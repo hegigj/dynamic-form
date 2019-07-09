@@ -1,0 +1,23 @@
+<div>
+
+  <div class="main header">
+    <div style="font-family: 'Roboto Medium';color: white">Dynamic Form</div>
+    <span style="flex: 1 1 auto"></span>
+    <div *ngIf="method" style="font-family: 'Roboto Light';color:white">{{method}}</div>
+  </div>
+
+  <div class="main body">
+    <!--Form Created Like This-->
+    <app-form [labels]="meta"
+              [labelsValue]="data"
+              [fieldDataPool]="dependencies"
+              [order]="order"
+              [method]="method"
+              [submit]="getForm"
+              (isValid)="canGet = $event"
+              (formEmitter)="showForm($event)" *ngIf="meta"></app-form>
+
+    <button mat-button (click)="getFormData()" [disabled]="!canGet">Submit</button>
+  </div>
+
+</div>

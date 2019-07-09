@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+  "lib": {
+    "entryFile": "./src/lib/public_api.ts",
+    "externals": {
+      "lodash": "lodash",
+      "primeng/primeng": "primeng",
+      "rxjs/Rx": "rxjs",
+      "ngxSkeletonLoader": "ngx-skeleton-loader",
+      "amazingTimePickerAngular6": "amazing-time-picker-angular6"
+    },
+    "umdModuleIds": {
+      "ngx-skeleton-loader": "ngx-skeleton-loader",
+      "amazing-time-picker-angular6": "amazing-time-picker-angular6"
+    }
+  },
+  "whitelistedNonPeerDependencies" : ["."]
+}

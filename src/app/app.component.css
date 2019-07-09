@@ -1,0 +1,16 @@
+.main{
+  width: 630px;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 0 11px 1px rgba(0,0,0,0.3);
+  padding: 15px;
+}
+
+.main.header{
+  background-color: #ff8800;
+}
+
+.main.body{
+  flex-direction: column!important;
+}
