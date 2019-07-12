@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormControlService} from '../controls/form-control.service';
-import {FormControlModel} from '../models/form-control.model';
+import {FormControlModel, ObjectType} from '../models/form-control.model';
 import {FormGroup} from '@angular/forms';
 import {FieldMapModel} from '../models/fieldMap.model';
 import {FieldOrderModel} from '../models/field-order.model';
@@ -8,29 +8,35 @@ import {FieldOrderModel} from '../models/field-order.model';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  styleUrls: ['./form.component.css'],
 })
-export class FormComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() labels: FieldMapModel;
-  @Input() labelsValue: any;
+export class FormComponent implements OnInit, OnChanges {
+  // KG OPTIONS SERVICE INPUTS
+  @Input() fields: FieldMapModel;
+  @Input() values: any;
   @Input() fieldDataPool: any;
 
+  // REQUIRED INPUTS
   @Input() method: string;
-  @Input() order: FieldOrderModel;
   @Input() appearance: string;
+  @Input() order: FieldOrderModel;
 
-  @Input() submit: boolean;
-  @Output() isValid = new EventEmitter<boolean>();
-  @Output() formEmitter = new EventEmitter<any>();
+  // GET AND RESET FORM TOGGLE INPUTS
+  @Input() returnForm: boolean;
+  @Input() resetForm: boolean;
+
+  // RETURN FORM AND FORM VALIDITY OUTPUTS
+  @Output() getValidity = new EventEmitter<boolean>();
+  @Output() getFormData = new EventEmitter<any>();
 
   form: FormGroup;
-  fields: FormControlModel[] = [];
   setSkeleton: any[] = [];
+  fieldArray: FormControlModel[] = [];
 
   constructor(private _fcs: FormControlService) {}
 
   ngOnInit() {
-    if (this.labels) {
+    if (this.fields) {
       this._setValue();
       this._setMetaValue();
       this._setMetaSelectedValue();
@@ -39,31 +45,23 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
 
       this._getFields();
 
-      setTimeout(() => {
-        this.form = this._fcs.create(this.fields, this.method);
-        this._returnFormValidity();
-      }, 1300);
+      this._fgCreator();
     }
   }
 
-  ngOnChanges(sch: SimpleChanges) {
-    if (sch.submit && sch.submit.currentValue) {
-      if (sch.submit.currentValue) {
-        this._returnForm();
-      }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.returnForm && changes.returnForm.currentValue) {
+      this._returnForm();
     }
-  }
-
-  ngOnDestroy() {
-    this.formEmitter.unsubscribe();
-    this.isValid.unsubscribe();
-    this.form.reset();
+    if (changes.resetForm && changes.resetForm.currentValue) {
+      this._resetForm();
+    }
   }
 
   private _setValue() {
-    if (this.labelsValue) {
-      Object.keys(this.labels).forEach((key) => {
-        Object.assign(this.labels[key], {value: this.labelsValue[key]});
+    if (this.values) {
+      Object.keys(this.fields).forEach((key) => {
+        Object.assign(this.fields[key], {value: this.values[key]});
       });
     }
   }
@@ -72,57 +70,59 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     if (this.order) {
       Object.keys(this.order).forEach((key) => {
         if (this.order[key].value) {
-          Object.assign(this.labels[key], {value: this.order[key].value});
+          Object.assign(this.fields[key], {value: this.order[key].value});
         }
       });
     }
   }
 
   private _setMetaSelectedValue() {
-    if (this.labelsValue) {
+    if (this.values && this.order) {
       Object.keys(this.order).forEach((key) => {
         if (this.order[key].selectValue) {
           const selectValue = this.order[key].selectValue;
-          this.labels[key].selectValue = selectValue.match(/[a-zA-Z_]+\s[a-zA-Z_]+/g) ?
-            `${this.labelsValue[selectValue.split(' ')[0]]} ${this.labelsValue[selectValue.split(' ')[1]]}` : selectValue.match(/\./g) ?
-            this.labelsValue[selectValue.split('.')[0]][selectValue.split('.')[1]] : this.labelsValue[selectValue];
+          this.fields[key].selectValue = selectValue.match(/[a-zA-Z_]+\s[a-zA-Z_]+/g) ?
+            `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` : selectValue.match(/\./g) ?
+            this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] : this.values[selectValue];
         }
       });
     }
   }
 
   private _setMetaExtra() {
-    Object.keys(this.order).forEach((key) => {
-      if (this.order[key].display !== undefined) {
-        Object.assign(this.labels[key], {display: this.order[key].display});
-      }
-      if (this.order[key].disabled) {
-        Object.assign(this.labels[key], {disabled: this.order[key].disabled});
-      }
-      if (this.order[key].disableDatePicker) {
-        Object.assign(this.labels[key], {disableDatePicker: this.order[key].disableDatePicker});
-      }
-      if (this.order[key].disableTimePicker) {
-        Object.assign(this.labels[key], {disableTimePicker: this.order[key].disableTimePicker});
-      }
-      if (this.order[key].disableDateInputArea) {
-        Object.assign(this.labels[key], {disableDateInputArea: this.order[key].disableDateInputArea});
-      }
-      if (this.order[key].disableRemoveDateInputArea) {
-        Object.assign(this.labels[key], {disableRemoveDateInputArea: this.order[key].disableRemoveDateInputArea});
-      }
-      if (this.order[key].multi) {
-        Object.assign(this.labels[key], {multi: this.order[key].multi});
-      }
-      if (this.order[key].required) {
-        Object.assign(this.labels[key], {required: this.order[key].required});
-      }
-    });
+    if (this.order) {
+      Object.keys(this.order).forEach((key) => {
+        if (this.order[key].display !== undefined) {
+          Object.assign(this.fields[key], {display: this.order[key].display});
+        }
+        if (this.order[key].disabled) {
+          Object.assign(this.fields[key], {disabled: this.order[key].disabled});
+        }
+        if (this.order[key].disableDatePicker) {
+          Object.assign(this.fields[key], {disableDatePicker: this.order[key].disableDatePicker});
+        }
+        if (this.order[key].disableTimePicker) {
+          Object.assign(this.fields[key], {disableTimePicker: this.order[key].disableTimePicker});
+        }
+        if (this.order[key].disableDateInputArea) {
+          Object.assign(this.fields[key], {disableDateInputArea: this.order[key].disableDateInputArea});
+        }
+        if (this.order[key].disableRemoveDateInputArea) {
+          Object.assign(this.fields[key], {disableRemoveDateInputArea: this.order[key].disableRemoveDateInputArea});
+        }
+        if (this.order[key].multi) {
+          Object.assign(this.fields[key], {multi: this.order[key].multi});
+        }
+        if (this.order[key].required) {
+          Object.assign(this.fields[key], {required: this.order[key].required});
+        }
+      });
+    }
   }
 
   private _setSkeleton() {
-    Object.keys(this.order ? this.order : this.labels).forEach((key) => {
-      this.setSkeleton.push(this.order ? this.order[key] : this.labels[key]);
+    Object.keys(this.order ? this.order : this.fields).forEach((key) => {
+      this.setSkeleton.push(this.order ? this.order[key] : this.fields[key]);
     });
   }
 
@@ -130,33 +130,45 @@ export class FormComponent implements OnInit, OnChanges, OnDestroy {
     this.order ?
       Object.keys(this.order).forEach((order) => {
 
-        Object.keys(this.labels).forEach((key) => { if (key === order) { this.fields.push(this.labels[key]); }});
+        Object.keys(this.fields).forEach((key) => { if (key === order) { this.fieldArray.push(this.fields[key]); }});
 
-      }) : Object.keys(this.labels).forEach((key) => this.fields.push(this.labels[key]));
+      }) : Object.keys(this.fields).forEach((key) => this.fieldArray.push(this.fields[key]));
+  }
+
+  private _fgCreator() {
+    setTimeout(() => {
+      this.form = this._fcs.create(this.fieldArray, this.method);
+      if (this.form.status === 'VALID') {
+        this.getValidity.emit(true);
+      } this._returnFormValidity();
+    }, 1360);
   }
 
   private _objectifyForm(controls) {
-    const object: any = {};
+    const object: ObjectType = {};
     Object.keys(controls).forEach((key) => {
       Object.assign(object, {[key]: controls[key].value});
     }); return object;
   }
 
   private _returnFormValidity() {
-    if (this.form.status === 'VALID') {
-      this.isValid.emit(true);
+    if (this.form) {
+      this.form.statusChanges.subscribe((res: any) => {
+        this.getValidity.emit(res === 'VALID');
+      });
     }
-    this.form.statusChanges.subscribe((res: any) => {
-      this.isValid.emit(res === 'VALID');
-    });
+  }
+
+  private _resetForm() {
+    if (this.form) {
+      this.form.reset();
+    }
   }
 
   private _returnForm() {
-    this.formEmitter.emit(this._objectifyForm(this.form.controls));
-    setTimeout(() => {
-      if (this.method && this.method === 'POST') {
-        this.form.reset();
-      } this.isValid.emit(false);
-    }, 600);
+    if (this.form) {
+      const form: ObjectType = this._objectifyForm(this.form.controls);
+      this.getFormData.emit(form);
+    }
   }
 }

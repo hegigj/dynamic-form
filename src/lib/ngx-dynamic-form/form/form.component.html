@@ -2,13 +2,13 @@
 <form class="row main-form"
       [formGroup]="form"
       *ngIf="form">
-  <div *ngFor="let field of fields"
-       [class]="order[field?.fieldName]?.class ? order[field?.fieldName]?.class : 'col-12'">
+  <div *ngFor="let field of fieldArray"
+       [class]="order ? order[field?.fieldName]?.class : 'col-12'">
 
     <app-field [appearance]="appearance"
                [fg]="form" [field]="field"
                [fieldDataPool]="fieldDataPool"
-               [method]="order[field?.fieldName]?.methods"></app-field>
+               [method]="order ? order[field?.fieldName]?.methods : undefined"></app-field>
   </div>
 </form>
 
@@ -18,7 +18,7 @@
 
   <div *ngFor="let skeleton of setSkeleton" [class]="skeleton?.class ? skeleton?.class : 'col-12'">
     <ngx-skeleton-loader [count]="1"
-                         [theme]="{height: '45px'}"
+                         [theme]="appearance ? {height: '60px'} : {height: '45px'}"
                          *ngIf="skeleton.display === undefined || skeleton.display"></ngx-skeleton-loader>
   </div>
 </div>

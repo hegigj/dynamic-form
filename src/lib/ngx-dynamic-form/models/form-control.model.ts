@@ -17,6 +17,6 @@ export class FormControlModel extends OrderConfigs {
   };
 }
 
-class ObjectType {
+export class ObjectType {
   [key: string]: any;
 }

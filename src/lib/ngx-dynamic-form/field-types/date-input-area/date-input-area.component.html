@@ -29,8 +29,8 @@
 
     <input matInput
            [formControlName]="i"
-           [value]="area | date: 'MMM dd yyyy, HH:mm'"
-           [placeholder]="appearance ? '' : (field.fieldLabel + '  ' + (i + 1))">
+           [placeholder]="appearance ? '' : (field.fieldLabel + '  ' + (i + 1))"
+           [value]="area | date: field?.disableTimePicker !== undefined && field?.disableTimePicker ? 'MMM dd yyyy' : 'MMM dd yyyy, HH:mm'">
 
     <button mat-icon-button matSuffix (click)="removeNew(i)" [disabled]="disableRemoveDateInputArea">
       <mat-icon>close</mat-icon>

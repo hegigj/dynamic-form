@@ -5,9 +5,7 @@
     "externals": {
       "lodash": "lodash",
       "primeng/primeng": "primeng",
-      "rxjs/Rx": "rxjs",
-      "ngxSkeletonLoader": "ngx-skeleton-loader",
-      "amazingTimePickerAngular6": "amazing-time-picker-angular6"
+      "rxjs/Rx": "rxjs"
     },
     "umdModuleIds": {
       "ngx-skeleton-loader": "ngx-skeleton-loader",

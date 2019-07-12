@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {EmployeeService} from './app-services/employee.service';
-import {FieldOrderModel} from './ngx-dynamic-form/models/field-order.model';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +9,7 @@ import {FieldOrderModel} from './ngx-dynamic-form/models/field-order.model';
 export class AppComponent implements OnInit {
   meta: any;
   method: string;
-  order: FieldOrderModel;
+  order: any;
 
   data: any;
   dependencies: any;
@@ -23,8 +22,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // this.getEmployeeMeta('POST');
     // this.getEmployee();
-    this.getXHMeta('POST');
-    // this.getXH();
+    // this.getXHMeta('POST');
+    this.getXH();
   }
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -101,7 +100,7 @@ export class AppComponent implements OnInit {
 
   getEmployee() {
     const params = {paramBean: {fillFieldLabels: true}};
-    this._emplServ.getEmployee('EMPL00000000115', {params: params}).subscribe((res: any) => {
+    this._emplServ.getEmployee('EMPL00000000140', {params: params}).subscribe((res: any) => {
       if (res.status.code === 'STATUS_OK') {
         this.data = res.body.data;
         this.getEmployeeMeta('PUT');
