@@ -18,6 +18,7 @@ export class OrderConfigs {
 
   disabled?: boolean;
   required?: boolean;
+  canReset?: boolean;
 
   methods?: Methods;
 }

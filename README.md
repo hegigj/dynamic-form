@@ -1,6 +1,6 @@
 # DynamicFormUniZKM HG
 
-Dynamic Form UniZKM Library, creates form with fields and skeleton during loading this fields
+Dynamic Form UniZKM Library, creates form with fields and skeleton during loading fields
 
 Creates Form Group with Form Controls and Validators
 
@@ -191,35 +191,35 @@ Use in Component.ts:
 1: Fields input, [fields] receives as input KG OPTIONS Service:
     
     "lastName":{
-    "fieldName": "lastName",
-    "fieldLabel": "Cognome",
-    "inputType": "TEXT_INPUT",
-    "canGet": true,
-    "canPost": true,
-    "canPut": true,
-    "constraintList":{},
-    "childFieldMeta":{}
+      "fieldName": "lastName",
+      "fieldLabel": "Cognome",
+      "inputType": "TEXT_INPUT",
+      "canGet": true,
+      "canPost": true,
+      "canPut": true,
+      "constraintList":{},
+      "childFieldMeta":{}
     },
     "graduateCourseName":{
-    "fieldName": "graduateCourseName",
-    "fieldLabel": "Corso di Laurea ",
-    "inputType": "TEXT_INPUT",
-    "canGet": true,
-    "canPost": true,
-    "canPut": true,
-    "constraintList":{},
-    "childFieldMeta":{}
+      "fieldName": "graduateCourseName",
+      "fieldLabel": "Corso di Laurea ",
+      "inputType": "TEXT_INPUT",
+      "canGet": true,
+      "canPost": true,
+      "canPut": true,
+      "constraintList":{},
+      "childFieldMeta":{}
     },
-    "graduateCourseId":{
-    "fieldName": "graduateCourseId",
-    "fieldLabel": "Corso di Laurea Id",
-    "inputType": "TEXT_INPUT",
-    "canGet": true,
-    "canPost": true,
-    "canPut": true,
-    "constraintList":{},
-    "childFieldMeta":{}
-    },
+    "registrationDate":{
+      "fieldName": "registrationDate",
+      "fieldLabel": "Data di amissione",
+      "inputType": "DATE_INPUT",
+      "canGet": true,
+      "canPost": true,
+      "canPut": true,
+      "constraintList":{},
+      "childFieldMeta":{}
+    }
     
   And accepts inputType or {order['...'].multi: true, ...}:
   
@@ -234,7 +234,7 @@ Use in Component.ts:
   
     "Min", "Max", "Pattern", "Email", "Size", "NotNull"
   
-2: Values Input, [values] receives as input any data object that it keys match fields keys above
+2: Values Input, [values] receives as input any data object that it keys match field keys above
 
 3: FieldDataPool Input, [fieldDataPool] receives as input any data object list that contains "id" and "someLabel"
 
@@ -282,7 +282,7 @@ Use in Component.ts:
     
   Order can contain:
   
-    // You can import this class to your project to have access to all Order autosuggestions 
+    // You can import FieldOrderModel class to your project to have access to all Order autosuggestions 
     export declare class FieldOrderModel {
         [key: string]: OrderConfigs;
     }
@@ -309,10 +309,10 @@ Use in Component.ts:
     
 6: ReturnForm Input, [returnForm] receives as input a boolean value in "Create", "Update", "Delete" button action clicks
 
-7: ResetForm Input, [resetForm] receives as input a boolean value in "Create", "Update", "Delete" button action clicks
+7: ResetForm Input, [resetForm] receives as input a boolean value in "Reset", "Clear" button action clicks
 
 ## Outputs
 
 1: GetValidity Output, (getValidity) returns a boolean to enable or disable form action buttons
 
-2: GetFormData Output, (getFormData) return an data object
+2: GetFormData Output, (getFormData) return a data object

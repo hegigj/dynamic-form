@@ -5,7 +5,7 @@
     <input matInput
            [formControlName]="field?.fieldName"
            [placeholder]="appearance ? '' : field?.fieldLabel"
-           [value]="fg.get(field.fieldName).value | date: field?.disableTimePicker !== undefined && field?.disableTimePicker ? 'MMM dd yyyy' : 'MMM dd yyyy, HH:mm'">
+           [value]="fg.get(field.fieldName).value | date: 'MMM dd yyyy, HH:mm'">
     <input type="hidden"
            [matDatepicker]="dp"
            (dateChange)="addDate($event)">

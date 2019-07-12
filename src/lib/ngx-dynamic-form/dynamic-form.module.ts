@@ -57,6 +57,6 @@ import {FormControlService} from './controls/form-control.service';
   exports: [FormComponent]
 })
 
-export class NgxDynamicFormModule {
+export class DynamicFormModule {
 
 }

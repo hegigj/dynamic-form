@@ -1,1 +1,1 @@
-export * from './ngx-dynamic-form/ngx-dynamic-form.module';
+export * from './ngx-dynamic-form/dynamic-form.module';

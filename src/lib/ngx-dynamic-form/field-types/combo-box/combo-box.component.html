@@ -9,7 +9,7 @@
            (keyup)="keyup($event)" (change)="change()" (focus)="focus()">
 
     <mat-autocomplete #af="matAutocomplete">
-      <mat-option *ngFor="let opt of field?.fieldDataPool ? field?.fieldDataPool?.list : fieldDataPool"
+      <mat-option *ngFor="let opt of field.fieldDataPool ? field.fieldDataPool.list : fieldDataPool"
                   [value]="opt?.id" (click)="select = opt?.someLabel">{{opt?.someLabel}}</mat-option>
     </mat-autocomplete>
   </mat-form-field>
