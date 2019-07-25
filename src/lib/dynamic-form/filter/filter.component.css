@@ -1,0 +1,7 @@
+/deep/ .mat-standard-chip:focus {
+  box-shadow: none!important;
+}
+
+/deep/ .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled=true]):hover {
+  background-color: white!important;
+}

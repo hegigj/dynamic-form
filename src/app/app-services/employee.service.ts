@@ -26,7 +26,7 @@ export class EmployeeService {
   }
 
   getExtraHourRequestMeta() {
-    return this._httpClient.options(`${this.url}/EMPL00000000115/requests/type/substitutions`);
+    return this._httpClient.options(`${this.url}/EMPL00000000115/requests`);
   }
 
   getExtraHourRequest(userId, requestId, params?) {
