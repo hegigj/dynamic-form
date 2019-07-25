@@ -18,17 +18,19 @@ import {
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {HeaderInterceptor} from './app-services/header.interceptor';
 import {EmployeeService} from './app-services/employee.service';
-import {NgxDynamicFormModule} from 'dynamic-form-unizkm-hg';
+import {DynamicFormModule} from '../lib/dynamic-form/dynamic-form.module';
+import { DecimalComponent } from '../lib/dynamic-form/filter-type/decimal/decimal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    DecimalComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgxDynamicFormModule,
+    DynamicFormModule,
     MatButtonModule,
     MatChipsModule,
     MatIconModule,

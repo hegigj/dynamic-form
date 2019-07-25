@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {EmployeeService} from './app-services/employee.service';
+import {FieldOrderModel} from '../lib/dynamic-form/models/field-order.model';
 
 @Component({
   selector: 'app-root',
@@ -7,23 +8,35 @@ import {EmployeeService} from './app-services/employee.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  meta: any;
   method: string;
-  order: any;
+  order: FieldOrderModel;
 
+  meta: any;
   data: any;
   dependencies: any;
 
   canGet: boolean; // obligatory variable
-  getForm: boolean; // obligatory variable
 
-  constructor(private _emplServ: EmployeeService) {}
+  filter: any;
+  employeeFilter: FieldOrderModel = {
+    firstName: {},
+    lastName: {},
+    managerId: {methods: {keyup: this.getEmployees.bind(this), focus: this.getEmployees.bind(this)}},
+    directorId: {methods: {keyup: this.getEmployees.bind(this), focus: this.getEmployees.bind(this)}}
+  };
+
+  requestFilter = {
+    requestTypeId: {},
+    validationDate: {},
+    pendingActionFrom: {methods: {keyup: this.getEmployees.bind(this), focus: this.getEmployees.bind(this)}}
+  };
+
+  constructor(private _serv: EmployeeService) {}
 
   ngOnInit() {
-    // this.getEmployeeMeta('POST');
+    this.getEmployeeMeta('POST');
     // this.getEmployee();
     // this.getXHMeta('POST');
-    this.getXH();
   }
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,14 +44,15 @@ export class AppComponent implements OnInit {
 
   // ---------------------------------------------------------------------------------------------------------------------------------------
   getEmployeeMeta(method) {
-    this._emplServ.getEmployeeMeta().subscribe((fields: any) => {
+    this._serv.getEmployeeMeta().subscribe((fields: any) => {
       this.meta = fields.body.data.fieldMap;
+      this.filter = fields.body.data.filterMap;
       this.method = method;
       this.order = {
-        id: {},
+        id: {disabled: true, display: true, canReset: false},
         firstName: {class: 'col-6'},
         lastName: {class: 'col-6'},
-        birthdate: {class: 'col-12'},
+        birthdate: {class: 'col-12', disableTimePicker: true, displayTimePicker: true},
         email: {class: 'col-12'},
         managerId: {
           class: 'col-6',
@@ -54,8 +68,9 @@ export class AppComponent implements OnInit {
   }
 
   getXHMeta(method) {
-    this._emplServ.getExtraHourRequestMeta().subscribe((meta: any) => {
+    this._serv.getExtraHourRequestMeta().subscribe((meta: any) => {
       this.meta = meta.body.data.fieldMap;
+      this.filter = meta.body.data.filterMap;
       this.method = method;
       this.order = this.method === 'POST' ? {
         id: {},
@@ -88,19 +103,9 @@ export class AppComponent implements OnInit {
     });
   }
 
-  getXH() {
-    const params = {paramBean: {fillFieldLabels: true}};
-    this._emplServ.getExtraHourRequest('EMPL00000000115', 'HREQ00000001031', {params: params}).subscribe((res: any) => {
-      if (res.status.code === 'STATUS_OK') {
-        this.data = res.body.data;
-        this.getXHMeta('PUT');
-      }
-    });
-  }
-
   getEmployee() {
     const params = {paramBean: {fillFieldLabels: true}};
-    this._emplServ.getEmployee('EMPL00000000140', {params: params}).subscribe((res: any) => {
+    this._serv.getEmployee('EMPL00000000140', {params: params}).subscribe((res: any) => {
       if (res.status.code === 'STATUS_OK') {
         this.data = res.body.data;
         this.getEmployeeMeta('PUT');
@@ -111,7 +116,7 @@ export class AppComponent implements OnInit {
   getEmployees(fn?) {
     const params = {paramBean: {fillFieldLabels: true, firstName: fn, pageSize: 12, pageNo: 1}};
     Object.keys(params.paramBean).forEach((key) => { if (params.paramBean[key] === undefined) { delete params.paramBean[key]; } });
-    this._emplServ.getEmployeeList({params: params}).subscribe((res: any) => {
+    this._serv.getEmployeeList({params: params}).subscribe((res: any) => {
       if (res.status.code === 'STATUS_OK') {
         this.dependencies = res.body.data.list;
       }
@@ -119,19 +124,11 @@ export class AppComponent implements OnInit {
   }
   // ---------------------------------------------------------------------------------------------------------------------------------------
 
-
-  showForm(e): void {
+  showFilter(e): void {
     console.log(e);
   }
 
-  // Obligatory function
-  getFormData() {
-    this.getForm = !(this.getForm);
-
-    setTimeout(() => {
-      this.getForm = !(this.getForm);
-    }, 300);
-
-    // then execute post or put or patch methods with the obtained form
+  showForm(e): void {
+    console.log(e);
   }
 }

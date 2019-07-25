@@ -1,0 +1,14 @@
+<div class="col" [formGroup]="fg" *ngIf="fg && filter">
+  <mat-form-field class="col">
+    <input matInput
+           [formControlName]="filter?.fieldName"
+           [placeholder]="filter?.fieldLabel"
+           [value]="fg.get(filter.fieldName).value | date: 'MMM dd yyyy'">
+    <input type="hidden"
+           [matDatepicker]="dp"
+           (dateChange)="addDate($event)">
+
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker touchUi #dp></mat-datepicker>
+  </mat-form-field>
+</div>

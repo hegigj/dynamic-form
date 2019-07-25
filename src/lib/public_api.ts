@@ -1,1 +1,2 @@
-export * from './ngx-dynamic-form/dynamic-form.module';
+export * from './dynamic-form/controls/sidebar-providers/sidebar.service';
+export * from './dynamic-form/dynamic-form.module';

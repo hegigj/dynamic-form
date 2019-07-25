@@ -1,0 +1,50 @@
+<div [formGroup]="fg" *ngIf="fg && field" class="col-12">
+  <div class="expand-full add-timestamp" *ngIf="field?.displayDateInputArea !== undefined ? field?.displayDateInputArea : true">
+    <mat-form-field class="expand-full" [appearance]="appearance">
+      <mat-label *ngIf="appearance">{{field.fieldLabel}}</mat-label>
+
+      <input matInput
+             [placeholder]="appearance ? '' : field.fieldLabel">
+      <input type="hidden"
+             [matDatepicker]="dp"
+             (dateChange)="addDate($event)">
+
+      <mat-datepicker-toggle matSuffix
+                             [for]="dp"
+                             [disabled]="field?.disableDatePicker"
+                             *ngIf="field?.displayDatePicker !== undefined ? field?.displayDatePicker : true"></mat-datepicker-toggle>
+      <button mat-icon-button
+              matSuffix
+              (click)="addTime()"
+              [disabled]="field?.disableTimePicker"
+              *ngIf="field?.displayTimePicker !== undefined ? field?.displayTimePicker : true">
+        <mat-icon>watch_later</mat-icon>
+      </button>
+
+      <mat-datepicker touchUi #dp></mat-datepicker>
+    </mat-form-field>
+    <button mat-mini-fab color="primary" style="margin-left: 15px" matSuffix (click)="addNew()" [disabled]="checkFormArray()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <mat-form-field class="expand-full"
+                  [formArrayName]="field.fieldName"
+                  *ngFor="let area of fg.controls[field.fieldName].value;let i = index"
+                  [appearance]="appearance">
+    <mat-label *ngIf="appearance">{{field.fieldLabel}}  {{i + 1}}</mat-label>
+
+    <input matInput
+           [formControlName]="i"
+           [placeholder]="appearance ? '' : (field.fieldLabel + '  ' + (i + 1))"
+           [value]="area | date: 'MMM dd yyyy, HH:mm'">
+
+    <button mat-icon-button
+            matSuffix
+            (click)="removeNew(i)"
+            [disabled]="field?.disableRemoveDateInputArea"
+            *ngIf="field?.displayRemoveDateInputArea !== undefined ? field?.displayRemoveDateInputArea : true">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

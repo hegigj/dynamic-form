@@ -17,8 +17,8 @@ Import NgxDynamicFormModule into AppModule:
      
     import { AppComponent } from './app.component';
      
-    // Import your NgxDynamicFormModule
-    import { NgxDynamicFormModule } from 'dynamic-form-unizkm-hg';
+    // Import your DynamicFormModule
+    import { DynamicFormModule } from 'dynamic-form-unizkm-hg';
      
     @NgModule({
       declarations: [
@@ -27,8 +27,8 @@ Import NgxDynamicFormModule into AppModule:
       ],
       imports: [
         ...,
-        // Import your NgxDynamicFormModule
-        NgxDynamicFormModule,
+        // Import your DynamicFormModule
+        DynamicFormModule,
         ...
       ],
       providers: [],
@@ -43,33 +43,29 @@ Use in Component.html:
               [fieldDataPool]="dependencies"
               
               [order]="order" 
-              [method]="'PUT'" 
+              [method]="method" 
               [appearance]="'outline'"
               
-              [returnForm]="triggerToGetFormData" 
-              [resetForm]="triggerToResetFormData"
-              
               (getValidity)="formValid = $event"
-              (getFormData)="formData = $event"
               
               class="expand-full-width" *ngIf="labels"></app-form>
           
               
-    <button (click)="postFormData()" [disabled]="!valid">
+    <button appGetForm (form)="postFormData($event)" [disabled]="!valid">
       Insert
     </button>
-    <button color="warn" (click)="resetFormData()">
+    <button appResetForm>
       Reset
     </button>
     
-    <button (click)="putFormData()" [disabled]="!valid">
+    <button appGetForm (form)="putFormData($event)" [disabled]="!valid">
       Update
     </button>
 
 Use in Component.ts:
 
     import {Component, Input, OnInit} from '@angular/core';
-    import {FieldOrderModel} from 'dynamic-form-unizkm-hg/ngx-dynamic-form/models/field-order.model';
+    import {FieldOrderModel} from 'dynamic-form-unizkm-hg/dynamic-form/models/field-order.model';
     
     @Component({
       selector: 'app-employee',
@@ -123,10 +119,7 @@ Use in Component.ts:
           multi: true
         }
       };
-      
-      triggerToResetFormData: boolean = false;
-      triggerToGetFormData: boolean = false;
-      
+      method: string;
       valid: boolean;
       formData: any;
     
@@ -139,12 +132,14 @@ Use in Component.ts:
       private _getEmployeeMeta() {
         this. ... .subscribe( (response: any) => {
           this.labels = response.body.data.fieldMap;
+          this.method = 'POST';
         })
       }
     
       private _getEmployee(employeeId) {
         this. ...(employeeId).subscribe( (response: any) => {
           this.employee = response.body.data;
+          this.method = 'PUT';
         })
       }
     
@@ -155,8 +150,8 @@ Use in Component.ts:
       }
                         
       // dynamic functions
-      postFormData() {
-        this.triggerToGetFormData = true;
+      postFormData(form: any) {
+        formData = form;
         
         setTimeout(() => {
         
@@ -166,21 +161,14 @@ Use in Component.ts:
         });
       }
     
-      putFormData() {
-        this.triggerToGetFormData = true;
-    
+      putFormData(form: any) {
+        formData = form;
+        
         setTimeout(() => {
         
           // your service
           ...
           
-        });
-      }
-    
-      resetFormData() {
-        this.triggerToResetFormData = !(this.triggerToResetFormData);
-        setTimeout(() => {
-          this.triggerToResetFormData = !(this.triggerToResetFormData);
         });
       }
     }
@@ -299,6 +287,7 @@ Use in Component.ts:
         disableDateInputArea?: boolean;
         disableRemoveDateInputArea?: boolean;
         disabled?: boolean;
+        canReset?: boolean;
         required?: boolean;
         methods?: Methods;
     }
@@ -307,12 +296,14 @@ Use in Component.ts:
     }
     export declare type BootstrapClass = 'col-12' | 'col-6' | 'col-3';
     
-6: ReturnForm Input, [returnForm] receives as input a boolean value in "Create", "Update", "Delete" button action clicks
-
-7: ResetForm Input, [resetForm] receives as input a boolean value in "Reset", "Clear" button action clicks
-
 ## Outputs
 
 1: GetValidity Output, (getValidity) returns a boolean to enable or disable form action buttons
 
-2: GetFormData Output, (getFormData) return a data object
+## Click Listeners
+
+1: AppGetForm, put on your "Create" or "Update" buttons 'appGetForm' and (form)="yourFunction($event)".
+   On click you will receive back the form as an object.
+   
+2: AppResetForm, put on your "Reset" or "Cancel" buttons 'appResetForm'.
+   On click form will be reset.
