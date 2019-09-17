@@ -1,0 +1,28 @@
+<div class="sidebar-header">
+  <div class="request-title">
+    <mat-icon style="font-size: 22px;margin-right: 10px">swap_horiz</mat-icon>
+    <span>{{requestType}}</span>
+  </div>
+</div>
+
+<div class="row sidebar-container">
+
+  <app-form [fields]="labels" [values]="request"
+            [method]="method" [order]="order"
+            (getValidity)="valid = $event"
+            style="width: 100%" *ngIf="labels"></app-form>
+
+
+  <div class="button-row">
+    <div [ngClass]="{'authorized': requestStatus?.id === 'POOL00000000085',
+                     'approved': requestStatus?.id === 'POOL00000000087',
+                     'authorization-pending': requestStatus?.id === 'POOL00000000084',
+                     'approval-pending': requestStatus?.id === 'POOL00000000083',
+                     'denied': requestStatus?.id === 'POOL00000000086'}" *ngIf="requestStatus">
+      {{requestStatus?.someLabel}}
+    </div>
+    <span style="flex: 1 1 auto"></span>
+    <button *ngIf="context === 'NEW'" mat-button color="primary" appGetForm (form)="insertRequest($event)" [disabled]="!valid">Insert</button>
+    <button *ngIf="context === 'NEW'" mat-button color="warn" appResetForm>Reset</button>
+  </div>
+</div>

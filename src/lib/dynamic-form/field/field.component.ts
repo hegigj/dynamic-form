@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControlModel} from '../models/form-control.model';
 import {FormGroup} from '@angular/forms';
-import {Methods} from '../models/field-order.model';
+import {FormOrderConfig} from '../models/form-order-config';
 
 @Component({
   selector: 'app-field',
@@ -9,10 +8,9 @@ import {Methods} from '../models/field-order.model';
   styleUrls: ['./field.component.css']
 })
 export class FieldComponent implements OnInit {
-  @Input() field: FormControlModel;
+  @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
   @Input() fieldDataPool: any[];
-  @Input() method: Methods;
   @Input() appearance: string;
 
   display: boolean;

@@ -1,0 +1,100 @@
+<div class="fluid-container main-header">
+  <div class="row" style="display: flex; align-items: center;">
+    <div class="col custom-tabs">
+      <button mat-button
+              [ngClass]="{'active' : params?.paramBean?.type === 'me'}"
+              (click)="switchRequest('me')">
+        My Request
+      </button>
+      <button mat-button
+              [ngClass]="{'active' : params?.paramBean?.type === 'pendingMe'}"
+              (click)="switchRequest('pendingMe')">
+        Pending Actions
+      </button>
+    </div>
+    <div class="col right-btn" style="text-align: right">
+      <button mat-button style="margin-left: 10px"
+              [matMenuTriggerFor]="requestsType">
+        Add
+      </button>
+    </div>
+  </div>
+</div>
+
+<mat-menu #requestsType="matMenu" class="primary-menu">
+  <div class="row menu-button" *ngFor="let reqType of requestsTypes" (click)="newRequest(reqType?.id)">
+    <div><mat-icon>{{requestIconMap[reqType?.id]}}</mat-icon></div>
+    <div>
+      <div class="label">{{reqType?.someLabel}}</div>
+      <div class="sub-label">Account settings and more</div>
+    </div>
+  </div>
+</mat-menu>
+
+<div class="container-fluid main-container" *ngIf="requestsList">
+  <div class="row">
+    <app-filter class="col" [filterMap]="filters" [order]="order" (returnFilters)="filtering($event)" *ngIf="filters"></app-filter>
+  </div>
+  <br>
+
+  <div class="row labels-row">
+    <div class="col-2">{{labels?.requestTypeId?.fieldLabel}}</div>
+    <div class="col">{{labels?.insertDate?.fieldLabel}}</div>
+    <div class="col">{{labels?.expireDate?.fieldLabel}}</div>
+    <div class="col">{{labels?.validationDate?.fieldLabel}}</div>
+    <div class="col" *ngIf="params?.paramBean?.type === 'pendingMe'">{{labels?.employeeId?.fieldLabel}}</div>
+    <div class="col" *ngIf="params?.paramBean?.type === 'me'">{{labels?.pendingActionFrom?.fieldLabel}}</div>
+    <div class="col">{{labels?.status?.fieldLabel}}</div>
+    <div class="col"></div>
+  </div>
+
+  <div class="row data-row" *ngFor="let request of requestsList?.list">
+    <div class="col-2" style="display: flex; align-items: center; padding: 0">
+      <mat-icon style="margin: 0 10px 0 6px">{{requestIconMap[request?.requestTypeId]}}</mat-icon>
+      <span>{{request?.labelMap?.requestTypeId}}</span>
+    </div>
+    <div class="col">{{request?.insertDate | date: 'MMM dd, yyyy'}}</div>
+    <div class="col">{{request?.expireDate | date: 'MMM dd, yyyy'}}</div>
+    <div class="col">{{request?.validationDate | date: 'MMM dd, yyyy'}}</div>
+    <div class="col" style="display: flex;flex-direction: column;align-items: left">
+      <div *ngIf="params?.paramBean?.type === 'pendingMe'">{{request?.labelMap?.employeeId}}</div>
+      <div *ngIf="params?.paramBean?.type === 'me'">{{request?.labelMap?.pendingActionFrom}}</div>
+      <div style="font-family:'Roboto Light';font-size: 12px;color: #a7a9ac;">{{request?.labelMap?.officeNameId}}</div>
+    </div>
+    <div class="col">
+      <span [ngClass]="{'authorized': request?.status === 'POOL00000000085',
+                        'approved': request?.status === 'POOL00000000087',
+                        'authorization-pending': request?.status === 'POOL00000000084',
+                        'approval-pending': request?.status === 'POOL00000000083',
+                        'denied': request?.status === 'POOL00000000086'}">
+        {{request?.labelMap?.status}}
+      </span>
+    </div>
+    <div class="col" style="display: flex; justify-content: flex-end">
+      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, {id: request?.status, someLabel: request?.labelMap?.status})"
+              *ngIf="params?.paramBean?.type === 'pendingMe'">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, {id: request?.status, someLabel: request?.labelMap?.status})"
+              *ngIf="params?.paramBean?.type === 'me'">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="params?.paramBean?.type === 'me'">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+
+
+  <div class="footer-paginator">
+    <mat-paginator style="margin-top: 10px;"
+                   #paginator
+                   [length]="tableData.totalRecords"
+                   [pageSize]="tableData.pageSize"
+                   [pageSizeOptions]="[6, 12, 18]"
+                   [showFirstLastButtons]="true"
+                   (page)="refreshList($event)">
+    </mat-paginator>
+  </div>
+</div>

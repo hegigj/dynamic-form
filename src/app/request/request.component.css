@@ -1,0 +1,132 @@
+.sidebar-header {
+  padding: 20px 30px;
+  background-color: white;
+  color: #6c7293;
+  border-bottom: 2px solid rgba(54,108,243,0.1);
+}
+
+.sidebar-container {
+  padding: 30px;
+  margin: 0;
+  color: #6c7293;
+}
+
+.sidebar-container form, .sidebar-container table {
+  width: 100%;
+}
+
+.sidebar-container /deep/ .mat-form-field {
+  width: 100%;
+}
+
+.sidebar-container /deep/ table tr td .mat-form-field {
+  padding-right: 20px;
+}
+.sidebar-container /deep/ table tr td:last-child .mat-form-field {
+  padding-right: 0;
+}
+
+.button-row {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.authorized {
+  background-color: rgba(54, 108, 243, 0.2);
+  color: #366cf3;
+}
+
+.approved {
+  background-color: rgba(29, 201, 183, 0.2);
+  color: #1dc9b7;
+}
+
+.approval-pending {
+  background-color: rgba(255, 184, 34, 0.2);
+  color: #ffb822;
+}
+
+.authorization-pending {
+  background-color: rgba(255, 184, 34, 0.2);
+  color: #ffb822;
+}
+
+.denied {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.button-row div{
+  border-radius: 2px;
+  padding: 10px 15px;
+  font-size: 14px;
+  width: fit-content;
+}
+
+button{
+  min-width: 150px;
+}
+
+button[color='warn'] {
+  margin-left: 20px;
+}
+
+input[type = 'time']::-webkit-inner-spin-button,
+input[type = 'time']::-webkit-outer-spin-button,
+input[type = 'time']::-webkit-clear-button{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: none;
+}
+
+.sidebar-container /deep/ table tr.time-input td .mat-form-field {
+  padding-right: 10px;
+  width: 205px;
+}
+
+.sidebar-container /deep/ table tr.time-input td .mat-form-field.data-picker{
+  padding-right: 20px;
+  width: 97px;
+}
+/deep/.mat-form-field-infix{
+  display: flex!important;
+}
+
+.company-name-field{
+  width: 94.5%!important;
+  margin-left: 15px!important;
+}
+
+.file-upload{
+  min-width: unset!important;
+}
+
+.request-title{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.condition{
+  padding: 0;
+  margin-bottom: 20px;
+  background-color: rgba(4, 91, 161, 0.02);
+}
+
+.condition .row{
+  margin: 0;
+}
+
+.condition .row:nth-child(1){
+  font-family: Roboto;
+  font-size: 14px;
+}
+
+.condition .row:not(:nth-child(1)) {
+  font-family: "Roboto Light";
+  font-size: 12px;
+  font-style: italic;
+}

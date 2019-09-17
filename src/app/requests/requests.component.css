@@ -1,0 +1,164 @@
+.main-header {
+  font-family: Roboto;
+  background-color: white;
+  padding: 0 35px;
+  color: #323232;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03), 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.06);
+}
+
+.main-container {
+  padding: 25px;
+  font-family: Roboto;
+  background-color: #F4F8FC;
+  color: #1a2a31;
+  height: calc(100vh - 292px);
+  overflow: auto;
+}
+
+/deep/.mat-menu-panel{
+  height: fit-content;
+}
+
+.menu-icon{
+  color: white;
+  height: unset;
+  width: unset;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.menu-icon /deep/.mat-badge-content{
+  background-color: white;
+  color: #045BA1;
+}
+
+.menu-button {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f4f8fc;
+  padding: 17px;
+}
+
+.menu-button:hover {
+  cursor: pointer;
+  background-color: #f7f8fa;
+}
+
+.menu-button mat-icon {
+  margin-right: 15px;
+}
+.menu-button .label {
+  font-size: 14px;
+  color: #6c7293;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.menu-button .sub-label {
+  font-size: 13px;
+  font-weight: 300;
+  color: #a7abc3;
+}
+
+.custom-tabs /deep/ .mat-button {
+  border-radius: 0;
+  padding: 13px 20px;
+  font-size: 15px;
+}
+
+.custom-tabs /deep/ .mat-button.active {
+  border-bottom: 4px solid #085fa5;
+  background-color: #186db508;
+  color: #075ea4;
+}
+
+.main-header .right-btn {
+  padding: 15px;
+}
+
+.labels-row {
+  padding: 0 20px 15px 17px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.labels-row .col {
+  padding: 0 15px;
+}
+
+.data-row {
+  padding: 10px;
+  font-size: 15px;
+  background-color: white;
+  border-radius: 5px;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+}
+
+.authorized {
+  background-color: rgba(54, 108, 243, 0.2);
+  color: #366cf3;
+}
+
+.approved {
+  background-color: rgba(29, 201, 183, 0.2);
+  color: #1dc9b7;
+}
+
+.approval-pending {
+  background-color: rgba(255, 184, 34, 0.2);
+  color: #ffb822;
+}
+
+.authorization-pending {
+  background-color: rgba(255, 184, 34, 0.2);
+  color: #ffb822;
+}
+
+.denied {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.data-row .col:not(:nth-child(1)) span{
+  border-radius: 2px;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+.example-full-width{
+  margin-right: 30px;
+}
+
+/deep/.mat-form-field-infix{
+  display: flex!important;
+  flex-direction: row;
+}
+
+.example-full-width mat-icon{
+  font-size: 14px;
+}
+
+/deep/.mat-icon{
+  height: unset;
+  width: unset;
+}
+
+/deep/ mat-expansion-panel {
+  background-color: white !important;
+}
+
+.main-container /deep/ .mat-expansion-panel-header {
+  background-color: white !important;
+}
+
+/deep/ mat-expansion-panel {
+  box-shadow: none!important;
+}
+
+mat-accordion {
+  margin-bottom: 20px;
+}

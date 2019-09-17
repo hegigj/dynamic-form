@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControlModel} from '../../models/form-control.model';
 import {FormGroup} from '@angular/forms';
+import {FormOrderConfig} from '../../models/form-order-config';
 
 @Component({
   selector: 'app-text-input',
@@ -11,7 +11,7 @@ export class TextInputComponent implements OnInit {
   @Input() notId: boolean;
   @Input() display: boolean;
   @Input() appearance: string;
-  @Input() field: FormControlModel;
+  @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
 
   constructor() { }

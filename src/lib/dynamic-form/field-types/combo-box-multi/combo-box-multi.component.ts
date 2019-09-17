@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControlModel} from '../../models/form-control.model';
+import {FormControlModel} from '../../../models/form-control.model';
 import {FormGroup} from '@angular/forms';
-import {Methods} from '../../models/field-order.model';
+import {Methods} from '../../../models/field-order.model';
+import {FormOrderConfig} from '../../models/form-order-config';
 
 @Component({
   selector: 'app-combo-box-multi',
@@ -13,7 +14,7 @@ export class ComboBoxMultiComponent implements OnInit {
   @Input() method: Methods;
   @Input() display: boolean;
   @Input() appearance: string;
-  @Input() field: FormControlModel;
+  @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
 
   selected: any[] = [];

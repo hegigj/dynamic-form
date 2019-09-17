@@ -2,7 +2,7 @@
   <mat-form-field *ngIf="notId && display" [appearance]="appearance" style="width: 100%">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}</mat-label>
     <input matInput
-           [value]="field?.metaValue ? field?.metaValue : field?.value ? field?.value : ''"
+           [value]="field?.selectValue ? field?.selectValue : field?.value ? field?.value : ''"
            [formControlName]="field?.fieldName"
            [placeholder]="appearance ? '' : field?.fieldLabel">
   </mat-form-field>

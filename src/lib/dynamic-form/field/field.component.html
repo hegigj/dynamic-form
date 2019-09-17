@@ -9,7 +9,14 @@
                       [appearance]="appearance"></app-text-input>
     </div>
 
-    <div *ngSwitchCase="'DECIMAL_INPUT' || 'INTEGER_INPUT'">
+    <div *ngSwitchCase="'DECIMAL_INPUT'">
+      <app-decimal-input class="row"
+                         [fg]="fg" [field]="field"
+                         [notId]="notId" [display]="display"
+                         [appearance]="appearance"></app-decimal-input>
+    </div>
+
+    <div *ngSwitchCase="'INTEGER_INPUT'">
       <app-decimal-input class="row"
                          [fg]="fg" [field]="field"
                          [notId]="notId" [display]="display"
@@ -30,13 +37,13 @@
 
     <div *ngSwitchCase="'COMBO_BOX'">
       <app-combo-box class="row"
-                     [fg]="fg" [field]="field" *ngIf="!field?.multi"
-                     [method]="method" [fieldDataPool]="fieldDataPool"
-                     [display]="display" [appearance]="appearance"></app-combo-box>
+                     [fg]="fg" [field]="field"
+                     [fieldDataPool]="fieldDataPool"
+                     [display]="display" [appearance]="appearance" *ngIf="!field?.multi"></app-combo-box>
       <app-combo-box-multi class="row"
-                           [fg]="fg" [field]="field" *ngIf="field?.multi"
-                           [method]="method" [fieldDataPool]="fieldDataPool"
-                           [display]="display" [appearance]="appearance"></app-combo-box-multi>
+                           [fg]="fg" [field]="field"
+                           [fieldDataPool]="fieldDataPool"
+                           [display]="display" [appearance]="appearance" *ngIf="field?.multi"></app-combo-box-multi>
     </div>
   </div>
 

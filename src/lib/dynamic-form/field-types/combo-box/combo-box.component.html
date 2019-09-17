@@ -6,13 +6,13 @@
            [matAutocomplete]="af"
            [formControlName]="field?.fieldName"
            [placeholder]="appearance ? '' : field?.fieldLabel"
-           (keyup)="keyup($event)" (change)="change()" (focus)="focus()">
+           (keyup)="keyup($event?.srcElement?.value)" (change)="change()" (focus)="focus()">
 
     <mat-autocomplete #af="matAutocomplete">
-      <mat-option *ngFor="let opt of field.fieldDataPool ? field.fieldDataPool.list : fieldDataPool"
+      <mat-option *ngFor="let opt of options ? (options | async) : field?.fieldDataPool ? field?.fieldDataPool?.list : fieldDataPool"
                   [value]="opt?.id"
-                  (click)="select = _frp.selectLabel(opt, field?.selectLabel ? field?.selectLabel : field?.fieldRestVal)">
-        {{_frp.selectLabel(opt, field?.selectLabel ? field?.selectLabel : field?.fieldRestVal)}}
+                  (click)="setLabel(opt)">
+        {{opt | option: selectLabel}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControlService} from '../controls/form-providers/form-control.service';
-import {FormControlModel} from '../models/form-control.model';
+import {FormControlService} from '../controls/form-control.service';
 import {FormGroup} from '@angular/forms';
-import {FieldMapModel} from '../models/fieldMap.model';
-import {FieldOrderModel} from '../models/field-order.model';
+import {FieldMapModel} from '../../models/fieldMap.model';
+import {FormOrderConfig} from '../models/form-order-config';
+import {FormOrder} from '../models/form-order';
 
 @Component({
   selector: 'app-form',
@@ -20,28 +20,25 @@ export class FormComponent implements OnInit {
   @Input() method: string;
   @Input() appearance: string;
   @Input() hideSkeleton: boolean;
-  @Input() order: FieldOrderModel;
+  @Input() order: FormOrder;
 
   // RETURN FORM VALIDITY OUTPUTS
   @Output() getValidity = new EventEmitter<boolean>();
 
   form: FormGroup;
   setSkeleton: any[] = [];
-  fieldArray: FormControlModel[] = [];
+  fieldArray: FormOrderConfig[] = [];
 
   constructor(private _fcs: FormControlService) { this.hideSkeleton = false; }
 
   ngOnInit() {
     if (this.fields) {
-      this._setValue();
-      this._setMetaValue();
-      this._setMetaGetValue();
-      this._setMetaSelectedValue();
       this._setMetaExtra();
+
+      this._setValue();
       this._setSkeleton();
 
       this._getFields();
-
       this._fgCreator();
     }
   }
@@ -54,83 +51,26 @@ export class FormComponent implements OnInit {
     }
   }
 
-  private _setMetaValue() {
-    if (this.order) {
-      Object.keys(this.order).forEach((key) => {
-        if (this.order[key].value) {
-          Object.assign(this.fields[key], {value: this.order[key].value});
-        }
-      });
-    }
-  }
-
-  private _setMetaGetValue() {
-    if (this.values && this.order) {
-      Object.keys(this.order).forEach((key) => {
-        if (this.order[key].metaValue) {
-          const metaValue = this.order[key].metaValue;
-          this.fields[key].metaValue = metaValue.match(/[a-zA-Z_]+\s[a-zA-Z_]+/g) ?
-            `${this.values[metaValue.split(' ')[0]]} ${this.values[metaValue.split(' ')[1]]}` : metaValue.match(/\./g) ?
-              this.values[metaValue.split('.')[0]][metaValue.split('.')[1]] : this.values[metaValue];
-        }
-      });
-    }
-  }
-
-  private _setMetaSelectedValue() {
-    if (this.values && this.order) {
-      Object.keys(this.order).forEach((key) => {
-        if (this.order[key].selectValue) {
-          const selectValue = this.order[key].selectValue;
-          this.fields[key].selectValue = selectValue.match(/[a-zA-Z_]+\s[a-zA-Z_]+/g) ?
-            `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` : selectValue.match(/\./g) ?
-            this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] : this.values[selectValue];
-        }
-      });
+  private _setMetaSelectedValue(key?) {
+    if (this.values && this.order[key].selectValue) {
+      const selectValue = this.order[key].selectValue;
+      this.order[key].selectValue =
+        selectValue.match(/\s/g) ?
+          `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` :
+          selectValue.match(/\./g) ?
+            this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] :
+            this.values[selectValue];
+    } else {
+      delete this.order[key].selectValue;
     }
   }
 
   private _setMetaExtra() {
     if (this.order) {
       Object.keys(this.order).forEach((key) => {
-        if (this.order[key].display !== undefined) {
-          Object.assign(this.fields[key], {display: this.order[key].display});
-        }
-        if (this.order[key].displayDatePicker !== undefined) {
-          Object.assign(this.fields[key], {displayDatePicker: this.order[key].displayDatePicker});
-        }
-        if (this.order[key].displayTimePicker !== undefined) {
-          Object.assign(this.fields[key], {displayTimePicker: this.order[key].displayTimePicker});
-        }
-        if (this.order[key].displayDateInputArea !== undefined) {
-          Object.assign(this.fields[key], {displayDateInputArea: this.order[key].displayDateInputArea});
-        }
-        if (this.order[key].displayRemoveDateInputArea !== undefined) {
-          Object.assign(this.fields[key], {displayRemoveDateInputArea: this.order[key].displayRemoveDateInputArea});
-        }
-        if (this.order[key].disabled) {
-          Object.assign(this.fields[key], {disabled: this.order[key].disabled});
-        }
-        if (this.order[key].disableDatePicker) {
-          Object.assign(this.fields[key], {disableDatePicker: this.order[key].disableDatePicker});
-        }
-        if (this.order[key].disableTimePicker) {
-          Object.assign(this.fields[key], {disableTimePicker: this.order[key].disableTimePicker});
-        }
-        if (this.order[key].disableDateInputArea) {
-          Object.assign(this.fields[key], {disableDateInputArea: this.order[key].disableDateInputArea});
-        }
-        if (this.order[key].disableRemoveDateInputArea) {
-          Object.assign(this.fields[key], {disableRemoveDateInputArea: this.order[key].disableRemoveDateInputArea});
-        }
-        if (this.order[key].multi) {
-          Object.assign(this.fields[key], {multi: this.order[key].multi});
-        }
-        if (this.order[key].required) {
-          Object.assign(this.fields[key], {required: this.order[key].required});
-        }
-        if (this.order[key].selectLabel) {
-          Object.assign(this.fields[key], {selectLabel: this.order[key].selectLabel});
+        if (this.order[key]) {
+          this._setMetaSelectedValue(key);
+          Object.assign(this.fields[key], this.order[key]);
         }
       });
     }

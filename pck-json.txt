@@ -3,6 +3,5 @@
 "repository": "https://github.com/hegigj/dynamic-form-unizkm-hg",
 "dependencies": {
   "amazing-time-picker-angular6": "^1.5.5",
-  "ngx-skeleton-loader": "^1.2.2",
-  "rxjs": "~6.2.0"
+  "ngx-skeleton-loader": "^1.2.2"
 },

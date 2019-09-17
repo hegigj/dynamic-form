@@ -7,17 +7,6 @@ export class EmployeeService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  getEmployeeMeta() {
-    return this._httpClient.options(this.url);
-  }
-
-  getEmployee(employeeId: string, params?) {
-    const reqOptions = {
-      params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
-    };
-    return this._httpClient.get(this.url + '/' + employeeId, reqOptions);
-  }
-
   getEmployeeList(params?) {
     const reqOptions = {
       params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
@@ -25,14 +14,25 @@ export class EmployeeService {
     return this._httpClient.get(this.url, reqOptions);
   }
 
-  getExtraHourRequestMeta() {
-    return this._httpClient.options(`${this.url}/EMPL00000000115/requests`);
+  getRequestMeta() {
+    return this._httpClient.options(`${this.url}/EMPL00000000140/requests`);
   }
 
-  getExtraHourRequest(userId, requestId, params?) {
+  getSubstitutionMeta() {
+    return this._httpClient.options(`${this.url}/EMPL00000000140/requests/type/substitutions`)
+  }
+
+  getSubstitution(id, params?) {
     const reqOptions = {
       params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
     };
-    return this._httpClient.get(`${this.url}/${userId}/requests/type/substitutions/${requestId}`, reqOptions);
+    return this._httpClient.get(`${this.url}/EMPL00000000140/requests/type/substitutions/${id}`, reqOptions);
+  }
+
+  getRequestList(params?) {
+    const reqOptions = {
+      params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
+    };
+    return this._httpClient.get(`${this.url}/EMPL00000000140/requests`, reqOptions);
   }
 }

@@ -8,12 +8,6 @@ import {DateInputComponent} from './field-types/date-input/date-input.component'
 import {DateInputAreaComponent} from './field-types/date-input-area/date-input-area.component';
 import {DecimalInputComponent} from './field-types/decimal-input/decimal-input.component';
 import {TextInputComponent} from './field-types/text-input/text-input.component';
-// Dynamic Filter Imports
-import {FilterComponent} from './filter/filter.component';
-import {TextComponent} from './filter-type/text/text.component';
-import {DateComponent} from './filter-type/date/date.component';
-import {DateBetweenComponent} from './filter-type/date-between/date-between.component';
-import {ComboComponent} from './filter-type/combo/combo.component';
 // Material Imports
 import {
   MatAutocompleteModule,
@@ -34,22 +28,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AmazingTimePickerModule} from 'amazing-time-picker-angular6';
 import {NgxSkeletonLoaderModule} from 'ngx-skeleton-loader';
 // Services Imports
-import {FormControlService} from './controls/form-providers/form-control.service';
-import {GetFormDirective} from './controls/form-providers/get-form.directive';
-import {ResetFormDirective} from './controls/form-providers/reset-form.directive';
-import {FilterControlService} from './controls/filter-providers/filter-control.service';
-import {InjectComponentDirective} from './controls/sidebar-providers/inject-component.directive';
-import {SharedService} from './controls/shared.service';
-import {DecimalComponent} from './filter-type/decimal/decimal.component';
+import {FormControlService} from './controls/form-control.service';
+import {GetFormDirective} from './controls/get-form.directive';
+import {ResetFormDirective} from './controls/reset-form.directive';
+import {ProviderService} from '../controls/provider.service';
+import {OptionPipe} from './controls/option.pipe';
 
 @NgModule({
   declarations: [
-    FilterComponent,
-    TextComponent,
-    ComboComponent,
-    DateComponent,
-    DateBetweenComponent,
-    DecimalComponent,
     FormComponent,
     FieldComponent,
     ComboBoxComponent,
@@ -58,7 +44,7 @@ import {DecimalComponent} from './filter-type/decimal/decimal.component';
     DateInputAreaComponent,
     DecimalInputComponent,
     TextInputComponent,
-    InjectComponentDirective,
+    OptionPipe,
     ResetFormDirective,
     GetFormDirective
   ],
@@ -81,11 +67,10 @@ import {DecimalComponent} from './filter-type/decimal/decimal.component';
   ],
   providers: [
     FormControlService,
-    FilterControlService,
     MatDatepickerModule,
-    SharedService
+    ProviderService
   ],
-  exports: [FilterComponent, FormComponent, GetFormDirective, ResetFormDirective, InjectComponentDirective]
+  exports: [FormComponent, GetFormDirective, ResetFormDirective]
 })
 
 export class DynamicFormModule {

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControlModel} from '../../models/form-control.model';
 import {FormGroup} from '@angular/forms';
 import {AmazingTimePickerService} from 'amazing-time-picker-angular6';
+import {FormOrderConfig} from '../../models/form-order-config';
 
 @Component({
   selector: 'app-date-input',
@@ -11,7 +11,7 @@ import {AmazingTimePickerService} from 'amazing-time-picker-angular6';
 export class DateInputComponent implements OnInit {
   @Input() display: boolean;
   @Input() appearance: string;
-  @Input() field: FormControlModel;
+  @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
 
   date: string;

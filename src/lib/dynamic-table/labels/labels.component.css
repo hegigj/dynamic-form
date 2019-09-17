@@ -1,0 +1,12 @@
+.labels-row {
+  padding: 20px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.labels-row .col,
+.labels-row .col-1,
+.labels-row .col-2,
+.labels-row .col-3 {
+  padding: 0 15px;
+}
