@@ -1,13 +1,12 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ListResponse} from '../app-models/list-response';
 import {Abstract} from '../app-models/abstract';
 import {MetadataResponse} from '../app-models/metadata-response';
 import {EmployeeService} from '../app-services/employee.service';
 import {RequestComponent} from '../request/request.component';
-import {ComponentInjector, SidebarService} from '../../lib/sidebar/controls/sidebar.service';
+import {ComponentInjector, SidebarService} from '../../lib/exportable/sidebar/controls/sidebar.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FilterOrder} from '../../lib/dynamic-filter/models/filter-order';
-import {MatPaginator} from '@angular/material';
+import {FilterOrder} from '../../lib/exportable/dynamic-filter/models/filter-order';
 import {Subscription} from 'rxjs';
 import {Request} from '../app-models/request';
 
@@ -17,20 +16,21 @@ import {Request} from '../app-models/request';
   styleUrls: ['./requests.component.css']
 })
 export class RequestsComponent implements OnInit, OnDestroy {
-  @ViewChild('paginator') page: MatPaginator;
-
   subs: Subscription;
 
   dependencies: any[];
 
   labels: Request<MetadataResponse<Abstract<string>>>;
   requestsList: ListResponse<Request<string>>;
+  statusMap: Abstract<string>[];
+
   tableData = {
+    pageNo: 1,
     pageSize: 6,
+    totalPages: 2,
     totalRecords: 12,
   };
 
-  type = 'me';
   params = {
     paramBean: {
       fillFieldLabels: true,
@@ -42,6 +42,46 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
   filters: MetadataResponse<Abstract<string>>;
   order: FilterOrder;
+  button = [
+    {
+      type: 'icon',
+      text: 'access_time',
+      tooltip: 'Add Extra Hours',
+      click: this.newRequest.bind(this),
+      clickParams: 'POOL00000000081',
+      disabled: true
+    },
+    {
+      type: 'icon',
+      text: 'work',
+      tooltip: 'Add Mission',
+      click: this.newRequest.bind(this),
+      clickParams: 'POOL00000000078'
+    },
+    {
+      type: 'icon',
+      text: 'date_range',
+      tooltip: 'Add Holidays and Permission',
+      click: this.newRequest.bind(this),
+      clickParams: 'POOL00000000079',
+      disabled: true
+    },
+    {
+      type: 'icon',
+      text: 'swap_horiz',
+      tooltip: 'Add Substituted Holidays',
+      click: this.newRequest.bind(this),
+      clickParams: 'POOL00000000082'
+    },
+    {
+      type: 'icon',
+      text: 'style',
+      tooltip: 'Add Badge Fail',
+      click: this.newRequest.bind(this),
+      clickParams: 'POOL00000000080',
+      disabled: true
+    }
+  ];
 
   requestsTypes: Abstract<string>[];
   requestIconMap: {[pool: string]: string} = {
@@ -83,9 +123,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
     if (this.route.snapshot.queryParams['requestType'] && this.route.snapshot.queryParams['id']) {
       const requestType = this.route.snapshot.queryParams['requestType'];
       const requestId = this.route.snapshot.queryParams['id'];
-      const statusId = '';
-      const status = '';
-      this.openRequest(requestType, requestId, {id: statusId, someLabel: status});
+      this.openRequest(requestType, requestId, this.requestsList.list.find(req => req.id === requestId).labelMap.status);
     } else if (this.route.snapshot.queryParams['id']) {
       this.newRequest(this.route.snapshot.queryParams['id']);
     }
@@ -97,6 +135,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
         this.requestsTypes = labels.body.data.fieldMap.requestTypeId.fieldDataPool.list;
         this.filters = labels.body.data.filterMap;
         this.labels = labels.body.data.fieldMap;
+        this.setStatusLabelingMap(labels);
       }
     });
   }
@@ -104,7 +143,12 @@ export class RequestsComponent implements OnInit, OnDestroy {
   private _getRequestsList() {
     this.requestService.getRequestList({params: this.params}).subscribe((response: any) => {
       if (response.status.code === 'STATUS_OK') {
-        this.tableData.totalRecords = response.body.data.totalRecords;
+        this.tableData = {
+          pageNo: response.body.data.pageNo,
+          pageSize: response.body.data.pageSize,
+          totalPages: response.body.data.totalPages,
+          totalRecords: response.body.data.totalRecords,
+        };
         this.requestsList = response.body.data;
         this._checkURL();
       }
@@ -113,24 +157,37 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
   switchRequest(type) {
     this.params.paramBean.type = type;
-    if (this.params.paramBean.type !== this.type) {
-      this.type = this.params.paramBean.type;
-      this.params.paramBean.pageNo = 1;
-      this.page.pageIndex = 0;
-    } this._getRequestsList();
+    this._getRequestsList();
+  }
+
+  // MAP TO STATUS "labelColor"
+  setStatusLabelingMap(label: any) {
+    this.statusMap = label.body.data.fieldMap.status.fieldDataPool.list
+      .map((res: Abstract<string>) => {
+        Object.assign(res, {
+          labelColor: res.id === 'POOL00000000085' ?
+            '#366cf3' : res.id === 'POOL00000000087' ?
+              '#1dc9b7' : res.id === 'POOL00000000084' || res.id === 'POOL00000000083' ?
+                '#ffb822' : '#f44336'
+        });
+        return res;
+      });
   }
 
   refreshList(event) {
-    this.params.paramBean.pageNo = event.pageIndex + 1;
-    this.params.paramBean.pageSize = event.pageSize;
-    this.tableData.pageSize = event.pageSize;
+    this.tableData = event;
+    this.params.paramBean.pageNo = this.tableData.pageNo;
+    this.params.paramBean.pageSize = this.tableData.pageSize;
     this._getRequestsList();
   }
 
   filtering(event) {
     Object.keys(this.order).forEach((key) => {
-      if (this.params.paramBean[key]) { delete this.params.paramBean[key]; }
-    }); Object.assign(this.params.paramBean, event);
+      if (this.params.paramBean[key]) {
+        delete this.params.paramBean[key];
+      }
+    });
+    Object.assign(this.params.paramBean, event);
     this._getRequestsList();
   }
 
@@ -154,7 +211,8 @@ export class RequestsComponent implements OnInit, OnDestroy {
         this.sidebarService.setComponent(true, params, RequestComponent, {
           employeeId: 'EMPL00000000140',
           requestId: requestId,
-          requestStatus: requestStatus
+          requestStatus: requestStatus,
+          statusArray: this.statusMap
         }); break;
     }
   }

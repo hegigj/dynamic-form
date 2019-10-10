@@ -1,0 +1,84 @@
+<div class="row paginator-container">
+  <!--BUTTONS LEFT SIDE-->
+  <div class="col">
+    <div class="row">
+      <div class="col"
+           *ngFor="let button of buttons;let i = index"
+           style="max-width: fit-content">
+        <!--NORMAL BUTTON-->
+        <button mat-button
+                [color]="color"
+                [disabled]="button?.disabled === true"
+                (click)="click(i)"
+                *ngIf="button?.type === 'btn'">{{button?.text}}</button>
+        <!--RAISED BUTTON-->
+        <button mat-raised-button
+                [color]="color"
+                [disabled]="button?.disabled === true"
+                (click)="click(i)"
+                *ngIf="button?.type === 'raised-btn'">{{button?.text}}</button>
+        <!--OUTLINE STROKED BUTTON-->
+        <button mat-stroked-button
+                [color]="color"
+                [disabled]="button?.disabled === true"
+                (click)="click(i)"
+                *ngIf="button?.type === 'outlined-btn'">{{button?.text}}</button>
+        <!--ICON BUTTON-->
+        <button mat-icon-button
+                [color]="color"
+                [disabled]="button?.disabled === true"
+                [matTooltip]="button?.tooltip"
+                (click)="click(i)"
+                *ngIf="button?.type === 'icon'">
+          <mat-icon>{{button?.text}}</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--PAGINATOR RIGHT SIDE-->
+  <div class="col paginator">
+    <span class="spacer"></span>
+    <!--PAGE SIZE SELECTOR-->
+    <div>{{languageMap[language].recordsPerPage}}</div>
+    <mat-form-field [color]="color">
+      <mat-select [(value)]="params.pageSize">
+        <mat-option *ngFor="let srxp of showRecordsPerPage"
+                    [value]="srxp"
+                    (click)="displayRecords(srxp)">{{srxp}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>{{languageMap[language]?.of}} {{params.totalRecords}}</div>
+    <!--FIRST PAGE-->
+    <button mat-icon-button
+            [color]="color"
+            [matTooltip]="languageMap[language]?.firstPage"
+            (click)="firstPage()">
+      <mat-icon>first_page</mat-icon>
+    </button>
+    <!--PREVIOUS PAGE-->
+    <button mat-icon-button
+            [color]="color"
+            [matTooltip]="languageMap[language]?.prevPage"
+            (click)="paginator(-1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <!--PAGES-->
+    <mat-button-toggle-group appearance="legacy" #pages="matButtonToggleGroup">
+      <mat-button-toggle *ngFor="let page of pagesPaginator" [value]="page" [checked]="params?.pageNo === page">{{page}}</mat-button-toggle>
+    </mat-button-toggle-group>
+    <!--NEXT PAGE-->
+    <button mat-icon-button
+            [color]="color"
+            [matTooltip]="languageMap[language]?.nextPage"
+            (click)="paginator(1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <!--LAST PAGE-->
+    <button mat-icon-button
+            [color]="color"
+            [matTooltip]="languageMap[language]?.lastPage"
+            (click)="lastPage()">
+      <mat-icon>last_page</mat-icon>
+    </button>
+  </div>
+</div>

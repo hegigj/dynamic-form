@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {EmployeeService} from '../app-services/employee.service';
-import {FormOrder} from '../../lib/dynamic-form/models/form-order';
-import {SidebarService} from '../../lib/sidebar/controls/sidebar.service';
+import {FormOrder} from '../../lib/exportable/dynamic-form/models/form-order';
+import {SidebarService} from '../../lib/exportable/sidebar/controls/sidebar.service';
 import {Abstract} from '../app-models/abstract';
 import {MetadataResponse} from '../app-models/metadata-response';
 import {Substitution} from '../app-models/substitution';
@@ -18,7 +18,8 @@ export class RequestComponent implements OnInit {
 
   @Input() requestId: string;
   @Input() employeeId: string;
-  @Input() requestStatus: Abstract<string>;
+  @Input() requestStatus: string;
+  @Input() statusArray: any[];
 
   request: Substitution<string>;
   labels: Substitution<MetadataResponse<Abstract<string>>>;
@@ -56,9 +57,20 @@ export class RequestComponent implements OnInit {
         value: new Date(new Date().valueOf() + 8.64e+7).toISOString().split('.')[0],
         canReset: false
       },
-      startTimestamp: {class: 'col-6', disabled: this.method === 'PUT'},
-      stopTimestamp: {class: 'col-6', disabled: this.method === 'PUT'},
-      countHD: {class: 'col-12', disabled: this.method === 'PUT'},
+      startTimestamp: {
+        class: 'col-6',
+        disableDatePicker: this.method === 'PUT',
+        displayTimePicker: this.method === 'POST',
+        disabled: this.method === 'PUT',
+        required: true},
+      stopTimestamp: {
+        class: 'col-6',
+        disableDatePicker: this.method === 'PUT',
+        displayTimePicker: this.method === 'POST',
+        disabled: this.method === 'PUT',
+        required: true
+      },
+      countHD: {class: 'col-12', disabled: this.method === 'PUT', required: true, suffix: {type: 'text', text: 'Hour(s)'}},
       substitutionDates: {
         class: 'col-12',
         disabled: this.method === 'PUT',
@@ -66,7 +78,8 @@ export class RequestComponent implements OnInit {
         displayTimePicker: this.method === 'POST',
         displayDateInputArea: this.method === 'POST',
         dateInputAreaLabel: 'Add new Sub. Date',
-        displayRemoveDateInputArea: this.method === 'POST'
+        displayRemoveDateInputArea: this.method === 'POST',
+        required: true
       },
       employeeNotes: {class: 'col-12', disabled: this.method === 'PUT'}
     };
@@ -100,7 +113,6 @@ export class RequestComponent implements OnInit {
 
   insertRequest(form) {
     this.router.navigate([], {relativeTo: this.route}).then(() => {
-      this.sidebarService.setComponent(false);
       console.log(form);
     });
   }

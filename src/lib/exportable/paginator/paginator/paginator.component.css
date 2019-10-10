@@ -1,0 +1,33 @@
+.paginator-container {
+  margin: 0;
+  padding: 8px 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.paginator {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.paginator mat-form-field {
+  max-width: 35px;
+  max-height: 40px;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.paginator > div {
+  font-size: 14px;
+  color: #a7a9ac;
+  margin-right: 18px;
+}
+
+.paginator mat-button-toggle-group {
+  box-shadow: none;
+}

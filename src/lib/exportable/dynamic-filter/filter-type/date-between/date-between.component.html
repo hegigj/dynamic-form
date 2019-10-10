@@ -1,0 +1,29 @@
+<div class="row" [formGroup]="fg" *ngIf="fg && filter">
+  <div [formGroupName]="filter?.fieldName">
+    <mat-form-field class="col-6">
+      <input matInput
+             [formControlName]="'min'"
+             [placeholder]="filter?.fieldLabel"
+             [value]="(fg.controls[filter?.fieldName]).controls['min'].value | date: 'MMM dd yyyy'">
+      <input type="hidden"
+             [matDatepicker]="min"
+             (dateChange)="addDate($event, 'min')">
+
+      <mat-datepicker-toggle matSuffix [for]="min"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #min></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="col-6">
+      <input matInput
+             [formControlName]="'max'"
+             [placeholder]="filter?.fieldLabel"
+             [value]="(fg.controls[filter?.fieldName]).controls['max'].value | date: 'MMM dd yyyy'">
+      <input type="hidden"
+             [matDatepicker]="max"
+             (dateChange)="addDate($event, 'max')">
+
+      <mat-datepicker-toggle matSuffix [for]="max"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #max></mat-datepicker>
+    </mat-form-field>
+  </div>
+</div>

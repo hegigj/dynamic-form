@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSidenav} from '@angular/material';
-import {InjectComponentDirective} from '../../lib/sidebar/controls/inject-component.directive';
-import {SidebarService} from '../../lib/sidebar/controls/sidebar.service';
+import {InjectComponentDirective} from '../../lib/exportable/sidebar/controls/inject-component.directive';
+import {SidebarService} from '../../lib/exportable/sidebar/controls/sidebar.service';
 
 @Component({
   selector: 'app-main',

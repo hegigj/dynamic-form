@@ -13,7 +13,7 @@
       </button>
     </div>
     <div class="col right-btn" style="text-align: right">
-      <button mat-button style="margin-left: 10px"
+      <button mat-button color="primary" style="margin-left: 10px"
               [matMenuTriggerFor]="requestsType">
         Add
       </button>
@@ -22,7 +22,10 @@
 </div>
 
 <mat-menu #requestsType="matMenu" class="primary-menu">
-  <div class="row menu-button" *ngFor="let reqType of requestsTypes" (click)="newRequest(reqType?.id)">
+  <div class="row menu-button"
+       *ngFor="let reqType of requestsTypes"
+       (click)="newRequest(reqType?.id)"
+       [ngStyle]="{'cursor': reqType?.id !== 'POOL00000000082' ? 'not-allowed' : 'pointer'}">
     <div><mat-icon>{{requestIconMap[reqType?.id]}}</mat-icon></div>
     <div>
       <div class="label">{{reqType?.someLabel}}</div>
@@ -33,7 +36,11 @@
 
 <div class="container-fluid main-container" *ngIf="requestsList">
   <div class="row">
-    <app-filter class="col" [filterMap]="filters" [order]="order" (returnFilters)="filtering($event)" *ngIf="filters"></app-filter>
+    <app-filter class="col"
+                [filterMap]="filters"
+                [order]="order"
+                (returnFilters)="filtering($event)"
+                *ngIf="filters"></app-filter>
   </div>
   <br>
 
@@ -62,20 +69,16 @@
       <div style="font-family:'Roboto Light';font-size: 12px;color: #a7a9ac;">{{request?.labelMap?.officeNameId}}</div>
     </div>
     <div class="col">
-      <span [ngClass]="{'authorized': request?.status === 'POOL00000000085',
-                        'approved': request?.status === 'POOL00000000087',
-                        'authorization-pending': request?.status === 'POOL00000000084',
-                        'approval-pending': request?.status === 'POOL00000000083',
-                        'denied': request?.status === 'POOL00000000086'}">
+      <span [appLabelStatus]="{statusArray: statusMap}">
         {{request?.labelMap?.status}}
       </span>
     </div>
     <div class="col" style="display: flex; justify-content: flex-end">
-      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, {id: request?.status, someLabel: request?.labelMap?.status})"
+      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, request?.labelMap?.status)"
               *ngIf="params?.paramBean?.type === 'pendingMe'">
         <mat-icon>more_vert</mat-icon>
       </button>
-      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, {id: request?.status, someLabel: request?.labelMap?.status})"
+      <button mat-icon-button (click)="openRequest(request?.requestTypeId, request?.id, request?.labelMap?.status)"
               *ngIf="params?.paramBean?.type === 'me'">
         <mat-icon>visibility</mat-icon>
       </button>
@@ -85,16 +88,13 @@
     </div>
   </div>
 
-
-
   <div class="footer-paginator">
-    <mat-paginator style="margin-top: 10px;"
-                   #paginator
-                   [length]="tableData.totalRecords"
-                   [pageSize]="tableData.pageSize"
-                   [pageSizeOptions]="[6, 12, 18]"
-                   [showFirstLastButtons]="true"
-                   (page)="refreshList($event)">
-    </mat-paginator>
+    <app-paginator language="en"
+                   color="primary"
+                   [buttons]="button"
+                   [maxPages]="3"
+                   [showRecordsPerPage]="[2, 4, 6]"
+                   [params]="tableData"
+                   (metaPaginator)="refreshList($event)"></app-paginator>
   </div>
 </div>

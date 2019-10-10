@@ -7,15 +7,15 @@ export class EmployeeService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  getEmployeeList(params?) {
+  getRequestMeta() {
+    return this._httpClient.options(`${this.url}/EMPL00000000140/requests`);
+  }
+
+  getRequestList(params?) {
     const reqOptions = {
       params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
     };
-    return this._httpClient.get(this.url, reqOptions);
-  }
-
-  getRequestMeta() {
-    return this._httpClient.options(`${this.url}/EMPL00000000140/requests`);
+    return this._httpClient.get(`${this.url}/EMPL00000000140/requests`, reqOptions);
   }
 
   getSubstitutionMeta() {
@@ -27,12 +27,5 @@ export class EmployeeService {
       params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
     };
     return this._httpClient.get(`${this.url}/EMPL00000000140/requests/type/substitutions/${id}`, reqOptions);
-  }
-
-  getRequestList(params?) {
-    const reqOptions = {
-      params: new HttpParams().set('paramBean', JSON.stringify(params ? params.params.paramBean : {}))
-    };
-    return this._httpClient.get(`${this.url}/EMPL00000000140/requests`, reqOptions);
   }
 }

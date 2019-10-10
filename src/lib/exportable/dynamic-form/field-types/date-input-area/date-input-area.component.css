@@ -1,0 +1,7 @@
+.expand-full{
+  width: 100%;
+}
+
+/deep/ .mat-form-field-appearance-outline .mat-form-field-suffix {
+  display: flex!important;
+}

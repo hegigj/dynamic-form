@@ -1,11 +1,14 @@
 import {Abstract} from './abstract';
 
 export class Request<T> extends Abstract<T> {
+  employeeId: T;
   authorizationDate: T;
   authorizationTypeId: T;
   authorizationId: T;
   approvementId: T;
   validationDate: T;
+  insertDate: T;
+  requestTypeId: T;
   substitutionDates: T;
   missionTypeId: T;
   expireDate: T;

@@ -20,17 +20,18 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {HeaderInterceptor} from './app-services/header.interceptor';
 import {EmployeeService} from './app-services/employee.service';
 
-import {DynamicFormModule} from '../lib/dynamic-form/dynamic-form.module';
-import {DynamicFilterModule} from '../lib/dynamic-filter/dynamic-filter.module';
-import {DynamicTableModule} from '../lib/dynamic-table/dynamic-table.module';
-import {SidebarService} from '../lib/sidebar/controls/sidebar.service';
+import {DynamicFormModule} from '../lib/exportable/dynamic-form/dynamic-form.module';
+import {DynamicFilterModule} from '../lib/exportable/dynamic-filter/dynamic-filter.module';
+import {SidebarService} from '../lib/exportable/sidebar/controls/sidebar.service';
 import {AvatarModule} from 'ngx-avatar';
 
 // Components
 import { RequestComponent } from './request/request.component';
 import { RequestsComponent } from './requests/requests.component';
 import { MainComponent } from './main/main.component';
-import {InjectComponentDirective} from '../lib/sidebar/controls/inject-component.directive';
+import {InjectComponentDirective} from '../lib/exportable/sidebar/controls/inject-component.directive';
+import {PaginatorModule} from '../lib/exportable/paginator/paginator.module';
+import {LabelStatusModule} from '../lib/exportable/label-status/label-status.module';
 
 const router: Routes = [
   {
@@ -66,7 +67,8 @@ const router: Routes = [
     BrowserAnimationsModule,
     DynamicFormModule,
     DynamicFilterModule,
-    DynamicTableModule,
+    PaginatorModule,
+    LabelStatusModule,
     MatButtonModule,
     MatChipsModule,
     MatIconModule,

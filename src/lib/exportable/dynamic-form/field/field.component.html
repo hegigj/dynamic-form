@@ -1,0 +1,66 @@
+<div [formGroup]="fg" *ngIf="fg && field">
+
+  <div [ngSwitch]="field?.inputType">
+
+    <div *ngSwitchCase="'TEXT_INPUT'">
+      <app-text-input class="row"
+                      [fg]="fg"
+                      [field]="field"
+                      [notId]="notId"
+                      [display]="display"
+                      [appearance]="appearance"></app-text-input>
+    </div>
+
+    <div *ngSwitchCase="'DECIMAL_INPUT'">
+      <app-decimal-input class="row"
+                         [fg]="fg"
+                         [field]="field"
+                         [notId]="notId"
+                         [display]="display"
+                         [appearance]="appearance"></app-decimal-input>
+    </div>
+
+    <div *ngSwitchCase="'INTEGER_INPUT'">
+      <app-decimal-input class="row"
+                         [fg]="fg"
+                         [field]="field"
+                         [notId]="notId"
+                         [display]="display"
+                         [appearance]="appearance"></app-decimal-input>
+    </div>
+
+    <div *ngSwitchCase="'DATE_INPUT'">
+      <app-date-input class="row"
+                      [fg]="fg"
+                      [field]="field"
+                      [display]="display"
+                      [appearance]="appearance"></app-date-input>
+    </div>
+
+    <div *ngSwitchCase="'TEXT_INPUT_AREA'">
+      <app-date-input-area class="row"
+                           [fg]="fg"
+                           [field]="field"
+                           [display]="display"
+                           [appearance]="appearance"></app-date-input-area>
+    </div>
+
+    <div *ngSwitchCase="'COMBO_BOX'">
+      <app-combo-box class="row"
+                     [fg]="fg"
+                     [field]="field"
+                     [fieldDataPool]="fieldDataPool"
+                     [display]="display"
+                     [appearance]="appearance"
+                     *ngIf="!field?.multi"></app-combo-box>
+      <app-combo-box-multi class="row"
+                           [fg]="fg"
+                           [field]="field"
+                           [fieldDataPool]="fieldDataPool"
+                           [display]="display"
+                           [appearance]="appearance"
+                           *ngIf="field?.multi"></app-combo-box-multi>
+    </div>
+  </div>
+
+</div>

@@ -14,15 +14,11 @@
 
 
   <div class="button-row">
-    <div [ngClass]="{'authorized': requestStatus?.id === 'POOL00000000085',
-                     'approved': requestStatus?.id === 'POOL00000000087',
-                     'authorization-pending': requestStatus?.id === 'POOL00000000084',
-                     'approval-pending': requestStatus?.id === 'POOL00000000083',
-                     'denied': requestStatus?.id === 'POOL00000000086'}" *ngIf="requestStatus">
-      {{requestStatus?.someLabel}}
-    </div>
+    <span [appLabelStatus]="{statusArray: statusArray}" *ngIf="requestStatus">
+      {{requestStatus}}
+    </span>
     <span style="flex: 1 1 auto"></span>
-    <button *ngIf="context === 'NEW'" mat-button color="primary" appGetForm (form)="insertRequest($event)" [disabled]="!valid">Insert</button>
+    <button *ngIf="context === 'NEW'" mat-button color="primary" appGetForm (form)="insertRequest($event)" disabled>Insert</button>
     <button *ngIf="context === 'NEW'" mat-button color="warn" appResetForm>Reset</button>
   </div>
 </div>
