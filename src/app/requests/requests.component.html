@@ -36,11 +36,17 @@
 
 <div class="container-fluid main-container" *ngIf="requestsList">
   <div class="row">
+
+    <!----------------------------->
+    <!--DYNAMIC FILTER HTML USAGE-->
+    <!----------------------------->
     <app-filter class="col"
                 [filterMap]="filters"
                 [order]="order"
                 (returnFilters)="filtering($event)"
                 *ngIf="filters"></app-filter>
+    <!----------------------------->
+
   </div>
   <br>
 
@@ -89,6 +95,10 @@
   </div>
 
   <div class="footer-paginator">
+
+    <!------------------------>
+    <!--PAGINATOR HTML USAGE-->
+    <!------------------------>
     <app-paginator language="en"
                    color="primary"
                    [buttons]="button"
@@ -96,5 +106,7 @@
                    [showRecordsPerPage]="[2, 4, 6]"
                    [params]="tableData"
                    (metaPaginator)="refreshList($event)"></app-paginator>
+    <!------------------------>
+
   </div>
 </div>

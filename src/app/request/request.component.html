@@ -7,18 +7,24 @@
 
 <div class="row sidebar-container">
 
-  <app-form [fields]="labels" [values]="request"
-            [method]="method" [order]="order"
-            (getValidity)="valid = $event"
-            style="width: 100%" *ngIf="labels"></app-form>
-
+  <!--DYNAMIC FORM HTML USAGE-->
+  <app-form [fields]="labels"
+            [values]="request"
+            [method]="method"
+            [order]="order"
+            style="width: 100%"
+            *ngIf="labels"></app-form>
+  <!--------------------------->
 
   <div class="button-row">
     <span [appLabelStatus]="{statusArray: statusArray}" *ngIf="requestStatus">
       {{requestStatus}}
     </span>
     <span style="flex: 1 1 auto"></span>
+
+    <!--DYNAMIC FORM GET FORM AND RESET FORM DIRECTIVES HTML USAGE-->
     <button *ngIf="context === 'NEW'" mat-button color="primary" appGetForm (form)="insertRequest($event)" disabled>Insert</button>
     <button *ngIf="context === 'NEW'" mat-button color="warn" appResetForm>Reset</button>
+    <!-------------------------------------------------------------->
   </div>
 </div>

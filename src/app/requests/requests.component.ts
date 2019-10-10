@@ -17,20 +17,9 @@ import {Request} from '../app-models/request';
 })
 export class RequestsComponent implements OnInit, OnDestroy {
   subs: Subscription;
-
   dependencies: any[];
-
   labels: Request<MetadataResponse<Abstract<string>>>;
   requestsList: ListResponse<Request<string>>;
-  statusMap: Abstract<string>[];
-
-  tableData = {
-    pageNo: 1,
-    pageSize: 6,
-    totalPages: 2,
-    totalRecords: 12,
-  };
-
   params = {
     paramBean: {
       fillFieldLabels: true,
@@ -40,8 +29,16 @@ export class RequestsComponent implements OnInit, OnDestroy {
     }
   };
 
+  // FILTER ----------------------------------
   filters: MetadataResponse<Abstract<string>>;
   order: FilterOrder;
+  // -----------------------------------------
+
+  // LABEL STATUS -----------------
+  statusMap: Abstract<string>[];
+  // ------------------------------
+
+  // PAGINATOR BUTTONS -------------------------------
   button = [
     {
       type: 'icon',
@@ -82,6 +79,16 @@ export class RequestsComponent implements OnInit, OnDestroy {
       disabled: true
     }
   ];
+  // -------------------------------------------------
+
+  // PAGINATOR DATA -------
+  tableData = {
+    pageNo: 1,
+    pageSize: 6,
+    totalPages: 2,
+    totalRecords: 12,
+  };
+  // ----------------------
 
   requestsTypes: Abstract<string>[];
   requestIconMap: {[pool: string]: string} = {
@@ -96,17 +103,25 @@ export class RequestsComponent implements OnInit, OnDestroy {
               private sidebarService: SidebarService,
               private router: Router,
               private route: ActivatedRoute) {
+
+    // FILTER ORDER -------
     this.order = {
       requestTypeId: {},
       validationDate: {},
       status: {}
     };
+    // --------------------
+
   }
 
   ngOnInit() {
+
+    // SIDEBAR OBSERVER --------------------------------------------------------------------------------------
     this.subs = this.sidebarService.injectComponentToComponent.subscribe((res: ComponentInjector) => {
       if (res && !res.control) { this._initControl(); }
     });
+    // -------------------------------------------------------------------------------------------------------
+
     this._initControl();
   }
 
@@ -135,7 +150,10 @@ export class RequestsComponent implements OnInit, OnDestroy {
         this.requestsTypes = labels.body.data.fieldMap.requestTypeId.fieldDataPool.list;
         this.filters = labels.body.data.filterMap;
         this.labels = labels.body.data.fieldMap;
+
+        // LABEL STATUS MAPPING CALL ------
         this.setStatusLabelingMap(labels);
+        // --------------------------------
       }
     });
   }
@@ -143,12 +161,16 @@ export class RequestsComponent implements OnInit, OnDestroy {
   private _getRequestsList() {
     this.requestService.getRequestList({params: this.params}).subscribe((response: any) => {
       if (response.status.code === 'STATUS_OK') {
+
+        // PAGINATOR FILLING DATA ------------------------------
         this.tableData = {
           pageNo: response.body.data.pageNo,
           pageSize: response.body.data.pageSize,
           totalPages: response.body.data.totalPages,
           totalRecords: response.body.data.totalRecords,
         };
+        // -----------------------------------------------------
+
         this.requestsList = response.body.data;
         this._checkURL();
       }
@@ -160,7 +182,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
     this._getRequestsList();
   }
 
-  // MAP TO STATUS "labelColor"
+  // LABEL STATUS MAP TO STATUS "labelColor" ------------------------------------------------
   setStatusLabelingMap(label: any) {
     this.statusMap = label.body.data.fieldMap.status.fieldDataPool.list
       .map((res: Abstract<string>) => {
@@ -173,14 +195,18 @@ export class RequestsComponent implements OnInit, OnDestroy {
         return res;
       });
   }
+  // ----------------------------------------------------------------------------------------
 
+  // PAGINATOR FUNCTION -------------------------------------
   refreshList(event) {
     this.tableData = event;
     this.params.paramBean.pageNo = this.tableData.pageNo;
     this.params.paramBean.pageSize = this.tableData.pageSize;
     this._getRequestsList();
   }
+  // --------------------------------------------------------
 
+  // FILTER FUNCTION --------------------------------------
   filtering(event) {
     Object.keys(this.order).forEach((key) => {
       if (this.params.paramBean[key]) {
@@ -190,17 +216,22 @@ export class RequestsComponent implements OnInit, OnDestroy {
     Object.assign(this.params.paramBean, event);
     this._getRequestsList();
   }
+  // ------------------------------------------------------
 
   newRequest(type: string) {
     switch (type) {
       case 'POOL00000000082':
       case 'new-substituted-holidays-request':
+
+        // SIDEBAR INJECTING COMPONENT --------------------------
         this.sidebarService.setComponent(
           true,
           {id: 'new-substituted-holidays-request'},
           RequestComponent,
           {employeeId: 'EMPL00000000140'}
         );
+        // ------------------------------------------------------
+
         break;
     }
   }
@@ -208,12 +239,17 @@ export class RequestsComponent implements OnInit, OnDestroy {
   openRequest(type, requestId, requestStatus) { const params = {requestType: type, id: requestId};
     switch (type) {
       case 'POOL00000000082':
+
+        // SIDEBAR INJECTING COMPONENT -----------------------------------------------------
         this.sidebarService.setComponent(true, params, RequestComponent, {
           employeeId: 'EMPL00000000140',
           requestId: requestId,
           requestStatus: requestStatus,
           statusArray: this.statusMap
-        }); break;
+        });
+        // ---------------------------------------------------------------------------------
+
+        break;
     }
   }
 }

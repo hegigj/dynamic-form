@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {EmployeeService} from '../app-services/employee.service';
 import {FormOrder} from '../../lib/exportable/dynamic-form/models/form-order';
-import {SidebarService} from '../../lib/exportable/sidebar/controls/sidebar.service';
 import {Abstract} from '../app-models/abstract';
 import {MetadataResponse} from '../app-models/metadata-response';
 import {Substitution} from '../app-models/substitution';
@@ -24,12 +23,12 @@ export class RequestComponent implements OnInit {
   request: Substitution<string>;
   labels: Substitution<MetadataResponse<Abstract<string>>>;
 
+  // FORM DECLARATION --
   method: string;
   order: FormOrder;
-  valid: boolean;
+  // -------------------
 
   constructor(
-    private sidebarService: SidebarService,
     private requestService: EmployeeService,
     private route: ActivatedRoute,
     private router: Router
@@ -41,6 +40,8 @@ export class RequestComponent implements OnInit {
   }
 
   private _setMethodAndOrder() {
+
+    // FORM ORDER FILL DATA AND SPECIFY METHOD ---------------------------------------------------------------------------
     this.method = this.requestId ? 'PUT' : 'POST';
     this.order = {
       id: {disabled: true},
@@ -83,6 +84,8 @@ export class RequestComponent implements OnInit {
       },
       employeeNotes: {class: 'col-12', disabled: this.method === 'PUT'}
     };
+    // -------------------------------------------------------------------------------------------------------------------
+
   }
 
   private _checkRequest() {
@@ -111,9 +114,11 @@ export class RequestComponent implements OnInit {
     });
   }
 
+  // GET FORM FUNCTION ---------------------------------------------------------------------------
   insertRequest(form) {
     this.router.navigate([], {relativeTo: this.route}).then(() => {
       console.log(form);
     });
   }
+  // ---------------------------------------------------------------------------------------------
 }

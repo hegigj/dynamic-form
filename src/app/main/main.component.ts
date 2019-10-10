@@ -35,6 +35,7 @@ export class MainComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // SIDEBAR OBSERVER ---------------------------------------------------------------------------------------
     this.sidebarService.injectComponentToComponent.subscribe((res: any) => {
       if (res) {
         res.control ?
@@ -42,12 +43,16 @@ export class MainComponent implements OnInit {
           this.drawer.close().then(() => this._destroyChildComponent());
       }
     });
+    // --------------------------------------------------------------------------------------------------------
   }
 
+  // SIDEBAR DESTROY INJECTED COMPONENT --------------------------
   private _destroyChildComponent() {
     if (this._componentRef) { this._componentRef.destroy(); }
   }
+  // -------------------------------------------------------------
 
+  // SIDEBAR LOAD INJECTED COMPONENT ------------------------------------------------------------------
   private _loadChildComponent(componentType: Type<any>, config?) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
     const viewContainerRef = this._insertionPoint.viewContainerRef;
@@ -60,10 +65,13 @@ export class MainComponent implements OnInit {
       });
     }
   }
+  // --------------------------------------------------------------------------------------------------
 
+  // SIDEBAR ON BACKDROP CLICK -------------------------------------------------------------------
   backing() {
     this.router.navigate([], {relativeTo: this.route}).then(() => {
       this.sidebarService.setComponent(false);
     });
   }
+  // ---------------------------------------------------------------------------------------------
 }
