@@ -1,0 +1,9 @@
+<div [formGroup]="fg" *ngIf="fg && field && fieldArray">
+  <div [formArrayName]="field?.fieldName" *ngFor="let abstractControl of fieldArray?.controls;let formGroupName = index">
+    <div class="row" [formGroupName]="formGroupName">
+      <div *ngFor="let control of formFieldArray">
+        <app-field [fg]="formGroupName" [field]="control"></app-field>
+      </div>
+    </div>
+  </div>
+</div>

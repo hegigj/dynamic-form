@@ -2,7 +2,9 @@
   <mat-form-field *ngIf="display" [appearance]="appearance" style="width: 100%">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}</mat-label>
 
-    <input matInput
+    <input #input
+           matInput
+           readonly
            [formControlName]="field?.fieldName"
            [placeholder]="appearance ? '' : field?.fieldLabel"
            [value]="fg.get(field.fieldName).value | date: 'MMM dd yyyy, HH:mm'"
@@ -13,13 +15,13 @@
     <mat-datepicker-toggle matSuffix
                            matTooltip="Add Date"
                            [for]="dp"
-                           [disabled]="field?.disableDatePicker"
+                           [disabled]="field?.disableDatePicker || input?.disabled"
                            *ngIf="field?.displayDatePicker !== undefined ? field?.displayDatePicker : true"></mat-datepicker-toggle>
     <button mat-icon-button
             matSuffix
             matTooltip="Add Time"
             (click)="addTime()"
-            [disabled]="field?.disableTimePicker"
+            [disabled]="field?.disableTimePicker || input?.disabled"
             *ngIf="field?.displayTimePicker !== undefined ? field?.displayTimePicker : true">
       <mat-icon>watch_later</mat-icon>
     </button>

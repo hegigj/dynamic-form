@@ -2,6 +2,6 @@
   width: 100%;
 }
 
-/deep/ .mat-form-field-appearance-outline .mat-form-field-suffix {
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-suffix {
   display: flex!important;
 }

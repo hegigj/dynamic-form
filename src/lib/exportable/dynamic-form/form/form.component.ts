@@ -13,27 +13,28 @@ import {FormOrder} from '../models/form-order';
 export class FormComponent implements OnInit {
   // KG OPTIONS SERVICE INPUTS
   @Input() fields: FieldMapModel;
-  @Input() values: any;
   @Input() fieldDataPool: any;
+  @Input() values: any;
 
   // REQUIRED INPUTS
   @Input() method: string;
+  @Input() order: FormOrder;
   @Input() appearance: string;
   @Input() hideSkeleton: boolean;
-  @Input() order: FormOrder;
 
   form: FormGroup;
-  setSkeleton: any[] = [];
-  fieldArray: FormOrderConfig[] = [];
+  setSkeleton: any[];
+  fieldArray: FormOrderConfig[];
 
   constructor(private _fcs: FormControlService) {
     this.hideSkeleton = false;
+    this.setSkeleton = [];
+    this.fieldArray = [];
   }
 
   ngOnInit() {
     if (this.fields) {
       this._setMetaExtra();
-
       this._setValue();
       this._setSkeleton();
 
@@ -45,10 +46,8 @@ export class FormComponent implements OnInit {
   private _setMetaExtra() {
     if (this.order) {
       Object.keys(this.order).forEach((key) => {
-        if (this.order[key]) {
-          this._setMetaSelectedValue(key);
-          Object.assign(this.fields[key], this.order[key]);
-        }
+        this._setMetaSelectedValue(key);
+        Object.assign(this.fields[key], this.order[key]);
       });
     }
   }
@@ -57,10 +56,8 @@ export class FormComponent implements OnInit {
     if (this.values && this.order[key].selectValue) {
       const selectValue = this.order[key].selectValue;
       this.order[key].selectValue =
-        selectValue.match(/\s/g) ?
-          `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` :
-          selectValue.match(/\./g) ?
-            this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] :
+        selectValue.match(/\s/g) ? `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` :
+          selectValue.match(/\./g) ? this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] :
             this.values[selectValue];
     } else {
       delete this.order[key].selectValue;
@@ -83,11 +80,8 @@ export class FormComponent implements OnInit {
 
   private _getFields() {
     this.order ?
-      Object.keys(this.order).forEach((order) => {
-
-        Object.keys(this.fields).forEach((key) => { if (key === order) { this.fieldArray.push(this.fields[key]); }});
-
-      }) : Object.keys(this.fields).forEach((key) => this.fieldArray.push(this.fields[key]));
+      Object.keys(this.order).forEach(field => this.fieldArray.push(this.fields[field])) :
+      Object.keys(this.fields).forEach(field => this.fieldArray.push(this.fields[field]));
   }
 
   private _fgCreator() {
@@ -100,8 +94,8 @@ export class FormComponent implements OnInit {
 
   private _returnFormValidity() {
     if (this.form) {
-      this.form.statusChanges.subscribe((disabled: any) => {
-        this._fcs.setForm$(this.form, this.order, disabled);
+      this.form.statusChanges.subscribe((validity: string) => {
+        this._fcs.setForm$(this.form, this.order, validity);
       });
     }
   }

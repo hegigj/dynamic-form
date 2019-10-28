@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FilterOrder} from '../../lib/exportable/dynamic-filter/models/filter-order';
 import {Subscription} from 'rxjs';
 import {Request} from '../app-models/request';
+import index from '@angular/cli/lib/cli';
 
 @Component({
   selector: 'app-requests',
@@ -31,7 +32,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
   // FILTER ----------------------------------
   filters: MetadataResponse<Abstract<string>>;
-  order: FilterOrder;
+  order: FilterOrder | any;
   // -----------------------------------------
 
   // LABEL STATUS -----------------
@@ -53,7 +54,8 @@ export class RequestsComponent implements OnInit, OnDestroy {
       text: 'work',
       tooltip: 'Add Mission',
       click: this.newRequest.bind(this),
-      clickParams: 'POOL00000000078'
+      clickParams: 'POOL00000000078',
+      disabled: true
     },
     {
       type: 'icon',
@@ -106,9 +108,9 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
     // FILTER ORDER -------
     this.order = {
-      requestTypeId: {},
+      requestTypeId: {inputType: 'COMBO_BOX'},
       validationDate: {},
-      status: {}
+      status: {inputType: 'COMBO_BOX'}
     };
     // --------------------
 
@@ -208,6 +210,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
   // FILTER FUNCTION --------------------------------------
   filtering(event) {
+    console.log(event);
     Object.keys(this.order).forEach((key) => {
       if (this.params.paramBean[key]) {
         delete this.params.paramBean[key];

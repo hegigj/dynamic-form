@@ -1,8 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControlModel} from '../../../../common/models/form-control.model';
 import {FormGroup} from '@angular/forms';
-import {Methods} from '../../../../common/models/field-order.model';
 import {FormOrderConfig} from '../../models/form-order-config';
+import {Methods} from '../../../../common/models/form-control.model';
 
 @Component({
   selector: 'app-combo-box-multi',

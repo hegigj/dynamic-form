@@ -5,7 +5,14 @@
     <input matInput
            [value]="field?.selectValue ? field?.selectValue : field?.value ? field?.value : ''"
            [formControlName]="field?.fieldName"
-           [placeholder]="appearance ? '' : field?.fieldLabel">
+           [placeholder]="appearance ? '' : field?.fieldLabel"
+           *ngIf="!field?.onTextInputTextarea">
+
+    <textarea matInput
+           [value]="field?.selectValue ? field?.selectValue : field?.value ? field?.value : ''"
+           [formControlName]="field?.fieldName"
+           [placeholder]="appearance ? '' : field?.fieldLabel"
+           *ngIf="field?.onTextInputTextarea"></textarea>
 
     <mat-icon *ngIf="field?.suffix && field?.suffix?.type === 'icon'">{{field?.suffix?.text}}</mat-icon>
     <span *ngIf="field?.suffix && field?.suffix.type === 'text'">{{field?.suffix?.text}}</span>

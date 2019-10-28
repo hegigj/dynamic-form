@@ -14,10 +14,19 @@ export class GetFormDirective {
   }
 
   @HostListener('click') emitter() {
-    const form = this._fcs.form$();
+    const form = this._cleanForm(this._fcs.form$);
     setTimeout(() => {
       this.form.emit(form);
     });
+  }
+
+  private _cleanForm(form) {
+    Object.keys(form).forEach((key) => {
+      if (form[key] === undefined || form[key] === null || form[key] === '') {
+        delete form[key];
+      }
+    });
+    return form;
   }
 
   private _formValidity() {

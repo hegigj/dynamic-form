@@ -4,6 +4,7 @@ import {AmazingTimePickerService} from 'amazing-time-picker-angular6';
 import {FormOrderConfig} from '../../models/form-order-config';
 import {Subscription} from 'rxjs';
 import {TimezonePipe} from '../../../../common/controls/timezone.pipe';
+import {FormControlService} from '../../controls/form-control.service';
 
 @Component({
   selector: 'app-date-input',
@@ -18,7 +19,9 @@ export class DateInputComponent implements OnInit, OnDestroy {
 
   valueChanges: Subscription;
   errorMessages: string[] = [];
-  constructor(private _atp: AmazingTimePickerService) {}
+
+  constructor(private _atp: AmazingTimePickerService,
+              private _fcs: FormControlService) {}
 
   ngOnInit() {
     this._checkForErrors();
@@ -34,42 +37,43 @@ export class DateInputComponent implements OnInit, OnDestroy {
 
   addDate(e) {
     const date = new TimezonePipe().transform(e.value);
-    this._setTimestamp(date.split('T')[0]);
+    this._fcs.setTimestamp$(
+      {
+        fieldName: this.field.fieldName
+      },
+      {
+        date: date.split('T')[0]
+      }
+    );
+    this._openDPandTPsimultaneously();
   }
 
   addTime() {
     this._atp.open({theme: 'light'}).afterClose().subscribe((time: any) => {
-      this._setTimestamp(null, `${time}:00`);
+      this._fcs.setTimestamp$(
+        {
+          fieldName: this.field.fieldName
+        },
+        {
+          time: `${time}:00`
+        }
+      );
     });
   }
 
-  private _setTimestamp(date?, time?) {
-    if (date && time) {
-      this.fg.controls[this.field.fieldName].setValue(`${date}T${time}`);
-    } else if (date) {
-      if (this.fg.controls[this.field.fieldName].value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        time = this.fg.controls[this.field.fieldName].value.split('T')[1];
-        this.fg.controls[this.field.fieldName].setValue(`${date}T${time}`);
-      } else {
-        this.fg.controls[this.field.fieldName].setValue(`${date}T00:00:00`);
-      }
-    } else if (time) {
-      if (this.fg.controls[this.field.fieldName].value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        date = this.fg.controls[this.field.fieldName].value.split('T')[0];
-        this.fg.controls[this.field.fieldName].setValue(`${date}T${time}`);
-      } else {
-        this.fg.controls[this.field.fieldName].setValue(`${new Date().toISOString().split('T')[0]}T${time}`);
-      }
-    } else {
-      this.fg.controls[this.field.fieldName].setValue('');
+  private _openDPandTPsimultaneously() {
+    if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
+        (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
+      this.addTime();
     }
   }
 
   private _checkForErrors() {
-    this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
+    const formControl = this.fg.controls[this.field.fieldName];
+    this.valueChanges = formControl.valueChanges.subscribe(() => {
       if (this.field.errorMessages) {
-        if (this.fg.controls[this.field.fieldName].errors) {
-          Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
+        if (formControl.errors) {
+          Object.keys(formControl.errors).forEach((key) => {
             if (this.errorMessages.indexOf(this.field.errorMessages[key]) === -1) {
               this.errorMessages.push(this.field.errorMessages[key]);
             }

@@ -1,5 +1,4 @@
-import {FormControlModel} from '../../../common/models/form-control.model';
-import {Methods} from '../../../common/models/field-order.model';
+import {FormControlModel, Methods} from '../../../common/models/form-control.model';
 
 export class FilterOrderConfig extends FormControlModel {
   selectLabel?: string | any;

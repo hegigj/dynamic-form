@@ -5,7 +5,9 @@
                   [appearance]="appearance">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}  {{i + 1}}</mat-label>
 
-    <input matInput
+    <input #input
+           matInput
+           readonly
            [formControlName]="i"
            [placeholder]="appearance ? '' : (field?.fieldLabel + '  ' + (i + 1))"
            [value]="area | date: 'MMM dd yyyy, HH:mm'"
@@ -17,7 +19,7 @@
             matSuffix
             matTooltip="Add Date"
             (click)="openDP(dp, i)"
-            [disabled]="field?.disableDatePicker ? field?.disableDatePicker : false"
+            [disabled]="field?.disableDatePicker || input?.disabled"
             *ngIf="field?.displayDatePicker !== undefined ? field?.displayDatePicker : true">
       <mat-icon>event</mat-icon>
     </button>
@@ -26,7 +28,7 @@
             matSuffix
             matTooltip="Add Time"
             (click)="addTime(i)"
-            [disabled]="field?.disableTimePicker ? field?.disableTimePicker : false"
+            [disabled]="field?.disableTimePicker || input?.disabled"
             *ngIf="field?.displayTimePicker !== undefined ? field?.displayTimePicker : true">
       <mat-icon>watch_later</mat-icon>
     </button>
@@ -35,7 +37,7 @@
             matSuffix
             matTooltip="Remove this Date"
             (click)="removeNew(i)"
-            [disabled]="field?.disableRemoveDateInputArea ? field?.disableRemoveDateInputArea : false"
+            [disabled]="field?.disableRemoveDateInputArea"
             *ngIf="(fg?.controls[field?.fieldName]?.value && fg?.controls[field?.fieldName]?.value?.length > 1) &&
                    (field?.displayRemoveDateInputArea !== undefined ? field?.displayRemoveDateInputArea : true)">
       <mat-icon>cancel</mat-icon>

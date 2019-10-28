@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 export class ProviderService {
   constructor(private _httpClient: HttpClient) {}
 
-  fieldRestPool(svc: string, url: string, key, value?, params?): Observable<Object> {
+  fieldRestPool(svc: string, url: string, key, value, params?): Observable<Object> {
     const options = {
       params: new HttpParams().set('paramBean', JSON.stringify(this._paramsConfig(key, value, params)))
     };
@@ -16,13 +16,13 @@ export class ProviderService {
       if (res.status.code === 'STATUS_OK') {
         return res.body.data;
       } else {
-        return throwError(`Request returned with ${res.status.code}, so is backend fault!`);
+        return throwError(`Request returned with ${res.status.code} !!!`);
       }
     }));
   }
 
-  private _paramsConfig(key, value?, params?) {
-    if (params === undefined || params.paramBean === {}) {
+  private _paramsConfig(key, value, params?) {
+    if (params === undefined || params === {} || params.paramBean === {}) {
       params = {paramBean: {pageNo: 1, pageSize: -1}};
     }
     if (key) {
@@ -30,6 +30,7 @@ export class ProviderService {
     }
     if (key && (value === undefined || value === null || value === '')) {
       delete params.paramBean[key];
-    } return params.paramBean;
+    }
+    return params.paramBean;
   }
 }

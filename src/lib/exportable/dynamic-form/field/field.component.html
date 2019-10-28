@@ -61,6 +61,12 @@
                            [appearance]="appearance"
                            *ngIf="field?.multi"></app-combo-box-multi>
     </div>
+
+    <div *ngSwitchCase="'INPUT_TABLE'">
+      <app-form-array [fg]="fg"
+                      [field]="field"
+                      [fieldArray]="fg?.get(field?.fieldName)"></app-form-array>
+    </div>
   </div>
 
 </div>

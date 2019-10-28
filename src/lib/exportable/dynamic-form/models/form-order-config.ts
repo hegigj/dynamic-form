@@ -1,8 +1,10 @@
-import {BootstrapClass, Methods} from '../../../common/models/field-order.model';
-import {FormControlModel, ObjectType} from '../../../common/models/form-control.model';
+import {BootstrapClass, FormControlModel, Methods, ObjectType, Suffix} from '../../../common/models/form-control.model';
+import {FormOrder} from './form-order';
 
 export class FormOrderConfig extends FormControlModel {
   class?: BootstrapClass;
+  onTextInputTextarea?: boolean;
+  childField?: FormOrder;
 
   customValidators?: any[];
   errorMessages?: ObjectType;
@@ -11,7 +13,6 @@ export class FormOrderConfig extends FormControlModel {
   selectValue?: string | any;
   selectLabel?: string | any;
   autocompleteLabel?: string | any;
-  suffix?: {type: 'icon' | 'text', text: string} | null | undefined;
 
   disableDatePicker?: boolean;
   displayDatePicker?: boolean;
@@ -30,6 +31,7 @@ export class FormOrderConfig extends FormControlModel {
   disabled?: boolean;
   required?: boolean;
   canReset?: boolean;
+  suffix?: Suffix;
 
   methods?: Methods;
   svc?: string;
@@ -41,6 +43,7 @@ export class FormOrderConfig extends FormControlModel {
     this.displayTimePicker = true;
     this.displayDateInputArea = true;
     this.displayRemoveDateInputArea = true;
+    this.onTextInputTextarea = false;
     this.disabled = false;
     this.multi = false;
     this.svc = 'svc';

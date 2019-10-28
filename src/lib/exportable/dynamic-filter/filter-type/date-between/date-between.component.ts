@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormArray, FormGroup} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {AbstractModel} from '../../../../common/models/abstract.model';
 import {FilterOrderConfig} from '../../models/filter-order-config';
@@ -11,7 +11,7 @@ import {TimezonePipe} from '../../../../common/controls/timezone.pipe';
   styleUrls: ['./date-between.component.css']
 })
 export class DateBetweenComponent implements OnInit {
-  @Input() fg: FormGroup;
+  @Input() fg: FormGroup | FormArray;
   @Input() filter: FilterOrderConfig;
   @Input() filterChipArray: AbstractModel[];
 

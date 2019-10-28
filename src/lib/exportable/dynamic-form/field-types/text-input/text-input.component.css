@@ -1,0 +1,18 @@
+::ng-deep .mat-error {
+  background-color: rgba(244, 67, 54, 0.15)!important;
+  color: #f44336!important;
+  padding: 6px 9px;
+  border-radius: 4px;
+  width: fit-content;
+  margin-bottom: 5px;
+  min-width: 250px;
+}
+
+::ng-deep .mat-form-field-underline,
+::ng-deep .mat-form-field-subscript-wrapper {
+  position: unset;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 10px!important;
+}

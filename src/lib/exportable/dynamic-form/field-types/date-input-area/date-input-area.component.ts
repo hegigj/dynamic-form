@@ -4,6 +4,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {FormOrderConfig} from '../../models/form-order-config';
 import {Subscription} from 'rxjs';
 import {TimezonePipe} from '../../../../common/controls/timezone.pipe';
+import {FormControlService} from '../../controls/form-control.service';
 
 @Component({
   selector: 'app-date-input-area',
@@ -21,7 +22,9 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
 
   valueChanges: Subscription;
   errorMessages: string[] = [];
-  constructor(private _atp: AmazingTimePickerService) { }
+
+  constructor(private _atp: AmazingTimePickerService,
+              private _fcs: FormControlService) { }
 
   ngOnInit() {
     this.index = this.fg.controls[this.field.fieldName].value.length - 1;
@@ -41,36 +44,37 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
 
   addDate(e) {
     const date = new TimezonePipe().transform(e.value);
-    this._setTimestamp(date.split('T')[0]);
+    this._fcs.setTimestamp$(
+      {
+        fieldName: this.field.fieldName,
+        isArray: this.index !== this.i ? this.i : this.index
+      },
+      {
+        date: date.split('T')[0]
+      }
+    );
+    this._openDPandTPsimultaneously();
   }
 
   addTime(index) {
     this.i = index;
     this._atp.open({theme: 'light'}).afterClose().subscribe((time: any) => {
-      this._setTimestamp(null, `${time}:00`);
+      this._fcs.setTimestamp$(
+        {
+          fieldName: this.field.fieldName,
+          isArray: this.index !== this.i ? this.i : this.index
+        },
+        {
+          time: `${time}:00`
+        }
+      );
     });
   }
 
-  private _setTimestamp(date?, time?) {
-    const formArrayControl = (<FormArray>this.fg.controls[this.field.fieldName]).at(this.index !== this.i ? this.i : this.index);
-    if (date && time) {
-      formArrayControl.setValue(`${date}T${time}`);
-    } else if (date) {
-      if (formArrayControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        time = formArrayControl.value.split('T')[1];
-        formArrayControl.setValue(`${date}T${time}`);
-      } else {
-        formArrayControl.setValue(`${date}T00:00:00`);
-      }
-    } else if (time) {
-      if (formArrayControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        date = formArrayControl.value.split('T')[0];
-        formArrayControl.setValue(`${date}T${time}`);
-      } else {
-        formArrayControl.setValue(`${new Date().toISOString().split('T')[0]}T${time}`);
-      }
-    } else {
-      formArrayControl.setValue('');
+  private _openDPandTPsimultaneously() {
+    if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
+      (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
+      this.addTime(this.index !== this.i ? this.i : this.index);
     }
   }
 
@@ -101,10 +105,9 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
     this.valueChanges = formArrayControl.valueChanges.subscribe(() => {
       if (this.field.errorMessages) {
         if (formArrayControl.errors) {
+          this.errorMessages = [];
           Object.keys(formArrayControl.errors).forEach((key) => {
-            if (this.errorMessages.indexOf(this.field.errorMessages[key]) === -1) {
-              this.errorMessages.push(this.field.errorMessages[key]);
-            }
+            this.errorMessages.push(this.field.errorMessages[key]);
           });
         } else {
           this.errorMessages = [];

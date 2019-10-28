@@ -42,12 +42,14 @@ export class LabelStatusDirective {
         this.config.color = this.config.statusArray.find(color => color.id === this.config.status).labelColor;
       } else {
         this.config.statusArray.forEach((color, index) => {
+          color.someLabel = color.someLabel.replace(/(\(|\)|\||\?)/g, specialChar => {
+            return `\\${specialChar}`;
+          });
           if ((<string>this._el.nativeElement.textContent).match(color.someLabel)) {
             this.config.color = this.config.statusArray[index].labelColor;
           }
         });
-      }
-      hex = this.config.color;
+      } hex = this.config.color;
     } return hex.charAt(0) === '#' ? hex.substr(1, 6) : hex;
   }
 

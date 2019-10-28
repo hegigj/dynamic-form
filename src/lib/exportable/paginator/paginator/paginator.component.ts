@@ -36,29 +36,18 @@ export class PaginatorComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('pages') page: MatButtonToggleGroup;
   @Output() metaPaginator: EventEmitter<Params> = new EventEmitter<Params>();
 
+  previousBtnDisabled: boolean;
+  firstPageNo: number;
   pagesPaginator: number[];
+  lastPageNo: number;
+  nextBtnDisabled: boolean;
+
   paginatorSub: Subscription;
   languageMap: {[key: string]: any};
 
   constructor() {
     this.color = 'accent';
     this.language = this.language ? this.language : 'en';
-    this.buttons = this.buttons ? this.buttons : [
-      {
-        type: 'icon',
-        text: 'thumb_up',
-        tooltip: 'LIKE'
-      },
-      {
-        type: 'outlined-btn',
-        text: 'Print page'
-      },
-      {
-        type: 'btn',
-        text: 'Print all',
-        disabled: true
-      }
-    ];
     this.languageMap = {
       en: {
         firstPage: 'First Page',
@@ -93,6 +82,8 @@ export class PaginatorComponent implements OnInit, OnChanges, OnDestroy {
       totalPages: 3,
       totalRecords: 18
     };
+    this.lastPageNo = this.maxPages;
+    this.firstPageNo = 1;
   }
 
   ngOnInit() {
@@ -129,32 +120,54 @@ export class PaginatorComponent implements OnInit, OnChanges, OnDestroy {
 
   firstPage() {
     this.params.pageNo = 1;
-    this._movePagesPaginator();
+    this.firstPageNo = this.params.pageNo;
+    this.lastPageNo = this.params.totalPages >= this.maxPages ? this.maxPages : this.params.totalPages;
     this.metaPaginator.emit(this.params);
+    this._disablePaginatorButtons();
   }
 
   paginator(move: number) {
     if (move === 1) {
-      this.params.pageNo = (this.params.pageNo === this.params.totalPages ? this.params.totalPages : (this.params.pageNo + 1));
-      this._movePagesPaginator();
+      this.params.pageNo = (this.params.pageNo === this.params.totalPages ? this.params.pageNo : (this.params.pageNo + 1));
     } else {
       this.params.pageNo = (this.params.pageNo === 1 ? this.params.pageNo : (this.params.pageNo - 1));
-      this._movePagesPaginator();
-    } this.metaPaginator.emit(this.params);
+    }
+    this._adjustFPandLP();
+    this.metaPaginator.emit(this.params);
+    this._disablePaginatorButtons();
   }
 
   lastPage() {
     this.params.pageNo = this.params.totalPages;
-    this._movePagesPaginator(true);
+    this.lastPageNo = this.params.pageNo;
+    this.firstPageNo = this.lastPageNo - (this.params.totalPages >= this.maxPages ? this.maxPages : this.params.totalPages) - 1;
     this.metaPaginator.emit(this.params);
+    this._disablePaginatorButtons();
   }
 
-  private _pagePaginatorGenerator(startIndex: number = 1) {
+  private _adjustFPandLP() {
+    this.firstPageNo = this.params.pageNo;
+    if (this.firstPageNo + (this.params.totalPages >= this.maxPages ? this.maxPages : this.params.totalPages) - 1 > this.params.totalPages) {
+      this.lastPageNo = this.params.pageNo;
+      this.firstPageNo = this.lastPageNo - (this.params.totalPages >= this.maxPages ? this.maxPages : this.params.totalPages) - 1;
+    } else {
+      this.lastPageNo = this.firstPageNo + (this.params.totalPages >= this.maxPages ? this.maxPages : this.params.totalPages) - 1;
+    } this._pagePaginatorGenerator(true);
+  }
+
+  private _pagePaginatorGenerator(move?: boolean) {
     this.pagesPaginator = [];
-    for (let p = startIndex;
-         p <= (this.params.totalPages <= this.maxPages || startIndex !== 1 ? this.params.totalPages : this.maxPages);
-         p++) {
-      this.pagesPaginator.push(p);
+
+    if (!move) {
+      if (this.params.totalPages >= this.maxPages) {
+        this.lastPageNo = this.maxPages;
+      } else if (this.params.totalPages < this.maxPages) {
+        this.lastPageNo = this.params.totalPages;
+      }
+    }
+
+    for (let page = this.firstPageNo; page <= this.lastPageNo; page++) {
+      this.pagesPaginator.push(page);
     }
   }
 
@@ -162,20 +175,21 @@ export class PaginatorComponent implements OnInit, OnChanges, OnDestroy {
     this.paginatorSub = this.page.change.subscribe((page: any) => {
       if (page) {
         this.params.pageNo = page.value;
+        this._disablePaginatorButtons();
         this.metaPaginator.emit(this.params);
-        this._movePagesPaginator();
       }
     });
   }
 
-  private _movePagesPaginator(lastPage: boolean = false) {
-    if (this.params.totalPages > this.maxPages) {
-      if ((lastPage ? true : (this.params.pageNo === this.pagesPaginator[this.pagesPaginator.length - 1])) &&
-        (lastPage ? true : (this.params.pageNo !== this.params.totalPages))) {
-        this._pagePaginatorGenerator(this.pagesPaginator[this.pagesPaginator.length - 1]);
-      } else if (this.params.pageNo === this.pagesPaginator[0]) {
-        this._pagePaginatorGenerator();
-      }
+  private _disablePaginatorButtons() {
+    if (this.params.pageNo === 1) {
+      this.previousBtnDisabled = true;
+    } if (this.params.pageNo > 1) {
+      this.previousBtnDisabled = false;
+    } if (this.params.pageNo < this.params.totalPages) {
+      this.nextBtnDisabled = false;
+    } if (this.params.pageNo === this.params.totalPages) {
+      this.nextBtnDisabled = true;
     }
   }
 }

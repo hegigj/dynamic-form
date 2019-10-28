@@ -19,19 +19,14 @@ export class ComboBoxComponent implements OnInit {
   @Input() fg: FormGroup;
 
   options: Observable<AbstractModel[] | any>;
-
   params = {pageNo: 1, pageSize: -1};
-
   selectLabel = '';
-  select = '';
 
   constructor(private _frp: ProviderService) { }
 
   ngOnInit() {
     this.selectLabel = this.field.selectLabel ? this.field.selectLabel : this.field.fieldRestVal ? this.field.fieldRestVal : 'someLabel';
-    if (this.field.selectValue) {
-      setTimeout(() => this.select = this.field.selectValue);
-    } this._filteredFields();
+    this._filteredFields();
   }
 
   private _filteredFields() {
@@ -40,10 +35,11 @@ export class ComboBoxComponent implements OnInit {
     }
   }
 
-  private _filter(value: AbstractModel[] | any): AbstractModel[] | any {
+  private _filter(value: string): AbstractModel[] | any {
     const filter = value.toLowerCase();
-    const label = this.field.autocompleteLabel ?
-      this.field.autocompleteLabel : this.field.fieldRestVal ? this.field.fieldRestVal : 'someLabel';
+    const label = this.field.autocompleteLabel ? this.field.autocompleteLabel :
+      this.field.fieldRestVal ? this.field.fieldRestVal :
+        'someLabel';
     if (this.field.fieldDataPool) {
       return this.field.fieldDataPool.list.filter(opt => {
         return opt[label].toLowerCase().includes(filter);
@@ -57,19 +53,19 @@ export class ComboBoxComponent implements OnInit {
 
   setLabel(option) {
     if (this.selectLabel.match(/[a-zA-z_]+\s[a-zA-z_]+/g)) {
-      this.select = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
+      this.field.selectValue = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
     } else if (this.selectLabel.match(/\./g)) {
-      this.select = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
+      this.field.selectValue = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
     } else {
-      this.select = option[this.selectLabel];
+      this.field.selectValue = option[this.selectLabel];
     }
   }
 
-  keyup(e) {
+  keyup(value) {
     if (this.field.methods && this.field.methods['keyup']) {
-      this.field.methods['keyup'](e);
+      this.field.methods['keyup'](value);
     } else if (this.field.fieldRestPool) {
-      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, e, {paramBean: this.params})
+      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, value, {paramBean: this.params})
         .subscribe((res: any) => this.fieldDataPool = res.list);
     }
   }

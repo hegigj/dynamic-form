@@ -1,0 +1,353 @@
+{
+  "footerHtml": {
+    "fieldName": "footerHtml",
+    "fieldLabel": "Footer",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "headerHtml": {
+    "fieldName": "headerHtml",
+    "fieldLabel": "Header",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "userConsentObligatory": {
+    "fieldName": "userConsentObligatory",
+    "fieldLabel": "com.teamdae.unisat.model.survey.Survey.userConsentObligatory.label",
+    "inputType": "CHECK_BOX",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "updateDate": {
+    "fieldName": "updateDate",
+    "fieldLabel": "Update Date",
+    "inputType": "DATE_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "insertDate": {
+    "fieldName": "insertDate",
+    "fieldLabel": "Insert Date",
+    "inputType": "DATE_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "name": {
+    "fieldName": "name",
+    "fieldLabel": "Title",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {
+      "Size": {
+        "type": "Size",
+        "message": "The size of this string is not valid",
+        "min": 0,
+        "max": 500
+      },
+      "NotNull": {
+        "type": "NotNull",
+        "message": "The value must not be null"
+      }
+    },
+    "childFieldMeta": {}
+  },
+  "description": {
+    "fieldName": "description",
+    "fieldLabel": "Description",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {
+      "Size": {
+        "type": "Size",
+        "message": "The size of this string is not valid",
+        "min": 0,
+        "max": 1024
+      }
+    },
+    "childFieldMeta": {}
+  },
+  "insertOperator": {
+    "fieldName": "insertOperator",
+    "fieldLabel": "Insert Operator",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {
+      "Size": {
+        "type": "Size",
+        "message": "The size of this string is not valid",
+        "min": 0,
+        "max": 15
+      }
+    },
+    "childFieldMeta": {}
+  },
+  "updateOperator": {
+    "fieldName": "updateOperator",
+    "fieldLabel": "Update Operator",
+    "inputType": "TEXT_INPUT",
+    "canGet": false,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {
+      "Size": {
+        "type": "Size",
+        "message": "The size of this string is not valid",
+        "min": 0,
+        "max": 15
+      }
+    },
+    "childFieldMeta": {}
+  },
+  "id": {
+    "fieldName": "id",
+    "fieldLabel": "com.teamdae.unisat.model.survey.Survey.id.label",
+    "inputType": "TEXT_INPUT",
+    "canGet": true,
+    "canPost": false,
+    "canPut": false,
+    "constraintList": {},
+    "childFieldMeta": {}
+  },
+  "questionList": {
+    "fieldName": "questionList",
+    "fieldLabel": "com.teamdae.unisat.model.survey.Survey.questionList.label",
+    "inputType": "INPUT_TABLE",
+    "canGet": true,
+    "canPost": true,
+    "canPut": true,
+    "constraintList": {},
+    "childFieldMeta": {
+      "optionPoolModuleId": {
+        "fieldName": "optionPoolModuleId",
+        "fieldLabel": "com.teamdae.unisat.model.survey.SurveyQuestion.optionPoolModuleId.label",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      },
+      "questionDescription": {
+        "fieldName": "questionDescription",
+        "fieldLabel": "Description",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {
+          "Size": {
+            "type": "Size",
+            "message": "The size of this string is not valid",
+            "min": 0,
+            "max": 500
+          },
+          "NotNull": {
+            "type": "NotNull",
+            "message": "The value must not be null"
+          }
+        },
+        "childFieldMeta": {}
+      },
+      "surveyId": {
+        "fieldName": "surveyId",
+        "fieldLabel": "com.teamdae.unisat.model.survey.SurveyQuestion.surveyId.label",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {
+          "Size": {
+            "type": "Size",
+            "message": "The size of this string is not valid",
+            "min": 15,
+            "max": 15
+          },
+          "NotNull": {
+            "type": "NotNull",
+            "message": "The value must not be null"
+          }
+        },
+        "childFieldMeta": {}
+      },
+      "orderNo": {
+        "fieldName": "orderNo",
+        "fieldLabel": "com.teamdae.unisat.model.survey.SurveyQuestion.orderNo.label",
+        "inputType": "INTEGER_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      },
+      "questionTitle": {
+        "fieldName": "questionTitle",
+        "fieldLabel": "Question Title",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {
+          "Size": {
+            "type": "Size",
+            "message": "The size of this string is not valid",
+            "min": 0,
+            "max": 500
+          },
+          "NotNull": {
+            "type": "NotNull",
+            "message": "The value must not be null"
+          }
+        },
+        "childFieldMeta": {}
+      },
+      "options": {
+        "fieldName": "options",
+        "fieldLabel": "Options",
+        "inputType": "INPUT_TABLE",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      },
+      "id": {
+        "fieldName": "id",
+        "fieldLabel": "com.teamdae.unisat.model.survey.SurveyQuestion.id.label",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      },
+      "questionType": {
+        "fieldName": "questionType",
+        "fieldLabel": "Type",
+        "inputType": "COMBO_BOX",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {
+          "Size": {
+            "type": "Size",
+            "message": "The size of this string is not valid",
+            "min": 15,
+            "max": 15
+          },
+          "NotNull": {
+            "type": "NotNull",
+            "message": "The value must not be null"
+          }
+        },
+        "childFieldMeta": {},
+        "fieldDataPool": {
+          "list": [
+            {
+              "labelMap": {},
+              "id": "QTYPE__DROPDOWN",
+              "someLabel": "Dropdown"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_TEXT_INLN",
+              "someLabel": "Text Inline"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_RADIO_MLT",
+              "someLabel": "Radio/Multiplechoice"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_CHECK_BOX",
+              "someLabel": "Checkbox"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_DATE_INPT",
+              "someLabel": "Date"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_DATE_RANG",
+              "someLabel": "Date Range"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_____EMOJI",
+              "someLabel": "Emoji"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE_PROGRSBAR",
+              "someLabel": "Progresbar"
+            },
+            {
+              "labelMap": {},
+              "id": "QTYPE____NUMBER",
+              "someLabel": "Number"
+            }
+          ],
+          "pageNo": 1,
+          "pageSize": -1,
+          "totalPages": -9,
+          "totalRecords": 9
+        }
+      },
+      "someLabel": {
+        "fieldName": "someLabel",
+        "fieldLabel": "com.teamdae.unisat.model.survey.SurveyQuestion.someLabel.label",
+        "inputType": "TEXT_INPUT",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      },
+      "required": {
+        "fieldName": "required",
+        "fieldLabel": "Required",
+        "inputType": "CHECK_BOX",
+        "canGet": false,
+        "canPost": false,
+        "canPut": false,
+        "constraintList": {},
+        "childFieldMeta": {}
+      }
+    }
+  },
+  "someLabel": {
+    "fieldName": "someLabel",
+    "fieldLabel": "com.teamdae.unisat.model.survey.Survey.someLabel.label",
+    "inputType": "TEXT_INPUT",
+    "canGet": true,
+    "canPost": true,
+    "canPut": true,
+    "constraintList": {},
+    "childFieldMeta": {}
+  }
+}
+

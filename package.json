@@ -25,6 +25,7 @@
     "@angular/router": "^6.1.0",
     "amazing-time-picker-angular6": "^1.5.5",
     "core-js": "^2.5.4",
+    "fs": "0.0.1-security",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.14",
     "ng-packagr": "^5.3.0",

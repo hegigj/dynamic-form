@@ -6,6 +6,7 @@
            [placeholder]="filter?.fieldLabel"
            [value]="selectFilterValue()"
            (keyup)="keyup($event?.srcElement?.value)" (focus)="focus()" (change)="change()">
+    <mat-icon matSuffix>arrow_drop_down</mat-icon>
     <mat-autocomplete #ac="matAutocomplete">
       <mat-option *ngFor="let option of options ? (options | async) : filter?.fieldDataPool ? filter?.fieldDataPool?.list : fieldDataPool"
                   [value]="option?.id"

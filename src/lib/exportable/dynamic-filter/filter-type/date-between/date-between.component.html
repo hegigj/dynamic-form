@@ -4,7 +4,7 @@
       <input matInput
              [formControlName]="'min'"
              [placeholder]="filter?.fieldLabel"
-             [value]="(fg.controls[filter?.fieldName]).controls['min'].value | date: 'MMM dd yyyy'">
+             [value]="(fg?.controls[filter?.fieldName])?.controls['min']?.value | date: 'MMM dd yyyy'">
       <input type="hidden"
              [matDatepicker]="min"
              (dateChange)="addDate($event, 'min')">
@@ -17,7 +17,7 @@
       <input matInput
              [formControlName]="'max'"
              [placeholder]="filter?.fieldLabel"
-             [value]="(fg.controls[filter?.fieldName]).controls['max'].value | date: 'MMM dd yyyy'">
+             [value]="(fg?.controls[filter?.fieldName])?.controls['max']?.value | date: 'MMM dd yyyy'">
       <input type="hidden"
              [matDatepicker]="max"
              (dateChange)="addDate($event, 'max')">
