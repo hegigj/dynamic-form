@@ -1,8 +1,34 @@
 <div [formGroup]="fg" *ngIf="fg && field && fieldArray">
   <div [formArrayName]="field?.fieldName" *ngFor="let abstractControl of fieldArray?.controls;let formGroupName = index">
-    <div class="row" [formGroupName]="formGroupName">
-      <div *ngFor="let control of formFieldArray">
-        <app-field [fg]="formGroupName" [field]="control"></app-field>
+    <div class="row form-array"
+         [formGroupName]="formGroupName" *ngIf="formFieldArray.length > 0"
+         [ngClass]="{'not-valid': !abstractControl?.pristine && abstractControl?.invalid}">
+      <div *ngFor="let control of formFieldArray" [class]="control?.class ? control?.class : 'col-12'">
+        <app-field [fg]="abstractControl"
+                   [field]="control"
+                   [appearance]="appearance"></app-field>
+      </div>
+
+      <div class="col-12 form-array-btn">
+        <span style="flex: 1 1 auto"></span>
+        <button mat-button
+                color="primary"
+                (click)="add(formGroupName)"
+                [disabled]="field?.formArrayActions ? field?.formArrayActions?.disableAddButton !== undefined ? field?.formArrayActions?.disableAddButton : false : false">
+          {{field?.formArrayActions ? field?.formArrayActions?.addButtonLabel : 'Add'}}
+        </button>
+        <button mat-button
+                color="warn"
+                (click)="delete(formGroupName)"
+                [disabled]="field?.formArrayActions ? field?.formArrayActions?.disableDeleteButton !== undefined ? field?.formArrayActions?.disableDeleteButton : false : false">
+          {{field?.formArrayActions ? field?.formArrayActions?.deleteButtonLabel : 'Delete'}}
+        </button>
+        <button mat-button
+                color="warn"
+                style="margin-left: 10px"
+                (click)="reset(formGroupName)">
+          {{field?.formArrayActions ? field?.formArrayActions?.resetButtonLabel : 'Reset'}}
+        </button>
       </div>
     </div>
   </div>

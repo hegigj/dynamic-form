@@ -16,7 +16,7 @@ export class TextInputComponent implements OnInit, OnDestroy {
   @Input() fg: FormGroup;
 
   valueChanges: Subscription;
-  errorMessages: string[] = [];
+  errorMessages: string;
   constructor() { }
 
   ngOnInit() {
@@ -30,14 +30,14 @@ export class TextInputComponent implements OnInit, OnDestroy {
   private _checkForErrors() {
     this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
       if (this.fg.controls[this.field.fieldName].errors) {
-        this.errorMessages = [];
+        this.errorMessages = '';
         Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
           if (this.field.errorMessages && this.field.errorMessages[key]) {
-            this.errorMessages.push(this.field.errorMessages[key]);
+            this.errorMessages = this.field.errorMessages[key];
           }
         });
       } else {
-        this.errorMessages = [];
+        this.errorMessages = '';
       }
     });
   }

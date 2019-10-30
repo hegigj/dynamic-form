@@ -10,7 +10,7 @@
            [value]="fg.get(field.fieldName).value | date: 'MMM dd yyyy, HH:mm'"
            (click)="openDP(dp)">
 
-    <mat-error *ngFor="let error of errorMessages">{{error}}</mat-error>
+    <mat-error>{{errorMessages}}</mat-error>
 
     <mat-datepicker-toggle matSuffix
                            matTooltip="Add Date"

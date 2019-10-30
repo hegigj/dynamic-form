@@ -82,9 +82,8 @@ export class FormControlService {
     return this._formValidity.asObservable();
   }
 
-  create(fields: FormOrderConfig[], method?: string) {
+  public create(fields: FormOrderConfig[], method?: string) {
     const formGroup = this._fgCreator(fields, method);
-    console.log(formGroup);
     return new FormGroup(formGroup);
   }
 
@@ -108,7 +107,7 @@ export class FormControlService {
                   [this._formArrayForm(field.childFieldMeta, field.childField, method)]
               ) : new FormControl(
                 {value: value, disabled: disabled},
-                field.fieldName === 'id' ? [] : this._validators(field, field.constraintList, field.required)
+                this._setValidator(field, method) ? [] : this._validators(field, field.constraintList, field.required)
               )
           }
         );
@@ -130,18 +129,20 @@ export class FormControlService {
 
   private _formArrayControl(values: any, disabled: boolean, validators: ValidatorFn | any) {
     const formArray = [];
-    if (typeof values === 'object') {
-      values.forEach((value) => {
+    typeof values === 'object' ? values.forEach((value) => {
         formArray.push(new FormControl({value: value, disabled: disabled}, validators));
-      });
-    } else {
-      formArray.push(new FormControl({value: values, disabled: disabled}, validators));
-    } return formArray;
+      }) : formArray.push(new FormControl({value: values, disabled: disabled}, validators));
+    return formArray;
+  }
+
+  private _setValidator(field: FormOrderConfig, method?: string): boolean {
+    return (field.fieldName === 'id' && method === 'POST');
   }
 
   private _validators(field: FormOrderConfig, constraints: Constraint, required?: boolean) {
     const validatorsArray = [];
     const errorMessage: ObjectType = {};
+    const timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
     Object.keys(constraints).forEach((key) => {
       switch (key) {
         case 'Size':
@@ -171,7 +172,6 @@ export class FormControlService {
           Object.assign(errorMessage, {'required': constraints[key].message});
           break;
         case 'Pattern':
-          const timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
           // Validators
           validatorsArray.push(
             Validators.pattern(constraints[key].regexp.match(/yyyy-MM-dd'T'HH:mm:ss/g) ? timestampPattern : constraints[key].regexp)

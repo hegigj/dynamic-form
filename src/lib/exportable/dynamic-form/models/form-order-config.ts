@@ -1,10 +1,10 @@
-import {BootstrapClass, FormControlModel, Methods, ObjectType, Suffix} from '../../../common/models/form-control.model';
-import {FormOrder} from './form-order';
+import {BootstrapClass, Buttons, FormControlModel, Methods, ObjectType, Suffix} from '../../../common/models/form-control.model';
 
 export class FormOrderConfig extends FormControlModel {
   class?: BootstrapClass;
   onTextInputTextarea?: boolean;
-  childField?: FormOrder;
+  childField?: ChildFormOrder;
+  formArrayActions?: FormArrayActions;
 
   customValidators?: any[];
   errorMessages?: ObjectType;
@@ -48,4 +48,17 @@ export class FormOrderConfig extends FormControlModel {
     this.multi = false;
     this.svc = 'svc';
   }
+}
+
+class ChildFormOrder {
+  [key: string]: FormOrderConfig;
+}
+
+class FormArrayActions {
+  buttons?: Buttons;
+  addButtonLabel?: string;
+  disableAddButton?: boolean;
+  deleteButtonLabel?: string;
+  disableDeleteButton?: boolean;
+  resetButtonLabel?: string;
 }

@@ -10,6 +10,6 @@
     <mat-icon *ngIf="field?.suffix && field?.suffix?.type === 'icon'">{{field?.suffix?.text}}</mat-icon>
     <span *ngIf="field?.suffix && field?.suffix.type === 'text'">{{field?.suffix?.text}}</span>
 
-    <mat-error *ngFor="let error of errorMessages">{{error}}</mat-error>
+    <mat-error>{{errorMessages}}</mat-error>
   </mat-form-field>
 </div>

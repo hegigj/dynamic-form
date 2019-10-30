@@ -1,0 +1,17 @@
+.form-array {
+  box-shadow: 0 3px 20px -12px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  padding: 15px;
+  margin: 5px 0;
+}
+
+.not-valid{
+  background-color: rgba(244, 67, 54, 0.02);
+}
+
+.form-array-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+}

@@ -17,7 +17,7 @@ export class DecimalInputComponent implements OnInit, OnDestroy {
   @Input() fg: FormGroup;
 
   valueChanges: Subscription;
-  errorMessages: string[] = [];
+  errorMessages: string;
   constructor() { }
 
   ngOnInit() {
@@ -30,16 +30,15 @@ export class DecimalInputComponent implements OnInit, OnDestroy {
 
   private _checkForErrors() {
     this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
-      if (this.field.errorMessages) {
-        if (this.fg.controls[this.field.fieldName].errors) {
-          Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
-            if (this.errorMessages.indexOf(this.field.errorMessages[key]) === -1) {
-              this.errorMessages.push(this.field.errorMessages[key]);
-            }
-          });
-        } else {
-          this.errorMessages = [];
-        }
+      if (this.fg.controls[this.field.fieldName].errors) {
+        this.errorMessages = '';
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
+          if (this.field.errorMessages && this.field.errorMessages[key]) {
+            this.errorMessages = this.field.errorMessages[key];
+          }
+        });
+      } else {
+        this.errorMessages = '';
       }
     });
   }

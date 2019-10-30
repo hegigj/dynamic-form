@@ -52,7 +52,7 @@ export class RequestComponent implements OnInit {
     //     'fieldLabel': 'Insert Date',
     //     'inputType': 'DATE_INPUT',
     //     'canGet': true,
-    //     'canPost': false,
+    //     'canPost': true,
     //     'canPut': false,
     //     'constraintList': {},
     //     'childFieldMeta': {}
@@ -62,13 +62,13 @@ export class RequestComponent implements OnInit {
     //     'fieldLabel': 'Title',
     //     'inputType': 'TEXT_INPUT',
     //     'canGet': true,
-    //     'canPost': false,
+    //     'canPost': true,
     //     'canPut': false,
     //     'constraintList': {
     //       'Size': {
     //         'type': 'Size',
     //         'message': 'The size of this string is not valid',
-    //         'min': 0,
+    //         'min': 15,
     //         'max': 500
     //       },
     //       'NotNull': {
@@ -83,13 +83,13 @@ export class RequestComponent implements OnInit {
     //     'fieldLabel': 'Description',
     //     'inputType': 'TEXT_INPUT',
     //     'canGet': true,
-    //     'canPost': false,
+    //     'canPost': true,
     //     'canPut': false,
     //     'constraintList': {
     //       'Size': {
     //         'type': 'Size',
     //         'message': 'The size of this string is not valid',
-    //         'min': 0,
+    //         'min': 45,
     //         'max': 1024
     //       }
     //     },
@@ -100,7 +100,7 @@ export class RequestComponent implements OnInit {
     //     'fieldLabel': 'Insert Operator',
     //     'inputType': 'TEXT_INPUT',
     //     'canGet': true,
-    //     'canPost': false,
+    //     'canPost': true,
     //     'canPut': false,
     //     'constraintList': {
     //       'Size': {
@@ -138,18 +138,19 @@ export class RequestComponent implements OnInit {
     //     'canPut': true,
     //     'constraintList': {},
     //     'childFieldMeta': {
-    //       'questionDescription': {
-    //         'fieldName': 'questionDescription',
-    //         'fieldLabel': 'Description',
+    //       'questionTitle': {
+    //         'value': 'Question 1',
+    //         'fieldName': 'questionTitle',
+    //         'fieldLabel': 'Question Title',
     //         'inputType': 'TEXT_INPUT',
     //         'canGet': true,
-    //         'canPost': false,
+    //         'canPost': true,
     //         'canPut': false,
     //         'constraintList': {
     //           'Size': {
     //             'type': 'Size',
     //             'message': 'The size of this string is not valid',
-    //             'min': 0,
+    //             'min': 10,
     //             'max': 500
     //           },
     //           'NotNull': {
@@ -159,49 +160,18 @@ export class RequestComponent implements OnInit {
     //         },
     //         'childFieldMeta': {}
     //       },
-    //       'surveyId': {
-    //         'fieldName': 'surveyId',
-    //         'fieldLabel': 'com.teamdae.unisat.model.survey.SurveyQuestion.surveyId.label',
+    //       'questionDescription': {
+    //         'fieldName': 'questionDescription',
+    //         'fieldLabel': 'Description',
     //         'inputType': 'TEXT_INPUT',
-    //         'canGet': false,
-    //         'canPost': false,
+    //         'canGet': true,
+    //         'canPost': true,
     //         'canPut': false,
     //         'constraintList': {
     //           'Size': {
     //             'type': 'Size',
     //             'message': 'The size of this string is not valid',
-    //             'min': 15,
-    //             'max': 15
-    //           },
-    //           'NotNull': {
-    //             'type': 'NotNull',
-    //             'message': 'The value must not be null'
-    //           }
-    //         },
-    //         'childFieldMeta': {}
-    //       },
-    //       'orderNo': {
-    //         'fieldName': 'orderNo',
-    //         'fieldLabel': 'com.teamdae.unisat.model.survey.SurveyQuestion.orderNo.label',
-    //         'inputType': 'INTEGER_INPUT',
-    //         'canGet': false,
-    //         'canPost': false,
-    //         'canPut': false,
-    //         'constraintList': {},
-    //         'childFieldMeta': {}
-    //       },
-    //       'questionTitle': {
-    //         'fieldName': 'questionTitle',
-    //         'fieldLabel': 'Question Title',
-    //         'inputType': 'TEXT_INPUT',
-    //         'canGet': false,
-    //         'canPost': false,
-    //         'canPut': false,
-    //         'constraintList': {
-    //           'Size': {
-    //             'type': 'Size',
-    //             'message': 'The size of this string is not valid',
-    //             'min': 0,
+    //             'min': 25,
     //             'max': 500
     //           },
     //           'NotNull': {
@@ -215,8 +185,8 @@ export class RequestComponent implements OnInit {
     //         'fieldName': 'options',
     //         'fieldLabel': 'Options',
     //         'inputType': 'INPUT_TABLE',
-    //         'canGet': false,
-    //         'canPost': false,
+    //         'canGet': true,
+    //         'canPost': true,
     //         'canPut': false,
     //         'constraintList': {},
     //         'childFieldMeta': {}
@@ -225,8 +195,8 @@ export class RequestComponent implements OnInit {
     //         'fieldName': 'questionType',
     //         'fieldLabel': 'Type',
     //         'inputType': 'COMBO_BOX',
-    //         'canGet': false,
-    //         'canPost': false,
+    //         'canGet': true,
+    //         'canPost': true,
     //         'canPut': false,
     //         'constraintList': {
     //           'Size': {
@@ -299,7 +269,7 @@ export class RequestComponent implements OnInit {
     //         'fieldName': 'required',
     //         'fieldLabel': 'Required',
     //         'inputType': 'CHECK_BOX',
-    //         'canGet': false,
+    //         'canGet': true,
     //         'canPost': false,
     //         'canPut': false,
     //         'constraintList': {},

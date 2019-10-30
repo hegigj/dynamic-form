@@ -13,7 +13,7 @@
            [value]="area | date: 'MMM dd yyyy, HH:mm'"
            (click)="openDP(dp, i)">
 
-    <mat-error *ngFor="let error of errorMessages">{{error}}</mat-error>
+    <mat-error>{{errorMessages}}</mat-error>
 
     <button mat-icon-button
             matSuffix

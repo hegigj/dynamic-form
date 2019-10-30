@@ -65,7 +65,8 @@
     <div *ngSwitchCase="'INPUT_TABLE'">
       <app-form-array [fg]="fg"
                       [field]="field"
-                      [fieldArray]="fg?.get(field?.fieldName)"></app-form-array>
+                      [fieldArray]="fg?.get(field?.fieldName)"
+                      [appearance]="appearance"></app-form-array>
     </div>
   </div>
 

@@ -21,7 +21,7 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
   index: number;
 
   valueChanges: Subscription;
-  errorMessages: string[] = [];
+  errorMessages: string;
 
   constructor(private _atp: AmazingTimePickerService,
               private _fcs: FormControlService) { }
@@ -103,15 +103,15 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
   private _checkForErrors() {
     const formArrayControl = (<FormArray>this.fg.controls[this.field.fieldName]).at(this.index !== this.i ? this.i : this.index);
     this.valueChanges = formArrayControl.valueChanges.subscribe(() => {
-      if (this.field.errorMessages) {
-        if (formArrayControl.errors) {
-          this.errorMessages = [];
-          Object.keys(formArrayControl.errors).forEach((key) => {
-            this.errorMessages.push(this.field.errorMessages[key]);
-          });
-        } else {
-          this.errorMessages = [];
-        }
+      if (this.fg.controls[this.field.fieldName].errors) {
+        this.errorMessages = '';
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
+          if (this.field.errorMessages && this.field.errorMessages[key]) {
+            this.errorMessages = this.field.errorMessages[key];
+          }
+        });
+      } else {
+        this.errorMessages = '';
       }
     });
   }
