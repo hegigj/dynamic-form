@@ -155,7 +155,12 @@ export class RequestsComponent implements OnInit, OnDestroy {
     matrix = this.minColumnScan(matrix);
     this.rowAndColumnScanZeros(matrix);
     this._optimumSolution$.subscribe((response) => {
-      console.log(response);
+      matrix = response;
+      const idealTime = [];
+      matrix.forEach((position: any) => {
+        idealTime.push(this.matrix[position.row][position.column]);
+      });
+      console.log('IDEAL TIME: ', idealTime);
     });
   }
 
@@ -204,7 +209,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
   }
 
   rowAndColumnScanZeros(matrix, useDiagonals?) {
-    console.log('Row and column scan ZEROS', new Date().valueOf());
+    console.log('Row and column scan ZEROS');
     if (useDiagonals) {
       matrix = this.rowDiagonalScan(matrix);
     } else {
@@ -217,9 +222,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
       matrix = this.rowScan(matrix, cellIndex);
       matrix = this.columnScan(matrix, cellIndex);
     }
-    matrix = this.areAllZerosCovered(matrix);
-    console.log(matrix, new Date().valueOf());
-    this._optimumSolution.next(matrix);
+    this.areAllZerosCovered(matrix);
   }
 
   rowScan(matrix, cellIndex) {
@@ -296,8 +299,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
     });
     if (zerosAreCovered) {
       console.log('- Yes they are');
-      matrix = this.markedZerosEqualToRows(matrix);
-      return matrix;
+      this.markedZerosEqualToRows(matrix);
     } else {
       console.log('- No they aren\'t');
       this.rowAndColumnScanZeros(matrix, true);
@@ -316,7 +318,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
     });
     if (markedZeros.length === matrix.length) {
       console.log('- Yes there are');
-      return markedZeros;
+      this._optimumSolution.next(markedZeros);
     } else {
       console.log('- No there aren\'t');
       this.identifyUncoveredValue(matrix);
