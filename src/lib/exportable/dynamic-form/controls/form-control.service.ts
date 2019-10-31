@@ -7,10 +7,17 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {TimezonePipe} from '../../../common/controls/timezone.pipe';
 import {FieldMapModel} from '../../../common/models/fieldMap.model';
 
+interface Field {
+  field: FieldMapModel;
+  order?: FormOrderConfig;
+  method?: string | 'POST' | 'PUT';
+}
+
 @Injectable()
 export class FormControlService {
   private _order: FormOrder;
   private _form: FormGroup;
+  private _field: Field;
   private _formArray: FormArray;
 
   private _formValidity: BehaviorSubject<string> = new BehaviorSubject<string>(null);
@@ -82,20 +89,37 @@ export class FormControlService {
     return this._formValidity.asObservable();
   }
 
+  public deleteFormArray(index: number) {
+    this._formArray.removeAt(index);
+  }
+
+  public addFormArray(index?: number, field?: Field) {
+    if (index) {
+      this._formArray.length > (index + 1) ?
+        this._formArray.insert(index + 1, this._formArrayForm(field ? field : this._field)) :
+        this._formArray.push(this._formArrayForm(field ? field : this._field));
+    } else {
+      this._formArray.push(this._formArrayForm(field ? field : this._field));
+    }
+  }
+
   public create(fields: FormOrderConfig[], method?: string) {
     const formGroup = this._fgCreator(fields, method);
+    console.log(formGroup, this._formArray);
     return new FormGroup(formGroup);
   }
 
   private _fgCreator(fields: FormOrderConfig[], method?: string) {
     const fg: any = {};
     fields.forEach((field) => {
+      // set value of the controller
       const value = field.value ? field.value : '';
+      // set if the controller is disabled or not
       const disabled = field.disabled !== undefined ? field.disabled :
         method === 'POST' ? !field.canPost :
           method === 'PUT' ? !field.canPut :
             true;
-
+      // create the controller
       if (field.canGet) {
         Object.assign(fg,
           {
@@ -104,7 +128,7 @@ export class FormControlService {
                 this._formArrayControl(value, disabled, this._validators(field, field.constraintList, field.required))
               ) : field.inputType.match(/TABLE/g) ?
               this._formBuilder.array(
-                  [this._formArrayForm(field.childFieldMeta, field.childField, method)]
+                  [this._formArrayForm({field: field.childFieldMeta, order: field.childField, method: method})]
               ) : new FormControl(
                 {value: value, disabled: disabled},
                 this._setValidator(field, method) ? [] : this._validators(field, field.constraintList, field.required)
@@ -112,26 +136,35 @@ export class FormControlService {
           }
         );
       }
+      // check if the controller is an FormArray
+      if (fg[field.fieldName] instanceof FormArray) {
+        this._field = {field: field.childFieldMeta, order: field.childField, method: method};
+        this._formArray = fg[field.fieldName];
+      }
     });
     return fg;
   }
 
-  private _formArrayForm(field: FieldMapModel, order?: FormOrderConfig, method?: string): FormGroup {
-    const fieldArray: FormOrderConfig[] = [];
-    Object.keys(order ? order : field).forEach(key => {
-      if (order) {
-        Object.assign(field[key], order[key]);
-      } fieldArray.push(field[key]);
+  private _formArrayForm(field: Field): FormGroup {
+    let hasValue: boolean;
+    const _formArray: FormOrderConfig[] = [];
+    Object.keys(field.order ? field.order : field.field).forEach((key) => {
+      if (field.order) {
+        // noinspection TsLint
+        if (field.order[key].value !== undefined) hasValue = true;
+        Object.assign(field.field[key], field.order[key]);
+      }
+      _formArray.push(field.field[key]);
     });
-    const form = this._fgCreator(fieldArray, method);
-    return this._formBuilder.group(form);
+    const _formGroup = this._fgCreator(_formArray, field.method ? field.method : hasValue ? 'PUT' : 'POST');
+    return this._formBuilder.group(_formGroup);
   }
 
   private _formArrayControl(values: any, disabled: boolean, validators: ValidatorFn | any) {
     const formArray = [];
     typeof values === 'object' ? values.forEach((value) => {
-        formArray.push(new FormControl({value: value, disabled: disabled}, validators));
-      }) : formArray.push(new FormControl({value: values, disabled: disabled}, validators));
+              formArray.push(new FormControl({value: value, disabled: disabled}, validators));
+            }) : formArray.push(new FormControl({value: values, disabled: disabled}, validators));
     return formArray;
   }
 
