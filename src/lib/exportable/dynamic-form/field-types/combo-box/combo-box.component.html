@@ -2,17 +2,17 @@
   <mat-form-field *ngIf="display" [appearance]="appearance" style="width: 100%">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}</mat-label>
     <input matInput
+           [value]="selected"
            [matAutocomplete]="af"
            [formControlName]="field?.fieldName"
            [placeholder]="appearance ? '' : field?.fieldLabel"
-           [value]="field.selectValue ? field?.selectValue : field?.value ? field?.value : ''"
-           (keyup)="keyup($event?.srcElement?.value)" (change)="change()" (focus)="focus()">
+           (keyup)="_keyup($event?.srcElement?.value)" (change)="_change()" (focus)="_focus()">
 
     <mat-icon matSuffix>arrow_drop_down</mat-icon>
 
     <mat-autocomplete #af="matAutocomplete">
       <mat-option *ngFor="let opt of options ? (options | async) : field?.fieldDataPool ? field?.fieldDataPool?.list : fieldDataPool"
-                  [value]="opt?.id"
+                  [value]="opt.id"
                   (click)="setLabel(opt)">
         {{opt | option: selectLabel}}
       </mat-option>

@@ -290,7 +290,10 @@ export class RequestComponent implements OnInit {
     // FORM ORDER FILL DATA AND SPECIFY METHOD ---------------------------------------------------------------------------
     this.method = this.requestId ? 'PUT' : 'POST';
     this.order = {
-      id: {disabled: true},
+      id: {
+        display: this.method === 'PUT',
+        disabled: true
+      },
       employeeId: {
         class: 'col-12',
         value: this.employeeId,
@@ -300,12 +303,10 @@ export class RequestComponent implements OnInit {
       requestTypeId: {
         class: 'col-12',
         value: 'POOL00000000082',
-        display: false,
         selectValue: 'labelMap.requestTypeId',
         canReset: false
       },
       insertDate: {
-        display: false,
         value: new TimezonePipe().transform(this.date),
         canReset: false
       },
@@ -333,15 +334,25 @@ export class RequestComponent implements OnInit {
         class: 'col-12',
         onTextInputTextarea: true
       },
+      approvementId: {
+        class: 'col-6',
+        value: 'POOL00000000043',
+        display: this.method === 'PUT',
+        selectValue: 'labelMap.approvementId'
+      },
       managerNotes: {
         class: 'col-6',
+        display: this.method === 'PUT'
+      },
+      authorizationId: {
+        class: 'col-6',
+        value: 'POOL00000000040',
         display: this.method === 'PUT',
-        onTextInputTextarea: true
+        selectValue: 'labelMap.authorizationId'
       },
       directorNotes: {
         class: 'col-6',
-        display: this.method === 'PUT',
-        onTextInputTextarea: true
+        display: this.method === 'PUT'
       }
     };
     // -------------------------------------------------------------------------------------------------------------------

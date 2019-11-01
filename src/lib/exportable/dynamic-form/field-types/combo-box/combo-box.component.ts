@@ -21,12 +21,26 @@ export class ComboBoxComponent implements OnInit {
   options: Observable<AbstractModel[] | any>;
   params = {pageNo: 1, pageSize: -1};
   selectLabel = '';
+  selected = '';
 
   constructor(private _frp: ProviderService) { }
 
   ngOnInit() {
     this.selectLabel = this.field.selectLabel ? this.field.selectLabel : this.field.fieldRestVal ? this.field.fieldRestVal : 'someLabel';
     this._filteredFields();
+    this._filledField();
+  }
+
+  private _filledField() {
+    if (this.field.value) {
+      setTimeout(() => {
+        if (this.field.selectValue === undefined) {
+          this.field.selectValue = this.field.fieldDataPool ?
+            this.field.fieldDataPool.list.find(sv => sv.id === this.field.value)[this.selectLabel] :
+            this.fieldDataPool.find(sv => sv.id === this.field.value)[this.selectLabel];
+        } this.selected = this.field.selectValue ? this.field.selectValue : this.field.value;
+      });
+    }
   }
 
   private _filteredFields() {
@@ -52,16 +66,23 @@ export class ComboBoxComponent implements OnInit {
   }
 
   setLabel(option) {
-    if (this.selectLabel.match(/[a-zA-z_]+\s[a-zA-z_]+/g)) {
-      this.field.selectValue = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
-    } else if (this.selectLabel.match(/\./g)) {
-      this.field.selectValue = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
+    if (typeof option === 'object') {
+      this.selected = '';
+      setTimeout(() => {
+        if (this.selectLabel.match(/\s/g)) {
+          this.selected = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
+        } else if (this.selectLabel.match(/\./g)) {
+          this.selected = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
+        } else {
+          this.selected = option[this.selectLabel];
+        }
+      });
     } else {
-      this.field.selectValue = option[this.selectLabel];
+      this.selected = option;
     }
   }
 
-  keyup(value) {
+  _keyup(value) {
     if (this.field.methods && this.field.methods['keyup']) {
       this.field.methods['keyup'](value);
     } else if (this.field.fieldRestPool) {
@@ -70,13 +91,13 @@ export class ComboBoxComponent implements OnInit {
     }
   }
 
-  change() {
+  _change() {
     if (this.field.methods && this.field.methods['change']) {
       this.field.methods['change']();
     }
   }
 
-  focus() {
+  _focus() {
     if (this.field.methods && this.field.methods['focus']) {
       this.field.methods['focus']();
     } else if (this.field.fieldRestPool) {

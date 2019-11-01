@@ -2,3 +2,7 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   display: none;
 }
+
+mat-form-field {
+  width: 100%;
+}

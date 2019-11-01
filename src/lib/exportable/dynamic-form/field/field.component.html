@@ -6,25 +6,22 @@
       <app-text-input class="row"
                       [fg]="fg"
                       [field]="field"
-                      [notId]="notId"
                       [display]="display"
                       [appearance]="appearance"></app-text-input>
-    </div>
-
-    <div *ngSwitchCase="'DECIMAL_INPUT'">
-      <app-decimal-input class="row"
-                         [fg]="fg"
-                         [field]="field"
-                         [notId]="notId"
-                         [display]="display"
-                         [appearance]="appearance"></app-decimal-input>
     </div>
 
     <div *ngSwitchCase="'INTEGER_INPUT'">
       <app-decimal-input class="row"
                          [fg]="fg"
                          [field]="field"
-                         [notId]="notId"
+                         [display]="display"
+                         [appearance]="appearance"></app-decimal-input>
+    </div>
+
+    <div *ngSwitchCase="'DECIMAL_INPUT'">
+      <app-decimal-input class="row"
+                         [fg]="fg"
+                         [field]="field"
                          [display]="display"
                          [appearance]="appearance"></app-decimal-input>
     </div>
@@ -60,6 +57,15 @@
                            [display]="display"
                            [appearance]="appearance"
                            *ngIf="field?.multi"></app-combo-box-multi>
+    </div>
+
+    <div *ngSwitchCase="'COMBO_BOX_AREA'">
+      <app-combo-box-multi class="row"
+                           [fg]="fg"
+                           [field]="field"
+                           [fieldDataPool]="fieldDataPool"
+                           [display]="display"
+                           [appearance]="appearance"></app-combo-box-multi>
     </div>
 
     <div *ngSwitchCase="'INPUT_TABLE'">

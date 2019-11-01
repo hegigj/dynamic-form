@@ -1,7 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FormOrderConfig} from '../../models/form-order-config';
-import {ObjectType} from '../../../../common/models/form-control.model';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -10,7 +9,6 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./decimal-input.component.css']
 })
 export class DecimalInputComponent implements OnInit, OnDestroy {
-  @Input() notId: boolean;
   @Input() display: boolean;
   @Input() appearance: string;
   @Input() field: FormOrderConfig;

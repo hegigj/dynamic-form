@@ -1,3 +1,7 @@
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-suffix {
   display: flex!important;
 }
+
+mat-form-field {
+  width: 100%;
+}

@@ -14,12 +14,10 @@ export class FieldComponent implements OnInit {
   @Input() appearance: string;
 
   display: boolean;
-  notId: boolean;
 
   constructor() {}
 
   ngOnInit() {
     this.display = this.field.display !== undefined ? this.field.display : true;
-    this.notId = this.field.fieldName !== 'id';
   }
 }

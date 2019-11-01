@@ -34,6 +34,7 @@ import {GetFormDirective} from './controls/get-form.directive';
 import {ResetFormDirective} from './controls/reset-form.directive';
 import {ProviderService} from '../../common/controls/provider.service';
 import {ControlsModule} from '../../common/controls/controls.module';
+import {CheckFormDirective} from './controls/check-form.directive';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {ControlsModule} from '../../common/controls/controls.module';
     DateInputAreaComponent,
     DecimalInputComponent,
     TextInputComponent,
+    CheckFormDirective,
     ResetFormDirective,
     GetFormDirective
   ],
@@ -72,7 +74,7 @@ import {ControlsModule} from '../../common/controls/controls.module';
     MatDatepickerModule,
     ProviderService
   ],
-  exports: [FormComponent, GetFormDirective, ResetFormDirective]
+  exports: [FormComponent, GetFormDirective, ResetFormDirective, CheckFormDirective]
 })
 
 export class DynamicFormModule {

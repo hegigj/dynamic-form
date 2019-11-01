@@ -9,7 +9,6 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./text-input.component.css']
 })
 export class TextInputComponent implements OnInit, OnDestroy {
-  @Input() notId: boolean;
   @Input() display: boolean;
   @Input() appearance: string;
   @Input() field: FormOrderConfig;

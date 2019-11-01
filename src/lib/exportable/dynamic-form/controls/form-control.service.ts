@@ -17,7 +17,7 @@ interface Field {
 export class FormControlService {
   private _order: FormOrder;
   private _form: FormGroup;
-  private _field: Field;
+  private _fieldArray: Field;
   private _formArray: FormArray;
 
   private _formValidity: BehaviorSubject<string> = new BehaviorSubject<string>(null);
@@ -25,32 +25,29 @@ export class FormControlService {
   constructor(private _formBuilder: FormBuilder) {}
 
   setTimestamp$(control: {fieldName: string, isArray?: number}, timestamp: {date?: string, time?: string}): void {
-    let date: string = timestamp.date;
-    let time: string = timestamp.time;
+    const date: string = timestamp.date;
+    const time: string = timestamp.time;
+    let oldDate: string, oldTime: string;
     let formControl: AbstractControl = this._form.controls[control.fieldName];
     if (control.isArray >= 0) {
       formControl = (<FormArray>formControl).at(control.isArray);
     }
-
-    if (date && time) {
-      formControl.setValue(`${date}T${time}`);
-    } else if (date) {
-      if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        time = formControl.value.split('T')[1];
-        formControl.setValue(`${date}T${time}`);
-      } else {
-        formControl.setValue(`${date}T00:00:00`);
-      }
-    } else if (time) {
-      if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
-        date = formControl.value.split('T')[0];
-        formControl.setValue(`${date}T${time}`);
-      } else {
-        formControl.setValue(`${new TimezonePipe().transform(new Date()).split('T')[0]}T${time}`);
-      }
-    } else {
-      formControl.setValue('');
+    if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
+      oldDate = formControl.value.split('T')[0];
+      oldTime = formControl.value.split('T')[1];
     }
+    formControl.setValue('');
+    setTimeout(() => {
+      if (date && time) {
+        formControl.setValue(`${date}T${time}`);
+      } else if (date) {
+        formControl.setValue(`${date}T${oldTime ? oldTime : '00:00:00'}`);
+      } else if (time) {
+        formControl.setValue(`${oldDate ? oldDate : new TimezonePipe().transform(new Date()).split('T')[0]}T${time}`);
+      } else {
+        formControl.setValue('');
+      }
+    });
   }
 
   setForm$(form: FormGroup, order?: FormOrder, validity?: string) {
@@ -96,16 +93,15 @@ export class FormControlService {
   public addFormArray(index?: number, field?: Field) {
     if (index) {
       this._formArray.length > (index + 1) ?
-        this._formArray.insert(index + 1, this._formArrayForm(field ? field : this._field)) :
-        this._formArray.push(this._formArrayForm(field ? field : this._field));
+        this._formArray.insert(index + 1, this._formArrayForm(field ? field : this._fieldArray)) :
+        this._formArray.push(this._formArrayForm(field ? field : this._fieldArray));
     } else {
-      this._formArray.push(this._formArrayForm(field ? field : this._field));
+      this._formArray.push(this._formArrayForm(field ? field : this._fieldArray));
     }
   }
 
   public create(fields: FormOrderConfig[], method?: string) {
     const formGroup = this._fgCreator(fields, method);
-    console.log(formGroup, this._formArray);
     return new FormGroup(formGroup);
   }
 
@@ -138,7 +134,7 @@ export class FormControlService {
       }
       // check if the controller is an FormArray
       if (fg[field.fieldName] instanceof FormArray) {
-        this._field = {field: field.childFieldMeta, order: field.childField, method: method};
+        this._fieldArray = {field: field.childFieldMeta, order: field.childField, method: method};
         this._formArray = fg[field.fieldName];
       }
     });

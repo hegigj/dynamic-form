@@ -23,7 +23,7 @@
     <span style="flex: 1 1 auto"></span>
 
     <!--DYNAMIC FORM GET FORM AND RESET FORM DIRECTIVES HTML USAGE-->
-    <button *ngIf="context === 'NEW'" mat-button color="primary" appGetForm (form)="insertRequest($event)" disabled>Insert</button>
+    <button mat-button color="primary" appGetForm (form)="insertRequest($event)" disabled>{{context === 'NEW' ? 'Insert' : 'Update'}}</button>
     <button *ngIf="context === 'NEW'" mat-button color="warn" appResetForm>Reset</button>
     <!-------------------------------------------------------------->
   </div>
