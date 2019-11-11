@@ -1,16 +1,18 @@
 <div class="col" [formGroup]="fg" *ngIf="fg && filter">
-  <mat-form-field class="col">
+  <mat-form-field style="width: 100%">
     <input matInput
+           [value]="selected"
            [matAutocomplete]="ac"
-           [formControlName]="filter?.fieldName"
            [placeholder]="filter?.fieldLabel"
-           [value]="selectFilterValue()"
+           [formControlName]="filter?.fieldName"
            (keyup)="keyup($event?.srcElement?.value)" (focus)="focus()" (change)="change()">
+
     <mat-icon matSuffix>arrow_drop_down</mat-icon>
+
     <mat-autocomplete #ac="matAutocomplete">
       <mat-option *ngFor="let option of options ? (options | async) : filter?.fieldDataPool ? filter?.fieldDataPool?.list : fieldDataPool"
                   [value]="option?.id"
-                  (click)="addSelectFilter(option)">
+                  (click)="setLabel(option)">
         {{option | option: selectLabel}}
       </mat-option>
     </mat-autocomplete>

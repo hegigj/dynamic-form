@@ -1,8 +1,8 @@
 <div class="col" [formGroup]="fg" *ngIf="fg && filter">
-  <mat-form-field class="col">
+  <mat-form-field style="width: 100%">
     <input matInput
            [formControlName]="filter?.fieldName"
            [placeholder]="filter?.fieldLabel"
-           (keyup)="addKeyUpFilter($event?.srcElement?.value)" (change)="change()">
+           (change)="change()">
   </mat-form-field>
 </div>

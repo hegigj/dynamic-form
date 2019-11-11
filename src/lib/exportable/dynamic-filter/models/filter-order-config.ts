@@ -1,6 +1,9 @@
 import {FormControlModel, Methods} from '../../../common/models/form-control.model';
 
 export class FilterOrderConfig extends FormControlModel {
+  value?: string | any;
+
+  selectValue?: string | any;
   selectLabel?: string | any;
   required?: boolean;
   disabled?: boolean;

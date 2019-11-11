@@ -3,70 +3,59 @@
   <mat-expansion-panel #filtersAccordion>
 
     <mat-expansion-panel-header>
-      <mat-icon style="display:flex;align-self:center">filter_list</mat-icon>
-
+      <mat-icon [matTooltip]="filterLabel">filter_list</mat-icon>
       <mat-panel-title>
         <mat-chip-list>
-          <mat-chip style="background-color: rgba(4, 91, 161, 0.02)"
-                    (click)="filtersAccordion.toggle()">
-            Filters
-            <mat-icon matChipRemove
-                      *ngIf="filterChipArray?.length > 0"
-                      (click)="removeAllFilters()">cancel</mat-icon>
+
+          <mat-chip class="filter" (click)="filtersAccordion.toggle()">
+            {{filterLabel}}
+            <mat-icon matChipRemove (click)="removeAllFilters()" *ngIf="filterChipArray?.length > 0">cancel</mat-icon>
           </mat-chip>
 
-          <mat-chip *ngFor="let filter of filterChipArray;let i = index"
+          <mat-chip *ngFor="let chip of filterChipArray;let i = index"
                     matTooltipPosition="above"
-                    [matTooltip]="filterMap[filter?.id] ? filterMap[filter?.id].fieldLabel : filter?.id"
-                    [removable]="true" (removed)="removeFilter(i, filter?.id)">
-            {{filter?.someLabel}}
+                    [matTooltip]="chip.label"
+                    [removable]="true"
+                    (removed)="removeFilter(i)">
+            {{chip?.selectValue ? chip?.selectValue : chip.isDate ? (chip.value | date: 'MMM dd yyyy') : chip.value}}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
+
         </mat-chip-list>
       </mat-panel-title>
 
     </mat-expansion-panel-header>
 
     <form [formGroup]="filter" class="row" *ngIf="filter">
-      <div *ngFor="let filters of filtersArray">
+      <div *ngFor="let field of filtersArray">
 
-        <div [ngSwitch]="filters?.inputType">
+        <div [ngSwitch]="field?.inputType">
 
           <div *ngSwitchCase="'TEXT_INPUT'">
-            <app-text [fg]="filter" [filter]="filters"
-                      [filterChipArray]="filterChipArray"
-                      (returnFilterChipArray)="_returnFilters($event)"></app-text>
+            <app-text [fg]="filter" [filter]="field"></app-text>
           </div>
 
           <div *ngSwitchCase="'INTEGER_INPUT'">
-            <app-decimal [fg]="filter" [filter]="filters"
-                         [filterChipArray]="filterChipArray"
-                         (returnFilterChipArray)="_returnFilters($event)"></app-decimal>
+            <app-decimal [fg]="filter" [filter]="field"></app-decimal>
           </div>
 
           <div *ngSwitchCase="'DECIMAL_INPUT'">
-            <app-decimal [fg]="filter" [filter]="filters"
-                         [filterChipArray]="filterChipArray"
-                         (returnFilterChipArray)="_returnFilters($event)"></app-decimal>
+            <app-decimal [fg]="filter" [filter]="field"></app-decimal>
           </div>
 
           <div *ngSwitchCase="'DATE_INPUT'">
-            <app-date [fg]="filter" [filter]="filters"
-                      [filterChipArray]="filterChipArray"
-                      (returnFilterChipArray)="_returnFilters($event)"></app-date>
+            <app-date [fg]="filter" [filter]="field"></app-date>
           </div>
 
           <div *ngSwitchCase="'DATE_INPUT_BETWEEN'">
-            <app-date-between [fg]="filter" [filter]="filters"
-                              [filterChipArray]="filterChipArray"
-                              (returnFilterChipArray)="_returnFilters($event)"></app-date-between>
+            <app-date-between [fg]="filter" [filter]="field"
+                              [filterChipArray]="filterChipArray"></app-date-between>
           </div>
 
           <div *ngSwitchCase="'COMBO_BOX'">
-            <app-combo [fg]="filter" [filter]="filters"
+            <app-combo [fg]="filter" [filter]="field"
                        [fieldDataPool]="fieldDataPool"
-                       [filterChipArray]="filterChipArray"
-                       (returnFilterChipArray)="_returnFilters($event)"></app-combo>
+                       (returnSelection)="selectValueCombo = $event"></app-combo>
           </div>
         </div>
       </div>

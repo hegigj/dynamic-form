@@ -5,3 +5,12 @@
 /deep/ .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled=true]):hover {
   background-color: white!important;
 }
+
+mat-expansion-panel-header mat-icon {
+  display: flex;
+  align-items: center;
+}
+
+.filter {
+  background-color: rgba(4, 91, 161, 0.02);
+}

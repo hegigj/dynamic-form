@@ -1,6 +1,6 @@
 <!--Form Group-->
 <form class="row" [formGroup]="form" *ngIf="form">
-  <div *ngFor="let field of fieldArray" [class]="order ? field?.class ? field?.class : 'col-12' : 'col-12'">
+  <div *ngFor="let field of fieldArray" [class]="order ? (field?.class ? field?.class : 'col-12') : 'col-12'">
     <app-field [appearance]="appearance"
                [fg]="form" [field]="field"
                [fieldDataPool]="fieldDataPool"></app-field>

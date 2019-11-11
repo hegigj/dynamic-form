@@ -6,3 +6,7 @@ input::-webkit-inner-spin-button {
 mat-form-field {
   width: 100%;
 }
+
+.dynamic-field-wrapper {
+  width: 100%;
+}

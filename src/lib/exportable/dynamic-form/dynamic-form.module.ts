@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormComponent} from './form/form.component';
 import {FieldComponent} from './field/field.component';
 import {FormArrayComponent} from './field-types/form-array/form-array.component';
+import {CheckBoxComponent} from './field-types/check-box/check-box.component';
 import {ComboBoxComponent} from './field-types/combo-box/combo-box.component';
 import {ComboBoxMultiComponent} from './field-types/combo-box-multi/combo-box-multi.component';
 import {DateInputComponent} from './field-types/date-input/date-input.component';
@@ -21,9 +22,10 @@ import {
   MatInputModule,
   MatNativeDateModule,
   MatSelectModule,
+  MatSlideToggleModule,
   MatTooltipModule
 } from '@angular/material';
-import {FormArray, ReactiveFormsModule} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // External Libraries Imports
 import {AmazingTimePickerModule} from 'amazing-time-picker-angular6';
@@ -41,6 +43,7 @@ import {CheckFormDirective} from './controls/check-form.directive';
     FormComponent,
     FieldComponent,
     FormArrayComponent,
+    CheckBoxComponent,
     ComboBoxComponent,
     ComboBoxMultiComponent,
     DateInputComponent,
@@ -67,7 +70,8 @@ import {CheckFormDirective} from './controls/check-form.directive';
     MatDatepickerModule,
     MatNativeDateModule,
     MatExpansionModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSlideToggleModule,
   ],
   providers: [
     FormControlService,

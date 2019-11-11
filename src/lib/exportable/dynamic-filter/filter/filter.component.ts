@@ -3,9 +3,16 @@ import {FormGroup} from '@angular/forms';
 import {FilterControlService} from '../controls/filter-control.service';
 import {FieldMapModel} from '../../../common/models/fieldMap.model';
 import {ObjectType} from '../../../common/models/form-control.model';
-import {AbstractModel} from '../../../common/models/abstract.model';
 import {FilterOrder} from '../models/filter-order';
 import {FilterOrderConfig} from '../models/filter-order-config';
+
+interface FilterChip {
+  name: string;
+  label: string;
+  value: string;
+  selectValue?: string;
+  isDate?: boolean;
+}
 
 @Component({
   selector: 'app-filter',
@@ -21,13 +28,17 @@ export class FilterComponent implements OnInit {
 
   @Output() returnFilters = new EventEmitter<ObjectType>();
 
+  filterLabel: string;
+  selectValueCombo: string;
+
   filter: FormGroup;
-  filterChipArray: AbstractModel[] = [];
+  filterChipArray: FilterChip[] = [];
   filtersArray: FilterOrderConfig[] = [];
 
   constructor(private _fcs: FilterControlService) {}
 
   ngOnInit() {
+    this._setFilterLabel();
     if (this.filterMap && this.order) {
       this._setExtra();
       this._getFilter();
@@ -39,48 +50,87 @@ export class FilterComponent implements OnInit {
     }
   }
 
-  private _getFilter() {
-    Object.keys(this.order).forEach((order) => {
-      Object.keys(this.filterMap).forEach((key) => { if (key === order) { this.filtersArray.push(this.filterMap[key]); }});
-    });
+  private _setFilterLabel() {
+    let lang: string, i: string;
+    for (i in localStorage) {
+      // noinspection TsLint
+      if (i.match(/lang/gi)) lang = localStorage.getItem(i);
+    } this.filterLabel = lang === 'sq' ? 'Filtrat' : lang === 'it' ? 'Filtri' : 'Filters';
   }
 
   private _setExtra() {
-    if (this.order) {
-      Object.keys(this.order).forEach((key) => {
-        if (this.order[key]) {
-          Object.assign(this.filterMap[key], this.order[key]);
-        }
-      });
-    }
+    Object.keys(this.order).forEach(key => Object.assign(this.filterMap[key], this.order[key]));
+  }
+
+  private _getFilter() {
+    Object.keys(this.order).forEach((key) => this.filtersArray.push(this.filterMap[key]));
   }
 
   private _fgCreate() {
     this.filter = this._fcs.create(this.filtersArray);
+    this.filter.valueChanges.subscribe(filter => {
+      this._chipCreator(filter);
+      this._returnFilter();
+    });
   }
 
-  _returnFilters(filterChipArray?) {
-    const filters = {};
-    const controls = this.filter.value;
-    if (filterChipArray) { this.filterChipArray = filterChipArray; }
-    Object.keys(controls).forEach((key) => {
-      if (controls[key] !== null && controls[key] !== undefined && controls[key] !== '') {
-        Object.assign(filters, {[key]: controls[key]});
+  private _chipCreator(filter) {
+    Object.keys(filter).forEach((key) => {
+      if (typeof filter[key] === 'object') {
+
+      } else {
+        if (filter[key] !== '') {
+          this._ifExist(filter, key);
+        } else {
+          const deletableFilterIndex = this.filterChipArray.findIndex(chip => chip.name === key);
+          // noinspection TsLint
+          if (deletableFilterIndex !== -1) this.filterChipArray.splice(deletableFilterIndex, 1);
+        }
       }
-    }); this.returnFilters.emit(filters);
+    });
   }
 
-  removeFilter(index, control) {
+  private _ifExist(filter, key) {
+    const chipIndex = this.filterChipArray.findIndex(chip => chip.name === key);
+    setTimeout(() => {
+      if (chipIndex === -1) {
+        this.filterChipArray.push({
+          name: key,
+          label: this.filterMap[key].fieldLabel,
+          value: filter[key],
+          selectValue: this.filterMap[key].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
+          isDate: !!this.filterMap[key].inputType.match(/DATE/g)
+        });
+      } else {
+        this.filterChipArray[chipIndex] = {
+          name: key,
+          label: this.filterMap[key].fieldLabel,
+          value: filter[key],
+          selectValue: this.filterMap[key].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
+          isDate: !!this.filterMap[key].inputType.match(/DATE/g)
+        };
+      }
+    });
+  }
+
+  private _returnFilter() {
+    const filter = {};
+    this.filterChipArray.forEach(chip => Object.assign(filter, {[chip.name]: chip.value}));
+    this.returnFilters.emit(filter);
+  }
+
+  removeFilter(index) {
+    const control = this.filterChipArray[index].name;
     this.filterChipArray.splice(index, 1);
     control.match(/\./g) ?
       (this.filter.controls[control.split('.')[0]] as FormGroup).controls[control.split('.')[1]].setValue('') :
       this.filter.controls[control].setValue('');
-    this._returnFilters();
+    this._returnFilter();
   }
 
   removeAllFilters() {
     this.filterChipArray = [];
     this.filter.reset();
-    this._returnFilters();
+    this._returnFilter();
   }
 }

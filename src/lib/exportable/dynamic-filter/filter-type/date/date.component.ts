@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {DatePipe} from '@angular/common';
-import {AbstractModel} from '../../../../common/models/abstract.model';
 import {FilterOrderConfig} from '../../models/filter-order-config';
 import {TimezonePipe} from '../../../../common/controls/timezone.pipe';
+import {FilterControlService} from '../../controls/filter-control.service';
+import {AmazingTimePickerService} from 'amazing-time-picker-angular6';
 
 @Component({
   selector: 'app-date',
@@ -13,32 +14,45 @@ import {TimezonePipe} from '../../../../common/controls/timezone.pipe';
 export class DateComponent implements OnInit {
   @Input() fg: FormGroup;
   @Input() filter: FilterOrderConfig;
-  @Input() filterChipArray: AbstractModel[];
-
-  @Output() returnFilterChipArray = new EventEmitter();
 
   date: any;
 
-  constructor() { }
+  constructor(private _fcs: FilterControlService,
+              private _atp: AmazingTimePickerService) { }
 
   ngOnInit() {
     this.date = new DatePipe('en-GB');
   }
 
-  addDate(e) {
-    const timestamp = new TimezonePipe().transform(e);
-    this.fg.controls[this.filter.fieldName].setValue(timestamp);
-    this._ifExist(timestamp);
-    this.returnFilterChipArray.emit(this.filterChipArray);
+  openDP(control) {
+    control.open();
   }
 
-  private _ifExist(value) {
-    let changed = false, index = 0;
-    this.filterChipArray.forEach((object: AbstractModel, i: number) => {
-      if (object.id === this.filter.fieldName) { changed = !(changed); index = i; }
+  addDate(e) {
+    const date = new TimezonePipe().transform(e.value);
+    this._fcs.setTimestamp$(
+      {
+        fg: this.fg,
+        fieldName: this.filter.fieldName
+      },
+      {
+        date: date.split('T')[0]
+      }
+    );
+    this.addTime();
+  }
+
+  addTime() {
+    this._atp.open({theme: 'light'}).afterClose().subscribe((time: any) => {
+      this._fcs.setTimestamp$(
+        {
+          fg: this.fg,
+          fieldName: this.filter.fieldName
+        },
+        {
+          time: `${time}:00`
+        }
+      );
     });
-    !changed ?
-      this.filterChipArray.push({id: this.filter.fieldName, someLabel: this.date.transform(value, 'MMM dd yyyy')}) :
-      this.filterChipArray[index] = {id: this.filter.fieldName, someLabel: this.date.transform(value, 'MMM dd yyyy')};
   }
 }

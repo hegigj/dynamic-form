@@ -15,22 +15,33 @@ export class ComboComponent implements OnInit {
   @Input() fg: FormGroup;
   @Input() filter: FilterOrderConfig;
   @Input() fieldDataPool: AbstractModel[];
-  @Input() filterChipArray: AbstractModel[];
 
-  @Output() returnFilterChipArray = new EventEmitter();
+  @Output() returnSelection = new EventEmitter();
 
   options: Observable<AbstractModel[] | any>;
 
   params = {pageNo: 1, pageSize: -1};
-
   selectLabel = '';
-  select = '';
+  selected = '';
 
   constructor(public _frp: ProviderService) { }
 
   ngOnInit() {
     this.selectLabel = this.filter.selectLabel ? this.filter.selectLabel : this.filter.fieldRestVal ? this.filter.fieldRestVal : 'someLabel';
     this._filteredFilters();
+    this._filledField();
+  }
+
+  private _filledField() {
+    if (this.filter.value) {
+      setTimeout(() => {
+        if (this.filter.selectValue === undefined) {
+          this.filter.selectValue = this.filter.fieldDataPool ?
+            this.filter.fieldDataPool.list.find(sv => sv.id === this.filter.value)[this.selectLabel] :
+            this.fieldDataPool.find(sv => sv.id === this.filter.value)[this.selectLabel];
+        } this.selected = this.filter.selectValue ? this.filter.selectValue : this.filter.value;
+      });
+    }
   }
 
   private _filteredFilters() {
@@ -41,7 +52,9 @@ export class ComboComponent implements OnInit {
 
   private _filter(value: any): AbstractModel[] | any {
     const filter = value.toLowerCase();
-    const someLabel = this.filter.selectLabel ? this.filter.selectLabel : this.filter.fieldRestVal ? this.filter.fieldRestVal : 'someLabel';
+    const someLabel = this.filter.selectLabel ? this.filter.selectLabel :
+      this.filter.fieldRestVal ? this.filter.fieldRestVal :
+        'someLabel';
     if (this.filter.fieldDataPool) {
       return this.filter.fieldDataPool.list.filter(opt => {
         return opt[someLabel].toLowerCase().includes(filter);
@@ -54,41 +67,27 @@ export class ComboComponent implements OnInit {
   }
 
   setLabel(option) {
-    if (this.selectLabel.match(/[a-zA-z_]+\s[a-zA-z_]+/g)) {
-      this.select = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
-    } else if (this.selectLabel.match(/\./g)) {
-      this.select = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
+    if (typeof option === 'object') {
+      this.selected = '';
+      setTimeout(() => {
+        if (this.selectLabel.match(/\s/g)) {
+          this.selected = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
+        } else if (this.selectLabel.match(/\./g)) {
+          this.selected = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
+        } else {
+          this.selected = option[this.selectLabel];
+        } this.returnSelection.emit({name: this.filter.fieldName, value: option.id, selectValue: this.selected});
+      });
     } else {
-      this.select = option[this.selectLabel];
+      this.selected = option;
     }
   }
 
-  addSelectFilter(option) {
-    this.setLabel(option);
-    this._ifExist(this.select);
-    this.returnFilterChipArray.emit(this.filterChipArray);
-  }
-
-  selectFilterValue() {
-    const index = this.filterChipArray.findIndex(filter => filter.id === this.filter.fieldName);
-    return this.filterChipArray[index] ? this.filterChipArray[index].someLabel : '';
-  }
-
-  private _ifExist(value) {
-    let changed = false, index = 0;
-    this.filterChipArray.forEach((object: AbstractModel, i: number) => {
-      if (object.id === this.filter.fieldName) { changed = !(changed); index = i; }
-    });
-    changed ?
-      this.filterChipArray[index] = {id: this.filter.fieldName, someLabel: value} :
-      this.filterChipArray.push({id: this.filter.fieldName, someLabel: value});
-  }
-
-  keyup(e) {
+  keyup(value) {
     if (this.filter.methods && this.filter.methods['keyup']) {
-      this.filter.methods['keyup'](e);
+      this.filter.methods['keyup'](value);
     } else if (this.filter.fieldRestPool) {
-      this._frp.fieldRestPool(this.filter.svc, this.filter.fieldRestPool, this.filter.fieldRestVal, e, {paramBean: this.params})
+      this._frp.fieldRestPool(this.filter.svc, this.filter.fieldRestPool, this.filter.fieldRestVal, value, {paramBean: this.params})
         .subscribe((res: any) => this.fieldDataPool = res.list);
     }
   }

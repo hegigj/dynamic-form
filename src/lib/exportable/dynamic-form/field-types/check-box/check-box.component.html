@@ -1,0 +1,4 @@
+<div [formGroup]="fg" *ngIf="fg && field" class="dynamic-field-wrapper additional-padding">
+  <mat-slide-toggle [formControlName]="field?.fieldName"
+                    [checked]="field?.value" *ngIf="display">{{field?.fieldLabel}}</mat-slide-toggle>
+</div>

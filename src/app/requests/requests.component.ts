@@ -109,9 +109,9 @@ export class RequestsComponent implements OnInit, OnDestroy {
 
     // FILTER ORDER -------
     this.order = {
-      requestTypeId: {inputType: 'COMBO_BOX'},
+      requestTypeId: {},
       validationDate: {},
-      status: {inputType: 'COMBO_BOX'}
+      status: {}
     };
     // --------------------
 

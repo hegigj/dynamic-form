@@ -1,6 +1,6 @@
 <div [formGroup]="fg" *ngIf="fg && field && fieldArray">
   <div [formArrayName]="field?.fieldName" *ngFor="let abstractControl of fieldArray?.controls;let formGroupName = index">
-    <div class="row form-array"
+    <div class="row dynamic-form-array-wrapper"
          [formGroupName]="formGroupName" *ngIf="formFieldArray.length > 0"
          [ngClass]="{'not-valid': !abstractControl?.pristine && abstractControl?.invalid}">
       <div *ngFor="let control of formFieldArray" [class]="control?.class ? control?.class : 'col-12'">
@@ -9,7 +9,7 @@
                    [appearance]="appearance"></app-field>
       </div>
 
-      <div class="col-12 form-array-btn">
+      <div class="col-12 dynamic-form-array-btn">
         <span style="flex: 1 1 auto"></span>
         <button mat-button
                 color="primary"

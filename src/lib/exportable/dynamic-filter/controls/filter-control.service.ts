@@ -1,21 +1,46 @@
 import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormControlModel} from '../../../common/models/form-control.model';
 import {FilterOrderConfig} from '../models/filter-order-config';
+import {TimezonePipe} from '../../../common/controls/timezone.pipe';
 
 @Injectable()
 export class FilterControlService {
   constructor() {}
 
+  setTimestamp$(control: {fg: FormGroup, fieldName: string, isArray?: number}, timestamp: {date?: string, time?: string}): void {
+    const date: string = timestamp.date;
+    const time: string = timestamp.time;
+    let oldDate: string, oldTime: string;
+    let formControl: AbstractControl = control.fg.controls[control.fieldName];
+    if (control.isArray >= 0) {
+      formControl = (<FormArray>formControl).at(control.isArray);
+    }
+    if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
+      oldDate = formControl.value.split('T')[0];
+      oldTime = formControl.value.split('T')[1];
+    }
+    formControl.setValue('');
+    setTimeout(() => {
+      if (date && time) {
+        formControl.setValue(`${date}T${time}`);
+      } else if (date) {
+        formControl.setValue(`${date}T${oldTime ? oldTime : '00:00:00'}`);
+      } else if (time) {
+        formControl.setValue(`${oldDate ? oldDate : new TimezonePipe().transform(new Date()).split('T')[0]}T${time}`);
+      } else {
+        formControl.setValue('');
+      }
+    });
+  }
+
   create(fields: FormControlModel[]) {
-    let formGroup: any = {};
-
-    formGroup = this._fgCreator(formGroup, fields);
-
+    const formGroup: any = this._fgCreator(fields);
     return new FormGroup(formGroup);
   }
 
-  private _fgCreator(fg: any, fields: FilterOrderConfig[]) {
+  private _fgCreator(fields: FilterOrderConfig[]) {
+    const fg: any = {};
     fields.forEach((field) => {
       const disabled = field.disabled !== undefined ? field.disabled : false;
 
@@ -23,8 +48,14 @@ export class FilterControlService {
         {
           [field.fieldName]: field.inputType.match(/BETWEEN/g) ?
             new FormGroup({
-              min: new FormControl({value: '', disabled: disabled}),
-              max: new FormControl({value: '', disabled: disabled})
+              min: new FormControl(
+                {value: '', disabled: disabled},
+                Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')
+              ),
+              max: new FormControl(
+                {value: '', disabled: disabled},
+                Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')
+              )
             }) : new FormControl(
               {value: '', disabled: disabled},
               this._validators(field.constraintList, field.required)
@@ -36,6 +67,7 @@ export class FilterControlService {
 
   private _validators(field: any, required?) {
     const validatorsArray = [];
+    const timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
     Object.keys(field).forEach((key) => {
       if (key === 'Size') {
         validatorsArray.push(Validators.minLength(field[key].min));
@@ -51,10 +83,11 @@ export class FilterControlService {
         validatorsArray.push(Validators.required);
       }
       if (key === 'Pattern') {
-        if (!field[key].regexp.match(/yyyy-MM-dd/g)) {
-          validatorsArray.push(Validators.pattern(field[key].regexp));
-        }
+        validatorsArray.push(
+          Validators.pattern(field[key].regexp.match(/yyyy-MM-dd'T'HH:mm:ss/g) ? timestampPattern : field[key].regexp)
+        );
       }
-    }); return validatorsArray;
+    });
+    return validatorsArray;
   }
 }

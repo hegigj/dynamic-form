@@ -54,7 +54,7 @@ export class FormComponent implements OnInit {
 
   private _setMetaSelectedValue(key?) {
     if (this.values && this.order[key].selectValue) {
-      const selectValue = this.order[key].selectValue;
+      const selectValue: string = this.order[key].selectValue;
       this.order[key].selectValue =
         selectValue.match(/\s/g) ? `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` :
           selectValue.match(/\./g) ? this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] :
@@ -66,37 +66,32 @@ export class FormComponent implements OnInit {
 
   private _setValue() {
     if (this.values) {
-      Object.keys(this.fields).forEach((key) => {
-        Object.assign(this.fields[key], {value: this.values[key]});
-      });
+      Object.keys(this.fields)
+        .forEach(key => Object.assign(this.fields[key], {value: this.values[key]}));
     }
   }
 
   private _setSkeleton() {
-    Object.keys(this.order ? this.order : this.fields).forEach((key) => {
-      this.setSkeleton.push(this.order ? this.order[key] : this.fields[key]);
-    });
+    Object.keys(this.order ? this.order : this.fields)
+      .forEach(key => this.setSkeleton.push(this.order ? this.order[key] : this.fields[key]));
   }
 
   private _getFields() {
-    this.order ?
-      Object.keys(this.order).forEach(field => this.fieldArray.push(this.fields[field])) :
-      Object.keys(this.fields).forEach(field => this.fieldArray.push(this.fields[field]));
+    Object.keys(this.order ? this.order : this.fields)
+      .forEach(field => this.fieldArray.push(this.fields[field]));
   }
 
   private _fgCreator() {
     setTimeout(() => {
       this.form = this._fcs.create(this.fieldArray, this.method);
-      this._fcs.setForm$(this.form, this.order, this.form.status);
       this._returnFormValidity();
     }, 1360);
   }
 
   private _returnFormValidity() {
     if (this.form) {
-      this.form.statusChanges.subscribe((validity: string) => {
-        this._fcs.setForm$(this.form, this.order, validity);
-      });
+      this._fcs.setForm$(this.form, this.order, this.form.status);
+      this.form.statusChanges.subscribe(validity => this._fcs.setForm$(this.form, this.order, validity));
     }
   }
 }

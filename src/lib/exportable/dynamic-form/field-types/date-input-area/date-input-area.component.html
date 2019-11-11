@@ -1,6 +1,5 @@
-<div [formGroup]="fg" *ngIf="fg && field && display" class="col-12">
-  <mat-form-field class="expand-full"
-                  [formArrayName]="field?.fieldName"
+<div [formGroup]="fg" *ngIf="fg && field && display" class="dynamic-field-wrapper">
+  <mat-form-field [formArrayName]="field?.fieldName"
                   *ngFor="let area of fg?.controls[field?.fieldName]?.value;let i = index"
                   [appearance]="appearance">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}  {{i + 1}}</mat-label>
