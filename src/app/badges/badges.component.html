@@ -1,0 +1,51 @@
+<div class="fluid-container main-header">
+  <div class="row" style="display: flex; align-items: center;">
+    <div class="col" style="margin-top: 7px">{{panelHeader}}</div>
+  </div>
+</div>
+
+
+<div class="fluid-container main-container">
+  <div class="row">
+    <app-filter [filterMap]="filters"
+                [order]="order"
+                (returnFilters)="filtering($event)"
+                [opened]="true"
+                class="col" *ngIf="filters"></app-filter>
+  </div>
+
+  <div class="row labels-row">
+    <div class="col">Nome del Studente</div>
+    <div class="col">{{labels?.studentLegalUsn?.fieldLabel}}</div>
+    <div class="col-1">{{labels?.studentUsn?.fieldLabel}}</div>
+    <div class="col">{{labels?.firstAccYear?.fieldLabel}}</div>
+    <div class="col-2">{{labels?.facultyName?.fieldLabel}}</div>
+    <div class="col-2">{{labels?.graduateCourseName?.fieldLabel}}</div>
+    <div class="col-1">{{labels?.yearNo?.fieldLabel}}</div>
+    <div class="col-1"></div>
+  </div>
+
+  <div class="row data-row" *ngFor="let student of studentsList?.list">
+    <div class="col" style="display: flex; align-items: center; padding: 0">
+      <ngx-avatar [name]="student?.firstName + ' ' + student?.lastName"
+                  [src]="'http://unims.unizkm.edu.al/photos/' + student?.personId + '.jpg'"
+                  bgColor="#F4F8FC"
+                  fgColor="#303131"
+                  [size]="42"></ngx-avatar>
+      <span style="margin-left: 10px">{{student?.firstName}} {{student?.lastName}}</span>
+    </div>
+    <div class="col">{{student?.studentLegalUsn}}</div>
+    <div class="col-1">{{student?.studentUsn}}</div>
+    <div class="col">{{student?.firstAccYear}}</div>
+    <div class="col-2" [matTooltip]="student?.facultyName">{{student?.facultyName}}</div>
+    <div class="col-2" [matTooltip]="student?.graduateCourseName">{{student?.graduateCourseName}}</div>
+    <div class="col-1">{{student?.yearNo}}</div>
+    <div class="col-1" style="text-align: right">
+      <button mat-icon-button
+              [matTooltip]="'open'"
+              (click)="openStudent(student?.id)">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

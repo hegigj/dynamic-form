@@ -8,11 +8,11 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule, MatButtonModule, MatChipsModule,
-  MatDatepickerModule, MatExpansionModule,
+  MatDatepickerModule, MatDialogModule, MatExpansionModule,
   MatFormFieldModule, MatIconModule,
   MatInputModule, MatMenuModule,
   MatNativeDateModule, MatPaginatorModule,
-  MatSelectModule, MatSidenavModule
+  MatSelectModule, MatSidenavModule, MatSnackBarModule, MatTooltipModule
 } from '@angular/material';
 
 // Services
@@ -32,17 +32,24 @@ import { MainComponent } from './main/main.component';
 import {InjectComponentDirective} from '../lib/exportable/sidebar/controls/inject-component.directive';
 import {PaginatorModule} from '../lib/exportable/paginator/paginator.module';
 import {LabelStatusModule} from '../lib/exportable/label-status/label-status.module';
+import {BadgesComponent} from './badges/badges.component';
+import {BadgeComponent} from './badge/badge.component';
+import {BadgeDialogComponent} from './badge-dialog/badge-dialog.component';
 
 const router: Routes = [
   {
     path: '',
-    redirectTo: '/module/requests',
+    redirectTo: '/module/student-badges',
     pathMatch: 'full'
   },
   {
     path: 'module',
     component: MainComponent,
     children: [
+      {
+        path: 'student-badges',
+        component: BadgesComponent
+      },
       {
         path: 'requests',
         component: RequestsComponent
@@ -57,6 +64,9 @@ const router: Routes = [
     InjectComponentDirective,
     RequestComponent,
     RequestsComponent,
+    BadgesComponent,
+    BadgeComponent,
+    BadgeDialogComponent,
     MainComponent
   ],
   imports: [
@@ -76,11 +86,14 @@ const router: Routes = [
     MatAutocompleteModule,
     MatInputModule,
     MatSelectModule,
+    MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatPaginatorModule,
     MatSidenavModule,
+    MatSnackBarModule,
     MatExpansionModule,
+    MatTooltipModule,
     MatMenuModule
   ],
   providers: [
@@ -94,7 +107,9 @@ const router: Routes = [
     MatDatepickerModule
   ],
   entryComponents: [
-    RequestComponent
+    RequestComponent,
+    BadgeComponent,
+    BadgeDialogComponent
   ],
   bootstrap: [AppComponent]
 })

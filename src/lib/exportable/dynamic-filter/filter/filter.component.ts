@@ -63,11 +63,21 @@ export class FilterComponent implements OnInit {
   }
 
   private _getFilter() {
-    Object.keys(this.order).forEach((key) => this.filtersArray.push(this.filterMap[key]));
+    Object.keys(this.order).forEach(key => this.filtersArray.push(this.filterMap[key]));
   }
 
   private _fgCreate() {
     this.filter = this._fcs.create(this.filtersArray);
+    this._consecutiveCheck();
+    this._firstCheck();
+  }
+
+  private _firstCheck() {
+    this._chipCreator(this.filter.value);
+    this._returnFilter();
+  }
+
+  private _consecutiveCheck() {
     this.filter.valueChanges.subscribe(filter => {
       this._chipCreator(filter);
       this._returnFilter();
@@ -76,41 +86,33 @@ export class FilterComponent implements OnInit {
 
   private _chipCreator(filter) {
     Object.keys(filter).forEach((key) => {
+      const chipIndex = this.filterChipArray.findIndex(chip => chip.name === key);
       if (typeof filter[key] === 'object') {
-
+        // TODO: when is date_input_between
       } else {
         if (filter[key] !== '') {
-          this._ifExist(filter, key);
-        } else {
-          const deletableFilterIndex = this.filterChipArray.findIndex(chip => chip.name === key);
-          // noinspection TsLint
-          if (deletableFilterIndex !== -1) this.filterChipArray.splice(deletableFilterIndex, 1);
+          this._ifExist(filter, key, chipIndex);
+        } else if (chipIndex !== -1) {
+          this.filterChipArray.splice(chipIndex, 1);
         }
       }
     });
   }
 
-  private _ifExist(filter, key) {
-    const chipIndex = this.filterChipArray.findIndex(chip => chip.name === key);
-    setTimeout(() => {
-      if (chipIndex === -1) {
-        this.filterChipArray.push({
-          name: key,
-          label: this.filterMap[key].fieldLabel,
-          value: filter[key],
-          selectValue: this.filterMap[key].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
-          isDate: !!this.filterMap[key].inputType.match(/DATE/g)
-        });
-      } else {
-        this.filterChipArray[chipIndex] = {
-          name: key,
-          label: this.filterMap[key].fieldLabel,
-          value: filter[key],
-          selectValue: this.filterMap[key].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
-          isDate: !!this.filterMap[key].inputType.match(/DATE/g)
-        };
-      }
-    });
+  private _ifExist(filterForm, field, index) {
+    const chip = {
+      name: field,
+      label: this.filterMap[field].fieldLabel,
+      value: filterForm[field],
+      selectValue: this.filterMap[field].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
+      isDate: !!this.filterMap[field].inputType.match(/DATE/g)
+    };
+    this.filterMap[field].inputType === 'COMBO_BOX' ?
+      setTimeout(() => this._populateChipArray(index, chip)) : this._populateChipArray(index, chip);
+  }
+
+  private _populateChipArray(index, chip) {
+    index === -1 ? this.filterChipArray.push(chip) : this.filterChipArray[index] = chip;
   }
 
   private _returnFilter() {
@@ -130,7 +132,7 @@ export class FilterComponent implements OnInit {
 
   removeAllFilters() {
     this.filterChipArray = [];
-    this.filter.reset();
     this._returnFilter();
+    this.filter.reset();
   }
 }

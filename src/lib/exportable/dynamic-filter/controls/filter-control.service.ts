@@ -6,7 +6,11 @@ import {TimezonePipe} from '../../../common/controls/timezone.pipe';
 
 @Injectable()
 export class FilterControlService {
-  constructor() {}
+  timestampPattern: string;
+
+  constructor() {
+    this.timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
+  }
 
   setTimestamp$(control: {fg: FormGroup, fieldName: string, isArray?: number}, timestamp: {date?: string, time?: string}): void {
     const date: string = timestamp.date;
@@ -16,7 +20,7 @@ export class FilterControlService {
     if (control.isArray >= 0) {
       formControl = (<FormArray>formControl).at(control.isArray);
     }
-    if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
+    if (formControl.value.match(this.timestampPattern)) {
       oldDate = formControl.value.split('T')[0];
       oldTime = formControl.value.split('T')[1];
     }
@@ -42,6 +46,7 @@ export class FilterControlService {
   private _fgCreator(fields: FilterOrderConfig[]) {
     const fg: any = {};
     fields.forEach((field) => {
+      const value = field.value ? field.value : '';
       const disabled = field.disabled !== undefined ? field.disabled : false;
 
       Object.assign(fg,
@@ -49,15 +54,15 @@ export class FilterControlService {
           [field.fieldName]: field.inputType.match(/BETWEEN/g) ?
             new FormGroup({
               min: new FormControl(
-                {value: '', disabled: disabled},
-                Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')
+                {value: value, disabled: disabled},
+                Validators.pattern(this.timestampPattern)
               ),
               max: new FormControl(
-                {value: '', disabled: disabled},
-                Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')
+                {value: value, disabled: disabled},
+                Validators.pattern(this.timestampPattern)
               )
             }) : new FormControl(
-              {value: '', disabled: disabled},
+              {value: value, disabled: disabled},
               this._validators(field.constraintList, field.required)
             )
         }
@@ -67,7 +72,6 @@ export class FilterControlService {
 
   private _validators(field: any, required?) {
     const validatorsArray = [];
-    const timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
     Object.keys(field).forEach((key) => {
       if (key === 'Size') {
         validatorsArray.push(Validators.minLength(field[key].min));
@@ -84,7 +88,7 @@ export class FilterControlService {
       }
       if (key === 'Pattern') {
         validatorsArray.push(
-          Validators.pattern(field[key].regexp.match(/yyyy-MM-dd'T'HH:mm:ss/g) ? timestampPattern : field[key].regexp)
+          Validators.pattern(field[key].regexp.match(/yyyy-MM-dd'T'HH:mm:ss/g) ? this.timestampPattern : field[key].regexp)
         );
       }
     });

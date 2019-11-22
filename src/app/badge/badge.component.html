@@ -1,0 +1,92 @@
+<div class="student-card">
+  <table width="100%">
+    <tr>
+      <td rowspan="4" style="width: 210px">
+        <ngx-avatar [name]="student?.firstName + ' ' + student?.lastName"
+                    [src]="'http://unims.unizkm.edu.al/photos/' + student?.personId + '.jpg'"
+                    [size]="200"
+                    bgColor="#ffffff"
+                    fgColor="#045ba1">
+        </ngx-avatar>
+      </td>
+    </tr>
+    <tr class="full-width">
+      <td colspan="3">
+        <span>Student Name</span>
+        <div>{{student?.firstName}} {{student?.lastName}}</div>
+      </td>
+    </tr>
+    <tr class="full-width">
+      <td colspan="3">
+        <span>{{labels?.facultyName?.fieldLabel}}</span>
+        <div>{{student?.facultyName}}</div>
+      </td>
+    </tr>
+    <tr class="full-width">
+      <td colspan="2">
+        <span>{{labels?.graduateCourseName?.fieldLabel}}</span>
+        <div>{{student?.graduateCourseName}}</div>
+      </td>
+      <td colspan="1">
+        <span>{{labels?.yearNo?.fieldLabel}}</span>
+        <div>{{student?.yearNo}}</div>
+      </td>
+    </tr>
+  </table>
+</div>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>More Information</mat-expansion-panel-header>
+    <div class="more-student-info">
+      <app-form [fields]="labels" [values]="student"
+                [order]="moreInfo" [method]="'PUT'"
+                style="width: 100%" *ngIf="labels && student"></app-form>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+<div class="student-badge-panel">
+  <div class="row labels-row">
+    <div class="col">Code</div>
+    <div class="col">Issued Date</div>
+    <div class="col">Badge Status</div>
+    <div class="col"></div>
+  </div>
+
+  <div class="row data-row" *ngFor="let badge of badges?.list">
+    <div class="col">{{badge?.badgeCode}}</div>
+    <div class="col">{{badge?.issueDate | date: 'MMM dd, yyyy'}}</div>
+    <div class="col">
+      <span [ngClass]="{'active': badge?.badgeStatus === 'BADGE_ST_ACTIVE',
+                        'suspended': badge?.badgeStatus === 'BADGE_ST_SUSPND',
+                        'damaged-lost': badge?.badgeStatus === 'BADGE_ST_DAMAGD' || badge?.badgeStatus === 'BADGE_ST___LOST'}">{{badge?.labelMap?.badgeStatus}}</span>
+    </div>
+    <div class="col" style="text-align: right;padding: 0">
+      <button mat-icon-button [matTooltip]="'download'" (click)="downloadBadge(badge?.id)" *ngIf="badge?.badgeStatus === 'BADGE_ST_ACTIVE'">
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      <button mat-icon-button [matTooltip]="'edit'" (click)="editBadge(badge)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button [matTooltip]="'delete'">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer-paginator">
+    <mat-paginator style="margin-top: 10px;"
+                   [length]="tableData.totalRecords"
+                   [pageSize]="params.paramBean?.pageSize"
+                   [pageIndex]="params.paramBean?.pageNo - 1"
+                   [pageSizeOptions]="[4, 8, 12]"
+                   [showFirstLastButtons]="true"
+                   (page)="refreshList($event)">
+    </mat-paginator>
+
+    <div class="footer-buttons">
+      <button mat-icon-button [matTooltip]="add" (click)="addBadge()">
+        <mat-icon>add_box</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

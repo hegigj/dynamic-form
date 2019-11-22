@@ -8,7 +8,7 @@ export class HeaderInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>,
             next: HttpHandler): Observable<HttpEvent<any>> {
 
-    const userToken = '7b434948-1008-4902-bed8-0ea8303c0470';
+    const userToken = 'bd8927f1-280c-4c03-b436-3eaf6cd7b34e';
     const lang = localStorage.getItem('language');
     const headers = {
       'Authorization': userToken,

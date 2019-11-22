@@ -1,0 +1,90 @@
+.student-card{
+  width: 100%;
+  height: fit-content;
+  background: linear-gradient(-30deg, rgb(36, 121, 194), rgb(4, 91, 161));
+  padding: 20px;
+}
+
+/deep/.mat-accordion, .mat-expansion-panel{
+  border-radius: 0!important;
+}
+
+.student-card .full-width span{
+  font-family: "Roboto Light";
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.student-card .full-width div{
+  border-radius: 2px;
+  background-color: #FFFFFF;
+  font-family: "Roboto Light";
+  font-size: 16px;
+  padding: 4px 6px;
+  min-height: 32px;
+}
+
+.more-student-info {
+  width: 100%;
+  height: fit-content;
+  padding: 20px;
+}
+
+.more-student-info tr td:nth-of-type(1){
+  padding-right: 10px;
+}
+
+.more-student-info tr td:nth-of-type(2){
+  padding-left: 10px;
+}
+
+/deep/ .avatar-content {
+  border-radius: 5px !important;
+}
+
+.student-badge-panel{
+  width: 100%;
+  background-color: #EAF2F8;
+  color: #1a2a31;
+  height: calc(100vh - 536px);
+  padding: 20px;
+}
+
+.labels-row {
+  padding: 0 20px 15px 30px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.labels-row .col{
+  padding: 0 4px;
+}
+
+.data-row {
+  padding: 10px;
+  font-size: 15px;
+  background-color: white;
+  border-radius: 5px;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+}
+
+.data-row .col:nth-child(3) span{
+  padding: 8px 10px;
+}
+
+.active {
+  background-color: rgba(29, 201, 183, 0.2);
+  color: #1dc9b7;
+}
+
+.suspended {
+  background-color: rgba(255, 184, 34, 0.2);
+  color: #ffb822;
+}
+
+.damaged-lost {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}

@@ -1,0 +1,71 @@
+.main-header {
+  font-family: Roboto;
+  padding: 15px 35px;
+  background-color: white;
+  color: #323232;
+  font-size: 16px;
+  font-weight: 500;
+  min-height: 66px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03), 0 4px 5px 0 rgba(0, 0, 0, 0.01), 0 1px 10px 0 rgba(0, 0, 0, 0.06);
+}
+
+.main-container {
+  padding: 25px;
+  font-family: Roboto;
+  background-color: #F4F8FC;
+  color: #1a2a31;
+  height: calc(100vh - 292px);
+  overflow: auto;
+}
+
+button:focus {
+  outline: 0;
+}
+
+.data-row {
+  padding: 10px;
+  font-size: 15px;
+  background-color: white;
+  border-radius: 5px;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+}
+
+.labels-row {
+  padding: 20px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.labels-row .col,
+.labels-row .col-1,
+.labels-row .col-2,
+.labels-row .col-3 {
+  padding: 0 5px;
+}
+
+.example-full-width{
+  margin-right: 30px;
+}
+
+/deep/.mat-form-field-infix{
+  display: flex!important;
+  flex-direction: row;
+}
+
+/deep/ mat-expansion-panel {
+  background-color: white !important;
+}
+
+.main-container /deep/ .mat-expansion-panel-header {
+  background-color: white !important;
+}
+
+/deep/ mat-expansion-panel {
+  box-shadow: none!important;
+}
+
+mat-accordion {
+  margin-bottom: 20px;
+}

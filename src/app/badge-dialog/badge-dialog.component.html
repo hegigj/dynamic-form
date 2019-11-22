@@ -1,0 +1,22 @@
+<div mat-dialog-title>{{data?.method === 'POST' ? 'ADD Badge' : 'Edit Badge'}}</div>
+<div mat-dialog-content *ngIf="data?.method === 'POST'">
+  <mat-form-field style="width: 100%">
+    <input matInput
+           (keyup)="addBadge($event)">
+  </mat-form-field>
+</div>
+<div mat-dialog-content *ngIf="data?.method === 'PUT'">
+  <div class="active-badge-warning" *ngIf="data?.message">{{data?.message}}</div>
+  <app-form [fields]="data?.labels" [values]="data?.badge"
+            [order]="order" [method]="data?.method"
+            (getValidity)="canPut = $event"></app-form>
+</div>
+<div mat-dialog-actions *ngIf="data?.method === 'PUT'">
+  <button mat-button
+          color="primary"
+          appGetForm
+          (form)="editBadge($event)"
+          [disabled]="!canPut">Edit</button>
+  <button mat-button
+          [mat-dialog-close]="false">Cancel</button>
+</div>
