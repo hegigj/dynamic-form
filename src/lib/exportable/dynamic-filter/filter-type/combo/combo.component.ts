@@ -76,7 +76,7 @@ export class ComboComponent implements OnInit {
           this.selected = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
         } else {
           this.selected = option[this.selectLabel];
-        } this.returnSelection.emit({name: this.filter.fieldName, value: option.id, selectValue: this.selected});
+        } this.returnSelection.emit(this.selected);
       });
     } else {
       this.selected = option;
