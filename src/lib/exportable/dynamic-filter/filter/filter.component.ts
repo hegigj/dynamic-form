@@ -29,7 +29,7 @@ export class FilterComponent implements OnInit {
   @Output() returnFilters = new EventEmitter<ObjectType>();
 
   filterLabel: string;
-  selectValueCombo: string;
+  selectValueCombo: {id: string, selected: string};
 
   filter: FormGroup;
   filterChipArray: FilterChip[] = [];
@@ -68,19 +68,13 @@ export class FilterComponent implements OnInit {
 
   private _fgCreate() {
     this.filter = this._fcs.create(this.filtersArray);
-    this._consecutiveCheck();
-    this._firstCheck();
-  }
-
-  private _firstCheck() {
     this._chipCreator(this.filter.value);
-    this._returnFilter();
+    this._consecutiveCheck();
   }
 
   private _consecutiveCheck() {
     this.filter.valueChanges.subscribe(filter => {
       this._chipCreator(filter);
-      this._returnFilter();
     });
   }
 
@@ -100,19 +94,20 @@ export class FilterComponent implements OnInit {
   }
 
   private _ifExist(filterForm, field, index) {
-    const chip = {
-      name: field,
-      label: this.filterMap[field].fieldLabel,
-      value: filterForm[field],
-      selectValue: this.filterMap[field].inputType === 'COMBO_BOX' ? this.selectValueCombo : undefined,
-      isDate: !!this.filterMap[field].inputType.match(/DATE/g)
-    };
-    this.filterMap[field].inputType === 'COMBO_BOX' ?
-      setTimeout(() => this._populateChipArray(index, chip)) : this._populateChipArray(index, chip);
-  }
-
-  private _populateChipArray(index, chip) {
-    index === -1 ? this.filterChipArray.push(chip) : this.filterChipArray[index] = chip;
+    setTimeout(() => {
+      const chip: FilterChip = {
+        name: field,
+        label: this.filterMap[field].fieldLabel,
+        value: filterForm[field],
+        selectValue: this.filterMap[field].inputType === 'COMBO_BOX' && this.selectValueCombo ?
+          (index === -1 ? this.selectValueCombo.selected :
+            filterForm[field] === this.selectValueCombo.id ? this.selectValueCombo.selected :
+              this.filterChipArray[index].selectValue) : undefined,
+        isDate: !!this.filterMap[field].inputType.match(/DATE/g)
+      };
+      index === -1 ? this.filterChipArray.push(chip) : this.filterChipArray[index] = chip;
+      this._returnFilter();
+    });
   }
 
   private _returnFilter() {

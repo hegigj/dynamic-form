@@ -25,15 +25,12 @@ export class BadgesComponent implements OnInit, OnDestroy {
   labels: Students<MetadataResponse<Abstract<string>>, MetadataResponse<Abstract<string>>>;
   filters: {[key: string]: MetadataResponse<Abstract<string>>};
   order: FilterOrder = {
-    firstName: {},
+    firstName: {inputType: 'COMBO_BOX', value: 'STUD00000000002'},
     lastName: {},
-    barcodeDigits: {},
+    barcode: {},
     badgeCode: {}
   };
   studentsList: ListResponse<Students<string, number>>;
-  tableData = {
-    totalRecords: 12
-  };
 
   params: ParamBean = {
     paramBean: {
@@ -42,6 +39,12 @@ export class BadgesComponent implements OnInit, OnDestroy {
       pageNo: 1
     }
   };
+
+  dataPool = [
+    {id: 'STUD00000000001', someLabel: 'Hegi Gjoka', firstName: 'Hegi', lastName: 'Gjoka', email: 'h.gjoka@fzkm.org'},
+    {id: 'STUD00000000002', someLabel: 'Monika Papa', firstName: 'Monika', lastName: 'Papa', email: 'm.papa@fzkm.org'},
+    {id: 'STUD00000000003', someLabel: 'Bedri Allkja', firstName: 'Bedri', lastName: 'Allkja', email: 'b.allkja@fzkm.org'},
+  ];
 
   constructor(
     private studentService: EmployeeService,
@@ -82,7 +85,6 @@ export class BadgesComponent implements OnInit, OnDestroy {
   private _getStudentsList() {
     this.studentService.getStudentList({params: this.params}).subscribe((res: any) => {
       this.studentsList = res;
-      this.tableData.totalRecords = this.studentsList.totalRecords;
     });
   }
 

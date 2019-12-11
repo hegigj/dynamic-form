@@ -9,9 +9,10 @@
   <div class="row">
     <app-filter [filterMap]="filters"
                 [order]="order"
+                [fieldDataPool]="dataPool"
                 (returnFilters)="filtering($event)"
                 [opened]="true"
-                class="col" *ngIf="filters"></app-filter>
+                class="col" *ngIf="filters && order"></app-filter>
   </div>
 
   <div class="row labels-row">
@@ -28,7 +29,6 @@
   <div class="row data-row" *ngFor="let student of studentsList?.list">
     <div class="col" style="display: flex; align-items: center; padding: 0">
       <ngx-avatar [name]="student?.firstName + ' ' + student?.lastName"
-                  [src]="'http://unims.unizkm.edu.al/photos/' + student?.personId + '.jpg'"
                   bgColor="#F4F8FC"
                   fgColor="#303131"
                   [size]="42"></ngx-avatar>

@@ -16,7 +16,7 @@ export class ComboComponent implements OnInit {
   @Input() filter: FilterOrderConfig;
   @Input() fieldDataPool: AbstractModel[];
 
-  @Output() returnSelection = new EventEmitter();
+  @Output() returnSelection = new EventEmitter<{id: string, selected: string}>();
 
   options: Observable<AbstractModel[] | any>;
 
@@ -34,13 +34,13 @@ export class ComboComponent implements OnInit {
 
   private _filledField() {
     if (this.filter.value) {
-      setTimeout(() => {
-        if (this.filter.selectValue === undefined) {
-          this.filter.selectValue = this.filter.fieldDataPool ?
-            this.filter.fieldDataPool.list.find(sv => sv.id === this.filter.value)[this.selectLabel] :
-            this.fieldDataPool.find(sv => sv.id === this.filter.value)[this.selectLabel];
-        } this.selected = this.filter.selectValue ? this.filter.selectValue : this.filter.value;
-      });
+      if (this.filter.selectValue === undefined) {
+        this.filter.selectValue = this.filter.fieldDataPool && this.filter.fieldDataPool.list ?
+          this.filter.fieldDataPool.list.find(sv => sv.id === this.filter.value)[this.selectLabel] :
+          this.fieldDataPool ? this.fieldDataPool.find(sv => sv.id === this.filter.value)[this.selectLabel] : undefined;
+      }
+      this.returnSelection.emit({id: this.filter.value, selected: this.filter.selectValue});
+      setTimeout(() => this.selected = this.filter.selectValue ? this.filter.selectValue : this.filter.value);
     }
   }
 
@@ -52,10 +52,8 @@ export class ComboComponent implements OnInit {
 
   private _filter(value: any): AbstractModel[] | any {
     const filter = value.toLowerCase();
-    const someLabel = this.filter.selectLabel ? this.filter.selectLabel :
-      this.filter.fieldRestVal ? this.filter.fieldRestVal :
-        'someLabel';
-    if (this.filter.fieldDataPool) {
+    const someLabel = this.selectLabel;
+    if (this.filter.fieldDataPool && this.filter.fieldDataPool.list) {
       return this.filter.fieldDataPool.list.filter(opt => {
         return opt[someLabel].toLowerCase().includes(filter);
       });
@@ -69,15 +67,13 @@ export class ComboComponent implements OnInit {
   setLabel(option) {
     if (typeof option === 'object') {
       this.selected = '';
-      setTimeout(() => {
-        if (this.selectLabel.match(/\s/g)) {
-          this.selected = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
-        } else if (this.selectLabel.match(/\./g)) {
-          this.selected = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
-        } else {
-          this.selected = option[this.selectLabel];
-        } this.returnSelection.emit(this.selected);
-      });
+      const selected = this.selectLabel.match(/\s/g) ?
+                        `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}` :
+                        this.selectLabel.match(/\./g) ?
+                          option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]] :
+                          option[this.selectLabel];
+      this.returnSelection.emit({id: option.id, selected: selected});
+      setTimeout(() => this.selected = selected);
     } else {
       this.selected = option;
     }
