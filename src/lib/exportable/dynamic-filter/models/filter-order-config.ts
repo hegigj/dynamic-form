@@ -1,4 +1,5 @@
-import {FormControlModel, Methods} from '../../../common/models/form-control.model';
+import {FormControlModel} from '../../../common/models/form-control.model';
+import {Methods} from '../../../common/models/extra.model';
 
 export class FilterOrderConfig extends FormControlModel {
   value?: string | any;

@@ -18,6 +18,7 @@ export class FieldComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    console.log(this.field);
     this.display = this.field.display !== undefined ? this.field.display : true;
   }
 }

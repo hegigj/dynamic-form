@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {Constraint, ObjectType} from '../../../common/models/form-control.model';
 import {FormOrderConfig} from '../models/form-order-config';
 import {FormOrder} from '../models/form-order';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {TimezonePipe} from '../../../common/controls/timezone.pipe';
 import {FieldMapModel} from '../../../common/models/fieldMap.model';
+import {Constraint, ObjectType} from '../../../common/models/extra.model';
 
 interface Field {
   field: FieldMapModel;
@@ -196,9 +196,21 @@ export class FormControlService {
           break;
         case 'NotNull':
           // Validators
-          validatorsArray.push(Validators.required); required = false;
+          validatorsArray.push(Validators.required);
+          required = false;
           // Error Messages
           Object.assign(errorMessage, {'required': constraints[key].message});
+          break;
+        case 'Past':
+          // Validators Function for Past Date
+          const date = new Date().toISOString().split('.')[0];
+          const pastDate = (control: FormControl): {[key: string]: boolean} | null => {
+            return control.value > date ? {'past': true} : null;
+          };
+          // Validators
+          validatorsArray.push(pastDate.bind(this));
+          // Error Messages
+          Object.assign(errorMessage, {'past': constraints[key].message});
           break;
         case 'Pattern':
           // Validators
@@ -209,7 +221,10 @@ export class FormControlService {
           Object.assign(errorMessage, {'pattern': constraints[key].message});
           break;
         default:
-          console.log(`${key.toUpperCase()} is not a constraint, that it's known in this form`);
+          console.log(
+            `${key.toUpperCase()} is not a constraint, that it's known in this form:
+             \\src\\lib\\exportable\\dynamic-form\\controls\\form-control.service.ts:214`
+          );
       }
     });
     if (required) {
@@ -227,9 +242,11 @@ export class FormControlService {
           errorMessageLang === 'it' ? 'Questo campo è obbligatorio' :
             'Kjo fushë është e detyrueshme'
       });
-    } if (field.customValidators) {
+    }
+    if (field.customValidators) {
       field.customValidators.forEach(customValidator => validatorsArray.push(customValidator));
-    } field.errorMessages = errorMessage;
+    }
+    field.errorMessages = errorMessage;
     return validatorsArray;
   }
 }

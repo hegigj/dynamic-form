@@ -23,10 +23,10 @@ export class BadgeDialogComponent implements OnInit {
   order: FormOrder = {
     id: {display: false},
     badgeCode: {class: 'col-6'},
-    issueDate: {class: 'col-6', displayTimePicker: false},
+    issueDate: {class: 'col-6', displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
     insertOperator: {class: 'col-6', selectValue: 'labelMap.insertOperator'},
     notes: {class: 'col-6'},
-    lastUpdate: {class: 'col-6', disabled: true, displayTimePicker: false},
+    lastUpdate: {class: 'col-6', disabled: true, displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
     badgeStatus: {class: 'col-6', selectValue: 'labelMap.badgeStatus'}
   };
 

@@ -21,7 +21,7 @@ export class BadgeComponent implements OnInit {
 
   student: Students<string, number>;
   moreInfo: FormOrder = {
-    registrationDate: {class: 'col-6', disabled: true, displayDatePicker: false, displayTimePicker: false},
+    registrationDate: {class: 'col-6', disabled: true, displayDatePicker: false, displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
     firstAccYear: {class: 'col-6', disabled: true},
     studentLegalUsn: {class: 'col-6', disabled: true},
     studentUsn: {class: 'col-6', disabled: true},

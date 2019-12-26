@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormOrderConfig} from '../../models/form-order-config';
-import {Methods} from '../../../../common/models/form-control.model';
 import {AbstractModel} from '../../../../common/models/abstract.model';
 import {map, startWith} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {ProviderService} from '../../../../common/controls/provider.service';
+import {Methods} from '../../../../common/models/extra.model';
 
 @Component({
   selector: 'app-combo-box-multi',

@@ -4,6 +4,7 @@ import {FormGroup} from '@angular/forms';
 import {FieldMapModel} from '../../../common/models/fieldMap.model';
 import {FormOrderConfig} from '../models/form-order-config';
 import {FormOrder} from '../models/form-order';
+import {OptionPipe} from '../../../common/controls/option.pipe';
 
 @Component({
   selector: 'app-form',
@@ -53,14 +54,14 @@ export class FormComponent implements OnInit {
   }
 
   private _setMetaSelectedValue(key?) {
-    if (this.values && this.order[key].selectValue) {
-      const selectValue: string = this.order[key].selectValue;
-      this.order[key].selectValue =
-        selectValue.match(/\s/g) ? `${this.values[selectValue.split(' ')[0]]} ${this.values[selectValue.split(' ')[1]]}` :
-          selectValue.match(/\./g) ? this.values[selectValue.split('.')[0]][selectValue.split('.')[1]] :
-            this.values[selectValue];
-    } else {
-      delete this.order[key].selectValue;
+    if (this.values) {
+      if (this.order && this.order[key]) {
+        if (this.order[key].selectValue) {
+          this.order[key].selectValue = new OptionPipe().transform(this.values, this.order[key].selectValue);
+        } else {
+          delete this.order[key].selectValue;
+        }
+      }
     }
   }
 

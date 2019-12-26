@@ -3,6 +3,6 @@ export class ParamBeanModel {
     fillFieldLabels?: boolean;
     pageNo?: number;
     pageSize?: number;
-    [param: string]: any;
+    [param: string]: string | number | boolean | any;
   };
 }

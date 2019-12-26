@@ -2,9 +2,9 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {FormGroup} from '@angular/forms';
 import {FilterControlService} from '../controls/filter-control.service';
 import {FieldMapModel} from '../../../common/models/fieldMap.model';
-import {ObjectType} from '../../../common/models/form-control.model';
 import {FilterOrder} from '../models/filter-order';
 import {FilterOrderConfig} from '../models/filter-order-config';
+import {ObjectType} from '../../../common/models/extra.model';
 
 interface FilterChip {
   name: string;

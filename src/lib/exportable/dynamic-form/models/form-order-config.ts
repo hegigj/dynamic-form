@@ -1,7 +1,8 @@
-import {BootstrapClass, Buttons, FormControlModel, Methods, ObjectType, Suffix} from '../../../common/models/form-control.model';
+import {FormControlModel} from '../../../common/models/form-control.model';
+import {BootstrapClass, Buttons, Methods, ObjectType, Suffix} from '../../../common/models/extra.model';
 
 export class FormOrderConfig extends FormControlModel {
-  class?: BootstrapClass;
+  class?: BootstrapClass | BootstrapClass[];
   onTextInputTextarea?: boolean;
   childField?: ChildFormOrder;
   formArrayActions?: FormArrayActions;
@@ -14,6 +15,7 @@ export class FormOrderConfig extends FormControlModel {
   selectLabel?: string | any;
   autocompleteLabel?: string | any;
 
+  dateFormat?: string;
   disableDatePicker?: boolean;
   displayDatePicker?: boolean;
 
@@ -39,13 +41,14 @@ export class FormOrderConfig extends FormControlModel {
   constructor() {
     super();
     this.display = true;
+
+    this.dateFormat = 'MMM dd yyyy, HH:mm';
     this.displayDatePicker = true;
     this.displayTimePicker = true;
+
     this.displayDateInputArea = true;
     this.displayRemoveDateInputArea = true;
-    this.onTextInputTextarea = false;
-    this.disabled = false;
-    this.multi = false;
+
     this.svc = 'svc';
   }
 }

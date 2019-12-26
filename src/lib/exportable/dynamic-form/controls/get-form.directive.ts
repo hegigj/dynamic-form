@@ -1,6 +1,6 @@
 import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
-import {ObjectType} from '../../../common/models/form-control.model';
 import {FormControlService} from './form-control.service';
+import {ObjectType} from '../../../common/models/extra.model';
 
 @Directive({
   selector: '[appGetForm]'

@@ -1,7 +1,7 @@
 import {AbstractModel} from './abstract.model';
 
-export class ListModel {
-  list: AbstractModel[] | any;
+export class ListModel<T = AbstractModel> {
+  list: T[] | any;
   pageNo: number;
   pageSize: number;
   totalPages: number;

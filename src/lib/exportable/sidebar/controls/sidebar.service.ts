@@ -1,7 +1,7 @@
 import {Injectable, Type} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {ObjectType} from '../../../common/models/form-control.model';
+import {ObjectType} from '../../../common/models/extra.model';
 
 export interface ComponentInjector {
   control?: boolean;
