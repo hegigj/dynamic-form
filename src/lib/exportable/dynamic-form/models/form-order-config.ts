@@ -1,20 +1,22 @@
 import {FormControlModel} from '../../../common/models/form-control.model';
-import {BootstrapClass, Buttons, Methods, ObjectType, Suffix} from '../../../common/models/extra.model';
 import {TimePickerConfig} from 'amazing-time-picker-angular6/src/app/atp-library/definitions';
+import {BootstrapClass, ChildFormOrder, FormArrayActions, Methods, ObjectType, Suffix} from '../../../common/models/extra.model';
 
 export class FormOrderConfig extends FormControlModel {
   class?: BootstrapClass | BootstrapClass[];
   onTextInputTextarea?: boolean;
+
   childField?: ChildFormOrder;
   formArrayActions?: FormArrayActions;
 
+  required?: boolean;
   customValidators?: any[];
   errorMessages?: ObjectType;
 
   value?: string | number | boolean | ObjectType | any;
-  selectValue?: string | any;
-  selectLabel?: string | any;
-  autocompleteLabel?: string | any;
+  selectValue?: string;
+  selectLabel?: string;
+  autocompleteLabel?: string;
 
   dateFormat?: string;
   disableDatePicker?: boolean;
@@ -30,13 +32,12 @@ export class FormOrderConfig extends FormControlModel {
   disableRemoveDateInputArea?: boolean;
   displayRemoveDateInputArea?: boolean;
 
-  multi?: boolean;
   display?: boolean;
   disabled?: boolean;
-  required?: boolean;
   canReset?: boolean;
   suffix?: Suffix;
 
+  multi?: boolean;
   methods?: Methods;
   svc?: string;
 
@@ -53,17 +54,4 @@ export class FormOrderConfig extends FormControlModel {
 
     this.svc = 'svc';
   }
-}
-
-class ChildFormOrder {
-  [key: string]: FormOrderConfig;
-}
-
-class FormArrayActions {
-  buttons?: Buttons;
-  addButtonLabel?: string;
-  disableAddButton?: boolean;
-  deleteButtonLabel?: string;
-  disableDeleteButton?: boolean;
-  resetButtonLabel?: string;
 }

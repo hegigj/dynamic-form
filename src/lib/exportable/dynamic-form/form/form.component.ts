@@ -56,8 +56,18 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.order) {
       Object.keys(this.order).forEach(key => {
         this._setMetaSelectedValue(key);
+        // noinspection TsLint
+        if (this.order[key].class) this._setArrayClass(key);
         Object.assign(this.fields[key], this.order[key]);
       });
+    }
+  }
+
+  private _setArrayClass(key: string): void {
+    if (typeof this.order[key].class === 'object') {
+      let cols = '';
+      (<Array<BootstrapClass>>this.order[key].class).forEach(col => cols += `${col} `);
+      this.order[key].class = cols.substr(0, cols.length - 1);
     }
   }
 

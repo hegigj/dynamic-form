@@ -83,45 +83,6 @@ export class ComboBoxMultiComponent implements OnInit {
     }
   }
 
-  addSelection(option: any) {
-    const selectedOption = option.option.value;
-    this._selectedId.push(selectedOption.id);
-    this.selected.push({id: selectedOption.id, someLabel: new OptionPipe().transform(selectedOption, this.selectLabel)});
-    this.fg.controls[this.field.fieldName].setValue(this._selectedId);
-    this.fg.controls['inputField'].setValue('');
-  }
-
-  removeSelection(index) {
-    this.selected.splice(index, 1);
-    this._selectedId.splice(index, 1);
-    this.fg.controls[this.field.fieldName].setValue(this._selectedId);
-  }
-
-  keyup(value) {
-    if (this.field.methods && this.field.methods['keyup']) {
-      this.field.methods['keyup'](value);
-    } else if (this.field.fieldRestPool) {
-      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, value, {paramBean: this.params})
-        .subscribe((res: any) => this.fieldDataPool = res.list);
-    }
-  }
-
-  change() {
-    if (this.field.methods && this.field.methods['change']) {
-      this.field.methods['change']();
-    }
-  }
-
-  focus() {
-    if (this.field.methods && this.field.methods['focus']) {
-      this.field.methods['focus']();
-    } else if (this.field.fieldRestPool) {
-      this._setOtherParams();
-      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, '', {paramBean: this.params})
-        .subscribe((res: any) => this.fieldDataPool = res.list);
-    }
-  }
-
   private _setOtherParams() {
     if (this.field.fieldDependsOn) {
       this.field.fieldDependsOn.forEach((fieldDependsOn) => {
@@ -142,5 +103,53 @@ export class ComboBoxMultiComponent implements OnInit {
         this.errorMessages = '';
       }
     });
+  }
+
+  addSelection(option: any) {
+    const selectedOption = option.option.value;
+    this._selectedId.push(selectedOption.id);
+    this.selected.push({id: selectedOption.id, someLabel: new OptionPipe().transform(selectedOption, this.selectLabel)});
+    this.fg.controls[this.field.fieldName].setValue(this._selectedId);
+    this.fg.controls['inputField'].setValue('');
+  }
+
+  removeSelection(index) {
+    this.selected.splice(index, 1);
+    this._selectedId.splice(index, 1);
+    this.fg.controls[this.field.fieldName].setValue(this._selectedId);
+  }
+
+  removeAllSelection() {
+    if (this.selected.length > 0) {
+      this.selected = [];
+      this._selectedId = [];
+      this.fg.controls[this.field.fieldName].setValue(this._selectedId);
+    }
+  }
+
+  _keyup(value) {
+    if (this.field.methods && this.field.methods['keyup']) {
+      this.field.methods['keyup'](value);
+    } else if (this.field.fieldRestPool) {
+      this._setOtherParams();
+      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, value, {paramBean: this.params})
+        .subscribe((res: any) => this.fieldDataPool = res.list);
+    }
+  }
+
+  _change() {
+    if (this.field.methods && this.field.methods['change']) {
+      this.field.methods['change']();
+    }
+  }
+
+  _focus() {
+    if (this.field.methods && this.field.methods['focus']) {
+      this.field.methods['focus']();
+    } else if (this.field.fieldRestPool) {
+      this._setOtherParams();
+      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, null, {paramBean: this.params})
+        .subscribe((res: any) => this.fieldDataPool = res.list);
+    }
   }
 }

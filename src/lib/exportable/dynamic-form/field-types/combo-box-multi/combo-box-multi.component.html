@@ -14,10 +14,13 @@
              [matAutocomplete]="af"
              [matChipInputFor]="multi"
              [matChipInputAddOnBlur]="false"
-             (keyup)="keyup($event)" (change)="change()" (focus)="focus()">
+             (keyup)="_keyup($event)" (change)="_change()" (focus)="_focus()">
     </mat-chip-list>
 
-    <mat-icon matSuffix>clear_all</mat-icon>
+    <mat-icon class="clear"
+              matSuffix
+              [matTooltip]="selected?.length > 0 ? 'Clear all selections' : ''"
+              (click)="removeAllSelection()">{{selected?.length > 0 ? 'clear_all' : 'list'}}</mat-icon>
 
     <mat-error>{{errorMessages}}</mat-error>
 

@@ -1,3 +1,5 @@
+import {FormOrderConfig} from '../../exportable/dynamic-form/models/form-order-config';
+
 export class ObjectType {
   [key: string]: any;
 }
@@ -14,13 +16,11 @@ export class Buttons {
   icon?: string;
   color?: Color;
   label?: string;
-  toolTip?: string;
   method: Function;
-  useValue: string;
 }
 
 export class Suffix {
-  type: 'icon' | 'text';
+  type: SuffixType;
   text: string;
 }
 
@@ -53,6 +53,22 @@ class Past {
   message: string;
 }
 
-export declare type BootstrapClass = 'col-12' | 'col-9' | 'col-6' | 'col-4' | 'col-3' | 'col-sm-12' | 'col-sm-9' | 'col-sm-6' | 'col-sm-4' | 'col-sm-3';
+export class ChildFormOrder {
+  [key: string]: FormOrderConfig;
+}
+
+export class FormArrayActions {
+  buttons?: Buttons;
+  addButtonLabel?: string;
+  disableAddButton?: boolean;
+  deleteButtonLabel?: string;
+  disableDeleteButton?: boolean;
+  resetButtonLabel?: string;
+}
+
+// noinspection TsLint
+export declare type BootstrapClass = 'col-12' | 'col-9' | 'col-6' | 'col-4' | 'col-3' | 'col-sm-12' | 'col-sm-9' | 'col-sm-6' | 'col-sm-4' | 'col-sm-3' | string;
 
 declare type Color = 'primary' | 'accent' | 'warn';
+
+declare type SuffixType = 'icon' | 'text';

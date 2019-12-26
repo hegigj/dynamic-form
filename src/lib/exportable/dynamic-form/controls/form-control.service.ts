@@ -134,7 +134,7 @@ export class FormControlService {
   private _formArrayForm(field: Field): FormGroup {
     let hasValue: boolean;
     const _formArray: FormOrderConfig[] = [];
-    Object.keys(field.order ? field.order : field.field).forEach((key) => {
+    Object.keys(field.order ? field.order : field.field).forEach(key => {
       if (field.order) {
         // noinspection TsLint
         if (field.order[key].value !== undefined) hasValue = true;

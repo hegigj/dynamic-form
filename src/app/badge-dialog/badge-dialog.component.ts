@@ -21,13 +21,13 @@ export interface DialogData {
 export class BadgeDialogComponent implements OnInit {
   canPut: boolean;
   order: FormOrder = {
-    id: {display: false},
-    badgeCode: {class: 'col-6'},
-    issueDate: {class: 'col-6', displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
-    insertOperator: {class: 'col-6', selectValue: 'labelMap.insertOperator'},
-    lastUpdate: {class: 'col-6', disabled: true, displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
+    id: {display: false, canReset: false},
+    badgeCode: {class: ['col-6', 'col-sm-12'], canReset: false, suffix: {type: 'text', text: 'RFID'}},
+    insertOperator: {class: ['col-6', 'col-sm-12'], selectValue: 'labelMap.insertOperator', suffix: {type: 'icon', text: 'people'}},
+    issueDate: {class: 'col-6', dateFormat: 'MMM dd yyyy'},
+    lastUpdate: {class: 'col-6', dateFormat: 'MMM dd yyyy'},
     notes: {class: 'col-12', onTextInputTextarea: true},
-    badgeStatus: {class: 'col-12', selectValue: 'labelMap.badgeStatus', multi: true, constraintList: {}, required: true}
+    badgeStatus: {class: 'col-12', selectValue: 'labelMap.badgeStatus', multi: true, required: true, constraintList: {}}
   };
 
   constructor(public dlg: MatDialogRef<BadgeDialogComponent>,
