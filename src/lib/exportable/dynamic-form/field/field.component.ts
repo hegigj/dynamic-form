@@ -8,17 +8,16 @@ import {FormOrderConfig} from '../models/form-order-config';
   styleUrls: ['./field.component.css']
 })
 export class FieldComponent implements OnInit {
+  @Input() appearance: string;
   @Input() fg: FormGroup;
   @Input() field: FormOrderConfig;
   @Input() fieldDataPool: any[];
-  @Input() appearance: string;
 
   display: boolean;
 
   constructor() {}
 
   ngOnInit() {
-    console.log(this.field);
     this.display = this.field.display !== undefined ? this.field.display : true;
   }
 }

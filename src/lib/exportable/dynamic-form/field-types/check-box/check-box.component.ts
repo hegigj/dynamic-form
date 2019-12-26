@@ -8,9 +8,9 @@ import {FormOrderConfig} from '../../models/form-order-config';
   styleUrls: ['./check-box.component.css']
 })
 export class CheckBoxComponent implements OnInit {
-  @Input() display: boolean;
-  @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
+  @Input() field: FormOrderConfig;
+  @Input() display: boolean;
 
   constructor() { }
 

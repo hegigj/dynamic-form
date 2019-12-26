@@ -1,5 +1,6 @@
 import {FormControlModel} from '../../../common/models/form-control.model';
 import {BootstrapClass, Buttons, Methods, ObjectType, Suffix} from '../../../common/models/extra.model';
+import {TimePickerConfig} from 'amazing-time-picker-angular6/src/app/atp-library/definitions';
 
 export class FormOrderConfig extends FormControlModel {
   class?: BootstrapClass | BootstrapClass[];
@@ -10,7 +11,7 @@ export class FormOrderConfig extends FormControlModel {
   customValidators?: any[];
   errorMessages?: ObjectType;
 
-  value?: string | any;
+  value?: string | number | boolean | ObjectType | any;
   selectValue?: string | any;
   selectLabel?: string | any;
   autocompleteLabel?: string | any;
@@ -19,6 +20,7 @@ export class FormOrderConfig extends FormControlModel {
   disableDatePicker?: boolean;
   displayDatePicker?: boolean;
 
+  timePickerFormat?: TimePickerConfig;
   disableTimePicker?: boolean;
   displayTimePicker?: boolean;
 

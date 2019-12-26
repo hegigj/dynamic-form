@@ -30,10 +30,9 @@ export class TextInputComponent implements OnInit, OnDestroy {
     this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
       if (this.fg.controls[this.field.fieldName].errors) {
         this.errorMessages = '';
-        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
-          if (this.field.errorMessages && this.field.errorMessages[key]) {
-            this.errorMessages = this.field.errorMessages[key];
-          }
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => {
+          // noinspection TsLint
+          if (this.field.errorMessages && this.field.errorMessages[key]) this.errorMessages = this.field.errorMessages[key];
         });
       } else {
         this.errorMessages = '';

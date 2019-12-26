@@ -1,6 +1,7 @@
 <div [formGroup]="fg" *ngIf="fg && field" class="dynamic-field-wrapper">
   <mat-form-field *ngIf="display" [appearance]="appearance">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}</mat-label>
+
     <input matInput
            [value]="selected"
            [matAutocomplete]="af"
@@ -10,10 +11,12 @@
 
     <mat-icon matSuffix>arrow_drop_down</mat-icon>
 
+    <mat-error>{{errorMessages}}</mat-error>
+
     <mat-autocomplete #af="matAutocomplete">
       <mat-option *ngFor="let opt of options ? (options | async) : field?.fieldDataPool ? field?.fieldDataPool?.list : fieldDataPool"
                   [value]="opt.id"
-                  (click)="setLabel(opt)">
+                  (click)="_setLabel(opt)">
         {{opt | option: selectLabel}}
       </mat-option>
     </mat-autocomplete>

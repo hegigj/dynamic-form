@@ -23,18 +23,30 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
   valueChanges: Subscription;
   errorMessages: string;
 
+  addNewDateLabel: string;
+
   constructor(private _atp: AmazingTimePickerService,
-              private _fcs: FormControlService) { }
+              private _fcs: FormControlService) {}
 
   ngOnInit() {
     this.index = this.fg.controls[this.field.fieldName].value.length - 1;
     this.i = this.index;
     this.checkFormArray();
     this._checkForErrors();
+    this._setAddNewDateLabel();
   }
 
   ngOnDestroy() {
     this.valueChanges.unsubscribe();
+  }
+
+  private _setAddNewDateLabel() {
+    let labelLang: string, lang: string;
+    for (lang in localStorage) {
+      // noinspection TsLint
+      if (lang.match(/lang/gi)) labelLang = localStorage.getItem(lang);
+    }
+    this.addNewDateLabel = labelLang === 'en' ? 'ADD NEW DATE' : labelLang === 'sq' ? 'SHTO DATÉ TÉ RE' : 'AGGIUNGI NUOVA DATE';
   }
 
   openDP(dp, index) {
@@ -53,12 +65,12 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
         date: date.split('T')[0]
       }
     );
-    this._openDPandTPsimultaneously();
+    this._openDatePickerAndTimePickerSimultaneously();
   }
 
   addTime(index) {
     this.i = index;
-    this._atp.open({theme: 'light'}).afterClose().subscribe((time: any) => {
+    this._atp.open(this.field.timePickerFormat ? this.field.timePickerFormat : {theme: 'light'}).afterClose().subscribe(time => {
       this._fcs.setTimestamp$(
         {
           fieldName: this.field.fieldName,
@@ -71,7 +83,7 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _openDPandTPsimultaneously() {
+  private _openDatePickerAndTimePickerSimultaneously() {
     if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
       (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
       this.addTime(this.index !== this.i ? this.i : this.index);
@@ -105,10 +117,9 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
     this.valueChanges = formArrayControl.valueChanges.subscribe(() => {
       if (this.fg.controls[this.field.fieldName].errors) {
         this.errorMessages = '';
-        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
-          if (this.field.errorMessages && this.field.errorMessages[key]) {
-            this.errorMessages = this.field.errorMessages[key];
-          }
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => {
+          // noinspection TsLint
+          if (this.field.errorMessages && this.field.errorMessages[key]) this.errorMessages = this.field.errorMessages[key];
         });
       } else {
         this.errorMessages = '';

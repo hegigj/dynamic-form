@@ -20,18 +20,15 @@ export class GetFormDirective {
     });
   }
 
-  private _cleanForm(form) {
-    Object.keys(form).forEach((key) => {
-      if (form[key] === undefined || form[key] === null || form[key] === '') {
-        delete form[key];
-      }
+  private _cleanForm(form): ObjectType {
+    Object.keys(form).forEach(key => {
+      // noinspection TsLint
+      if (form[key] === undefined || form[key] === null || form[key] === '') delete form[key];
     });
     return form;
   }
 
   private _formValidity() {
-    this._fcs.formValidity$.subscribe((INVALID: string) => {
-      this.disabled = INVALID !== 'VALID';
-    });
+    this._fcs.formValidity$.subscribe((INVALID: string) => this.disabled = INVALID !== 'VALID');
   }
 }

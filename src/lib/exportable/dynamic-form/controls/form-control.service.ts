@@ -10,17 +10,17 @@ import {Constraint, ObjectType} from '../../../common/models/extra.model';
 interface Field {
   field: FieldMapModel;
   order?: FormOrderConfig;
-  method?: string | 'POST' | 'PUT';
+  method?: 'POST' | 'PUT' | string;
 }
 
 @Injectable()
 export class FormControlService {
-  private _order: FormOrder;
   private _form: FormGroup;
+  private _order: FormOrder;
   private _fieldArray: Field;
   private _formArray: FormArray;
 
-  private _formValidity: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  private _formValidity: BehaviorSubject<string> = new BehaviorSubject<string>('INVALID');
 
   constructor(private _formBuilder: FormBuilder) {}
 
@@ -30,7 +30,7 @@ export class FormControlService {
     let oldDate: string, oldTime: string;
     let formControl: AbstractControl = this._form.controls[control.fieldName];
     if (control.isArray >= 0) {
-      formControl = (<FormArray>formControl).at(control.isArray);
+      formControl = (<FormArray>formControl).at(control.isArray); // turning formControl to array at a specified index(in our case isArray)
     }
     if (formControl.value.match(/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/g)) {
       oldDate = formControl.value.split('T')[0];
@@ -52,34 +52,24 @@ export class FormControlService {
 
   setForm$(form: FormGroup, order?: FormOrder, validity?: string) {
     this._form = form;
-    if (order) {
-      this._order = order;
-    }
-    if (validity) {
-      this._formValidity.next(validity);
-    }
+    // noinspection TsLint
+    if (order) this._order = order;
+    // noinspection TsLint
+    if (validity) this._formValidity.next(validity);
   }
 
   resetForm$() {
     if (this._form) {
-      if (this._order) {
-        Object.keys(this._order).forEach((key) => {
-          if (this._order[key].canReset === undefined || this._order[key].canReset) {
-            this._form.controls[key].setValue('');
-          }
-        });
-      } else {
-        this._form.reset();
-      }
+      this._order ?
+        Object.keys(this._order).forEach(key => {
+          // noinspection TsLint
+          if (this._order[key].canReset === undefined || this._order[key].canReset) this._form.controls[key].setValue('');
+        }) : this._form.reset();
     }
   }
 
   get form$() {
-    if (this._form) {
-      return this._form.value;
-    } else {
-      return {};
-    }
+    return this._form ? this._form.value : {};
   }
 
   get formValidity$(): Observable<string> {
@@ -121,13 +111,13 @@ export class FormControlService {
           {
             [field.fieldName]: field.inputType.match(/AREA/g) ?
               new FormArray(
-                this._formArrayControl(value, disabled, this._validators(field, field.constraintList, field.required))
+                this._formArrayControl(value, disabled, this._validators(field, field.constraintList, field.required)) // field array
               ) : field.inputType.match(/TABLE/g) ?
               this._formBuilder.array(
-                  [this._formArrayForm({field: field.childFieldMeta, order: field.childField, method: method})]
+                  [this._formArrayForm({field: field.childFieldMeta, order: field.childField, method: method})] // form array
               ) : new FormControl(
                 {value: value, disabled: disabled},
-                this._setValidator(field, method) ? [] : this._validators(field, field.constraintList, field.required)
+                this._setValidators(field, method)
               )
           }
         );
@@ -164,14 +154,15 @@ export class FormControlService {
     return formArray;
   }
 
-  private _setValidator(field: FormOrderConfig, method?: string): boolean {
-    return (field.fieldName === 'id' && method === 'POST');
+  private _setValidators(field: FormOrderConfig, method?: string): ValidatorFn[] {
+    return (field.fieldName === 'id' && method === 'POST') ? [] : this._validators(field, field.constraintList, field.required);
   }
 
-  private _validators(field: FormOrderConfig, constraints: Constraint, required?: boolean) {
+  private _validators(field: FormOrderConfig, constraints: Constraint, required?: boolean): ValidatorFn[] {
     const validatorsArray = [];
     const errorMessage: ObjectType = {};
-    const timestampPattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}';
+    const matcherPattern = `yyyy-MM-dd'T'HH:mm:ss`;
+    const timestampPattern = `[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}`;
     Object.keys(constraints).forEach((key) => {
       switch (key) {
         case 'Size':
@@ -197,9 +188,10 @@ export class FormControlService {
         case 'NotNull':
           // Validators
           validatorsArray.push(Validators.required);
-          required = false;
           // Error Messages
           Object.assign(errorMessage, {'required': constraints[key].message});
+          // If Required is true make it false, because it was checked from NotNull Constraint
+          required = false;
           break;
         case 'Past':
           // Validators Function for Past Date
@@ -214,33 +206,31 @@ export class FormControlService {
           break;
         case 'Pattern':
           // Validators
-          validatorsArray.push(
-            Validators.pattern(constraints[key].regexp.match(/yyyy-MM-dd'T'HH:mm:ss/g) ? timestampPattern : constraints[key].regexp)
-          );
+          validatorsArray.push(Validators.pattern(constraints[key].regexp.match(matcherPattern) ? timestampPattern : constraints[key].regexp));
           // Error Messages
           Object.assign(errorMessage, {'pattern': constraints[key].message});
           break;
         default:
           console.log(
             `${key.toUpperCase()} is not a constraint, that it's known in this form:
-             \\src\\lib\\exportable\\dynamic-form\\controls\\form-control.service.ts:214`
+             \\src\\lib\\exportable\\dynamic-form\\controls\\form-control.service.ts:167`
           );
       }
     });
     if (required) {
       // Validators
       validatorsArray.push(Validators.required);
-      // Error Messages
-      let errorMessageLang: string, i: string;
-      for (i in localStorage) {
-        if (i.match(/lang/gi)) {
-          errorMessageLang = localStorage.getItem(i);
-        }
+      // Error Message Language
+      let errorMessageLang: string, lang: string;
+      for (lang in localStorage) {
+        // noinspection TsLint
+        if (lang.match(/lang/gi)) errorMessageLang = localStorage.getItem(lang);
       }
+      // Error Messages
       Object.assign(errorMessage, {
-        'required': errorMessageLang === 'en' ? 'This field is required' :
-          errorMessageLang === 'it' ? 'Questo campo è obbligatorio' :
-            'Kjo fushë është e detyrueshme'
+        'required': errorMessageLang === 'en' ? 'This field is required!' :
+          errorMessageLang === 'sq' ? 'Kjo fushë është e detyrueshme!' :
+            'Questo campo è obbligatorio!'
       });
     }
     if (field.customValidators) {

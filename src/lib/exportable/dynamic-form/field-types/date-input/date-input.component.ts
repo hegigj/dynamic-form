@@ -45,11 +45,11 @@ export class DateInputComponent implements OnInit, OnDestroy {
         date: date.split('T')[0]
       }
     );
-    this._openDPandTPsimultaneously();
+    this._openDatePickerAndTimePickerSimultaneously();
   }
 
   addTime() {
-    this._atp.open({theme: 'light'}).afterClose().subscribe((time: any) => {
+    this._atp.open(this.field.timePickerFormat ? this.field.timePickerFormat : {theme: 'light'}).afterClose().subscribe(time => {
       this._fcs.setTimestamp$(
         {
           fieldName: this.field.fieldName
@@ -61,7 +61,7 @@ export class DateInputComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _openDPandTPsimultaneously() {
+  private _openDatePickerAndTimePickerSimultaneously() {
     if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
         (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
       this.addTime();
@@ -69,14 +69,12 @@ export class DateInputComponent implements OnInit, OnDestroy {
   }
 
   private _checkForErrors() {
-    const formControl = this.fg.controls[this.field.fieldName];
-    this.valueChanges = formControl.valueChanges.subscribe(() => {
+    this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
       if (this.fg.controls[this.field.fieldName].errors) {
         this.errorMessages = '';
-        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
-          if (this.field.errorMessages && this.field.errorMessages[key]) {
-            this.errorMessages = this.field.errorMessages[key];
-          }
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => {
+          // noinspection TsLint
+          if (this.field.errorMessages && this.field.errorMessages[key]) this.errorMessages = this.field.errorMessages[key];
         });
       } else {
         this.errorMessages = '';

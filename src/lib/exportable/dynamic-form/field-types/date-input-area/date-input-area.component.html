@@ -49,7 +49,7 @@
             [disabled]="checkFormArray()"
             *ngIf="(i === fg?.controls[field?.fieldName]?.value?.length -1) &&
                    (field?.displayDateInputArea !== undefined ? field?.displayDateInputArea : true)">
-      {{field?.dateInputAreaLabel ? field?.dateInputAreaLabel : 'ADD NEW DATE'}}
+      {{field?.dateInputAreaLabel ? field?.dateInputAreaLabel : addNewDateLabel}}
     </button>
   </mat-form-field>
 

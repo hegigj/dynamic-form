@@ -1,27 +1,32 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {ProviderService} from '../../../../common/controls/provider.service';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AbstractModel} from '../../../../common/models/abstract.model';
 import {map, startWith} from 'rxjs/operators';
 import {FormOrderConfig} from '../../models/form-order-config';
+import {OptionPipe} from '../../../../common/controls/option.pipe';
 
 @Component({
   selector: 'app-combo-box',
   templateUrl: './combo-box.component.html',
   styleUrls: ['./combo-box.component.css']
 })
-export class ComboBoxComponent implements OnInit {
+export class ComboBoxComponent implements OnInit, OnDestroy {
+  @Input() fg: FormGroup;
+  @Input() field: FormOrderConfig;
   @Input() fieldDataPool: AbstractModel[] | any;
   @Input() display: boolean;
   @Input() appearance: string;
-  @Input() field: FormOrderConfig;
-  @Input() fg: FormGroup;
 
-  options: Observable<AbstractModel[] | any>;
+  options: Observable<AbstractModel[] | any[]>;
   params = {pageNo: 1, pageSize: -1};
+
   selectLabel = '';
   selected = '';
+
+  statusChanges: Subscription;
+  errorMessages: string;
 
   constructor(private _frp: ProviderService) { }
 
@@ -29,16 +34,24 @@ export class ComboBoxComponent implements OnInit {
     this.selectLabel = this.field.selectLabel ? this.field.selectLabel : this.field.fieldRestVal ? this.field.fieldRestVal : 'someLabel';
     this._filteredFields();
     this._filledField();
+    this._checkErrors();
+  }
+
+  ngOnDestroy() {
+    this.statusChanges.unsubscribe();
   }
 
   private _filledField() {
     if (this.field.value) {
       setTimeout(() => {
         if (this.field.selectValue === undefined) {
-          this.field.selectValue = this.field.fieldDataPool ?
-            this.field.fieldDataPool.list.find(sv => sv.id === this.field.value)[this.selectLabel] :
-            this.fieldDataPool.find(sv => sv.id === this.field.value)[this.selectLabel];
-        } this.selected = this.field.selectValue ? this.field.selectValue : this.field.value;
+          this.field.selectValue = new OptionPipe()
+            .transform(
+              (this.field.fieldDataPool ? this.field.fieldDataPool.list : this.fieldDataPool).find(sv => sv.id === this.field.value),
+              this.selectLabel
+            );
+        }
+        this.selected = this.field.selectValue ? this.field.selectValue : this.field.value;
       });
     }
   }
@@ -49,7 +62,7 @@ export class ComboBoxComponent implements OnInit {
     }
   }
 
-  private _filter(value: string): AbstractModel[] | any {
+  private _filter(value: string): AbstractModel[] | any[] {
     const filter = value.toLowerCase();
     const label = this.field.autocompleteLabel ? this.field.autocompleteLabel :
       this.field.fieldRestVal ? this.field.fieldRestVal :
@@ -65,18 +78,31 @@ export class ComboBoxComponent implements OnInit {
     }
   }
 
-  setLabel(option) {
+  private _setOtherParams() {
+    if (this.field.fieldDependsOn) {
+      this.field.fieldDependsOn
+        .forEach(fieldDependsOn => Object.assign(this.params, {[fieldDependsOn]: this.fg.controls[fieldDependsOn].value}));
+    }
+  }
+
+  private _checkErrors() {
+    this.statusChanges = this.fg.controls[this.field.fieldName].statusChanges.subscribe(() => {
+      if (this.fg.controls[this.field.fieldName].errors) {
+        this.errorMessages = '';
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => {
+          // noinspection TsLint
+          if (this.field.errorMessages && this.field.errorMessages[key]) this.errorMessages = this.field.errorMessages[key];
+        });
+      } else {
+        this.errorMessages = '';
+      }
+    });
+  }
+
+  _setLabel(option) {
     if (typeof option === 'object') {
       this.selected = '';
-      setTimeout(() => {
-        if (this.selectLabel.match(/\s/g)) {
-          this.selected = `${option[this.selectLabel.split(' ')[0]]} ${option[this.selectLabel.split(' ')[1]]}`;
-        } else if (this.selectLabel.match(/\./g)) {
-          this.selected = option[this.selectLabel.split('.')[0]][this.selectLabel.split('.')[1]];
-        } else {
-          this.selected = option[this.selectLabel];
-        }
-      });
+      setTimeout(() => this.selected = new OptionPipe().transform(option, this.selectLabel));
     } else {
       this.selected = option;
     }
@@ -86,6 +112,7 @@ export class ComboBoxComponent implements OnInit {
     if (this.field.methods && this.field.methods['keyup']) {
       this.field.methods['keyup'](value);
     } else if (this.field.fieldRestPool) {
+      this._setOtherParams();
       this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, value, {paramBean: this.params})
         .subscribe((res: any) => this.fieldDataPool = res.list);
     }
@@ -102,16 +129,8 @@ export class ComboBoxComponent implements OnInit {
       this.field.methods['focus']();
     } else if (this.field.fieldRestPool) {
       this._setOtherParams();
-      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, '', {paramBean: this.params})
+      this._frp.fieldRestPool(this.field.svc, this.field.fieldRestPool, this.field.fieldRestVal, null, {paramBean: this.params})
         .subscribe((res: any) => this.fieldDataPool = res.list);
-    }
-  }
-
-  private _setOtherParams() {
-    if (this.field.fieldDependsOn) {
-      this.field.fieldDependsOn.forEach((fieldDependsOn) => {
-        Object.assign(this.params, {[fieldDependsOn]: this.fg.controls[fieldDependsOn].value});
-      });
     }
   }
 }
