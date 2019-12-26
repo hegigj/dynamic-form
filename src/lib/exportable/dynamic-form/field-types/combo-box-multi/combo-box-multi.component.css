@@ -5,3 +5,8 @@ mat-form-field {
 .dynamic-field-wrapper {
   width: 100%;
 }
+
+mat-chip{
+  border: 1px solid rgba(0, 0, 0, .87);
+  border-radius: 8px;
+}

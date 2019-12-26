@@ -25,9 +25,9 @@ export class BadgeDialogComponent implements OnInit {
     badgeCode: {class: 'col-6'},
     issueDate: {class: 'col-6', displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
     insertOperator: {class: 'col-6', selectValue: 'labelMap.insertOperator'},
-    notes: {class: 'col-6'},
     lastUpdate: {class: 'col-6', disabled: true, displayTimePicker: false, dateFormat: 'MMM dd yyyy'},
-    badgeStatus: {class: 'col-6', selectValue: 'labelMap.badgeStatus'}
+    notes: {class: 'col-12', onTextInputTextarea: true},
+    badgeStatus: {class: 'col-12', selectValue: 'labelMap.badgeStatus', multi: true, constraintList: {}, required: true}
   };
 
   constructor(public dlg: MatDialogRef<BadgeDialogComponent>,
@@ -42,6 +42,7 @@ export class BadgeDialogComponent implements OnInit {
   }
 
   editBadge(badge) {
+    console.log(badge);
     this.dlg.close(badge);
   }
 }

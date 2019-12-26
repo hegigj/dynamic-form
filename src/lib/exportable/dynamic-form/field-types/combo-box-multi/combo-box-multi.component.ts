@@ -6,6 +6,7 @@ import {map, startWith} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {ProviderService} from '../../../../common/controls/provider.service';
 import {Methods} from '../../../../common/models/extra.model';
+import {OptionPipe} from '../../../../common/controls/option.pipe';
 
 @Component({
   selector: 'app-combo-box-multi',
@@ -20,14 +21,15 @@ export class ComboBoxMultiComponent implements OnInit {
   @Input() field: FormOrderConfig;
   @Input() fg: FormGroup;
 
+  options: Observable<AbstractModel[] | any[]>;
   params = {pageNo: 1, pageSize: -1};
+  selectLabel: string;
+
   valueChanges: Subscription;
   errorMessages: string;
 
-  selectLabel: string;
-  selected: any[] = [];
   private _selectedId: string[] = [];
-  options: Observable<AbstractModel[] | any>;
+  selected: AbstractModel[] = [];
 
   constructor(private _frp: ProviderService) { }
 
@@ -40,32 +42,19 @@ export class ComboBoxMultiComponent implements OnInit {
   }
 
   private _filledChips() {
+    const setSomeLabel = (id) => {
+      return new OptionPipe().transform(
+        (this.field.fieldDataPool ? this.field.fieldDataPool.list : this.fieldDataPool).find(chip => chip.id === id),
+        this.selectLabel
+      );
+    };
     if (this.field.value) {
-      let someLabel: string[] | string | any;
       if (typeof this.field.value === 'object') {
         this._selectedId = this.field.value;
-        this._selectedId.forEach((id) => {
-          someLabel.push(this.field.fieldDataPool ?
-                            this.field.fieldDataPool.list.find(sl => sl.id === id).someLabel :
-                            this.fieldDataPool.find(sl => sl.id === id).someLabel
-          );
-        });
+        this._selectedId.forEach(id => this.selected.push({id: id, someLabel: setSomeLabel(id)}));
       } else {
         this._selectedId.push(this.field.value);
-        if (this.field.selectValue) {
-          someLabel = this.field.selectValue;
-        } else {
-          someLabel = this.field.fieldDataPool ?
-            this.field.fieldDataPool.list.find(sl => sl.id === this.field.value).someLabel :
-            this.fieldDataPool.find(sl => sl.id === this.field.value).someLabel;
-        }
-      }
-      if (typeof this.field.value === 'object') {
-        this._selectedId.forEach((id, i) => {
-          this.selected.push({id: id, someLabel: someLabel[i]});
-        });
-      } else {
-        this.selected.push({id: this._selectedId[0], someLabel: someLabel});
+        this.selected.push({id: this._selectedId[0], someLabel: setSomeLabel(this._selectedId[0])});
       }
     }
   }
@@ -76,10 +65,12 @@ export class ComboBoxMultiComponent implements OnInit {
     }
   }
 
-  private _filter(value: string): AbstractModel[] | any {
+  private _filter(value: string): AbstractModel[] | any[] {
     if (typeof value !== 'object') {
       const filter = value.toLowerCase();
-      const label = this.selectLabel;
+      const label = this.field.autocompleteLabel ? this.field.autocompleteLabel :
+        this.field.fieldRestVal ? this.field.fieldRestVal :
+          'someLabel';
       if (this.field.fieldDataPool) {
         return this.field.fieldDataPool.list.filter(opt => {
           return opt[label].toLowerCase().includes(filter);
@@ -95,9 +86,9 @@ export class ComboBoxMultiComponent implements OnInit {
   addSelection(option: any) {
     const selectedOption = option.option.value;
     this._selectedId.push(selectedOption.id);
-    this.selected.push({id: selectedOption.id, someLabel: selectedOption[this.selectLabel]});
+    this.selected.push({id: selectedOption.id, someLabel: new OptionPipe().transform(selectedOption, this.selectLabel)});
     this.fg.controls[this.field.fieldName].setValue(this._selectedId);
-    this.fg.controls['inputField'].setValue(null);
+    this.fg.controls['inputField'].setValue('');
   }
 
   removeSelection(index) {
@@ -143,10 +134,9 @@ export class ComboBoxMultiComponent implements OnInit {
     this.valueChanges = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
       if (this.fg.controls[this.field.fieldName].errors) {
         this.errorMessages = '';
-        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach((key) => {
-          if (this.field.errorMessages && this.field.errorMessages[key]) {
-            this.errorMessages = this.field.errorMessages[key];
-          }
+        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => {
+          // noinspection TsLint
+          if (this.field.errorMessages && this.field.errorMessages[key]) this.errorMessages = this.field.errorMessages[key];
         });
       } else {
         this.errorMessages = '';
