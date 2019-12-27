@@ -20,11 +20,14 @@ export class DateInputComponent implements OnInit, OnDestroy {
   valueChanges: Subscription;
   errorMessages: string;
 
+  DISPLAY__TIME_PICKER: boolean;
+
   constructor(private _atp: AmazingTimePickerService,
               private _fcs: FormControlService) {}
 
   ngOnInit() {
     this._checkForErrors();
+    this._displayTP();
   }
 
   ngOnDestroy() {
@@ -61,9 +64,18 @@ export class DateInputComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _displayTP() {
+    if (this.field.displayTimePicker !== undefined) {
+      this.DISPLAY__TIME_PICKER = this.field.displayTimePicker;
+    } else if (this.field.dateFormat) {
+      this.DISPLAY__TIME_PICKER = !!this.field.dateFormat.match(/HH:mm(:ss|)/g);
+    } else {
+      this.DISPLAY__TIME_PICKER = true;
+    }
+  }
+
   private _openDatePickerAndTimePickerSimultaneously() {
-    if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
-        (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
+    if (this.DISPLAY__TIME_PICKER && (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
       this.addTime();
     }
   }

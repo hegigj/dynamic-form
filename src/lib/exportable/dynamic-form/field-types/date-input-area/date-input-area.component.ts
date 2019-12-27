@@ -23,6 +23,7 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
   valueChanges: Subscription;
   errorMessages: string;
 
+  DISPLAY__TIME_PICKER: boolean;
   addNewDateLabel: string;
 
   constructor(private _atp: AmazingTimePickerService,
@@ -31,6 +32,7 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.index = this.fg.controls[this.field.fieldName].value.length - 1;
     this.i = this.index;
+    this._displayTP();
     this.checkFormArray();
     this._checkForErrors();
     this._setAddNewDateLabel();
@@ -83,9 +85,18 @@ export class DateInputAreaComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _displayTP() {
+    if (this.field.displayTimePicker !== undefined) {
+      this.DISPLAY__TIME_PICKER = this.field.displayTimePicker;
+    } else if (this.field.dateFormat) {
+      this.DISPLAY__TIME_PICKER = !!this.field.dateFormat.match(/HH:mm(:ss|)/g);
+    } else {
+      this.DISPLAY__TIME_PICKER = true;
+    }
+  }
+
   private _openDatePickerAndTimePickerSimultaneously() {
-    if ((this.field.displayTimePicker === undefined || this.field.displayTimePicker) &&
-      (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
+    if (this.DISPLAY__TIME_PICKER && (this.field.disableTimePicker === undefined || !this.field.disableTimePicker)) {
       this.addTime(this.index !== this.i ? this.i : this.index);
     }
   }

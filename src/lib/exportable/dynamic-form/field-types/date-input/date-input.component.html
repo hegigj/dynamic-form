@@ -22,7 +22,7 @@
             matTooltip="Add Time"
             (click)="addTime()"
             [disabled]="field?.disableTimePicker || input?.disabled"
-            *ngIf="field?.displayTimePicker !== undefined ? field?.displayTimePicker : true">
+            *ngIf="DISPLAY__TIME_PICKER">
       <mat-icon>watch_later</mat-icon>
     </button>
   </mat-form-field>
