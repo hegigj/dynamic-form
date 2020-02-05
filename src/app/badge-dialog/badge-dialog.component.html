@@ -7,16 +7,17 @@
 </div>
 <div mat-dialog-content *ngIf="data?.method === 'PUT'">
   <div class="active-badge-warning" *ngIf="data?.message">{{data?.message}}</div>
-  <app-form [fields]="data?.labels" [values]="data?.badge"
-            [order]="order" [method]="data?.method"
-            (getValidity)="canPut = $event"></app-form>
+  <app-form [fields]="data?.labels"
+            [values]="data?.badge"
+            [order]="order"
+            [method]="data?.method"></app-form>
 </div>
 <div mat-dialog-actions *ngIf="data?.method === 'PUT'">
   <button mat-button
           color="primary"
           appGetForm
           (form)="editBadge($event)"
-          [disabled]="!canPut">Edit</button>
+          disabled>Edit</button>
   <button mat-button
           [mat-dialog-close]="false">Cancel</button>
 </div>
