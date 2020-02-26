@@ -7,7 +7,7 @@ import {FormOrder} from '../models/form-order';
 import {OptionPipe} from '../../../common/controls/option.pipe';
 import {BootstrapClass} from '../../../common/models/extra.model';
 import {Subscription} from 'rxjs';
-import {AbstractModel} from "../../../common/models/abstract.model";
+import {AbstractModel} from '../../../common/models/abstract.model';
 
 @Component({
   selector: 'app-form',

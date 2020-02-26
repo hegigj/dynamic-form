@@ -1,8 +1,5 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {FormOrderConfig} from '../../models/form-order-config';
-import {Subscription} from 'rxjs';
-import {ErrorCheck} from "../../controls/error-check";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ErrorCheck} from '../../controls/error-check';
 
 @Component({
   selector: 'app-text-input',

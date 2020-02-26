@@ -1,13 +1,13 @@
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {Input} from "@angular/core";
-import {FormOrderConfig} from "../models/form-order-config";
-import {FormGroup} from "@angular/forms";
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {Input} from '@angular/core';
+import {FormOrderConfig} from '../models/form-order-config';
+import {FormGroup} from '@angular/forms';
 
 export class ErrorCheck {
   @Input()
   set field(value: FormOrderConfig) {
     this._field = value;
-    this._checkForErrors();
+    setTimeout(() => this._checkForErrors());
   }
 
   @Input() fg: FormGroup;
@@ -34,13 +34,15 @@ export class ErrorCheck {
   }
 
   private _checkForErrors(): void {
-    this._valueChange = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
-      if (this.fg.controls[this.field.fieldName].errors) {
-        Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => this._setErrorMessage(key));
-      } else {
-        this._resetErrorMessage();
-      }
-    });
+    if (this.fg && this.field) {
+      this._valueChange = this.fg.controls[this.field.fieldName].valueChanges.subscribe(() => {
+        if (this.fg.controls[this.field.fieldName].errors) {
+          Object.keys(this.fg.controls[this.field.fieldName].errors).forEach(key => this._setErrorMessage(key));
+        } else {
+          this._resetErrorMessage();
+        }
+      });
+    }
   }
 
   private _resetErrorMessage(): void {
