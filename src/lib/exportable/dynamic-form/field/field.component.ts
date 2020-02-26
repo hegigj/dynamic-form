@@ -18,6 +18,10 @@ export class FieldComponent implements OnInit {
     this.display = this._field.display !== undefined ? this._field.display : true;
   }
 
+  get field(): FormOrderConfig {
+    return this._field;
+  }
+
   @Input() appearance: string;
   @Input() fieldDataPool: any[];
 
