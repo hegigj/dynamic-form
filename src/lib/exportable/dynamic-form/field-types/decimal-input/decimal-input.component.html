@@ -8,7 +8,7 @@
            [placeholder]="appearance ? '' : field?.fieldLabel">
 
     <mat-icon *ngIf="field?.suffix && field?.suffix?.type === 'icon'">{{field?.suffix?.text}}</mat-icon>
-    <span *ngIf="field?.suffix && field?.suffix.type === 'text'">{{field?.suffix?.text}}</span>
+    <span class="hg-dynamic-field-suffix" *ngIf="field?.suffix && field?.suffix.type === 'text'">{{field?.suffix?.text}}</span>
 
     <mat-error>{{errorMessages}}</mat-error>
   </mat-form-field>

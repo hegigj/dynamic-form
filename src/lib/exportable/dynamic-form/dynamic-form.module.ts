@@ -78,7 +78,12 @@ import {CheckFormDirective} from './controls/check-form.directive';
     MatDatepickerModule,
     ProviderService
   ],
-  exports: [FormComponent, GetFormDirective, ResetFormDirective, CheckFormDirective]
+  exports: [
+    FormComponent,
+    GetFormDirective,
+    ResetFormDirective,
+    CheckFormDirective
+  ]
 })
 
 export class DynamicFormModule {

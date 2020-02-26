@@ -17,7 +17,7 @@ export class SidebarService {
 
   constructor(private _router: Router) {}
 
-  setComponent(control?: boolean, params?: ObjectType, component?: Type<any>, configs?: ObjectType) {
+  setComponent(control?: boolean, params: ObjectType = null, component?: Type<any>, configs?: ObjectType) {
     this._navigate(params);
     if (control !== undefined) {
       this._params = {control: control, component: component, configs: configs};
@@ -29,13 +29,13 @@ export class SidebarService {
     }
   }
 
+  get injectComponentToComponent(): Observable<ComponentInjector> {
+    return this._injectComponentToComponent.asObservable();
+  }
+
   private _navigate(params?: ObjectType) {
     if (params) {
       this._router.navigate([], {queryParams: params}).then();
     }
-  }
-
-  get injectComponentToComponent(): Observable<ComponentInjector> {
-    return this._injectComponentToComponent.asObservable();
   }
 }

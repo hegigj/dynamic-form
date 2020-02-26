@@ -1,3 +1,8 @@
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 6px 0;
+  position: relative;
+}
+
 ::ng-deep .mat-error {
   background-color: rgba(244, 67, 54, 0.15)!important;
   color: #f44336!important;

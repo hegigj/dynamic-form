@@ -1,5 +1,6 @@
 export * from './exportable/dynamic-filter/dynamic-filter.module';
 export * from './exportable/dynamic-form/dynamic-form.module';
+export * from './exportable/dynamic-form/controls/form-control.service';
 export * from './exportable/label-status/label-status.module';
 export * from './exportable/paginator/paginator.module';
 export * from './exportable/sidebar/controls/sidebar.service';

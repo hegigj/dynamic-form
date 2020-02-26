@@ -67,7 +67,7 @@ export class FormArrayActions {
 }
 
 // noinspection TsLint
-export declare type BootstrapClass = 'col-12' | 'col-9' | 'col-6' | 'col-4' | 'col-3' | 'col-sm-12' | 'col-sm-9' | 'col-sm-6' | 'col-sm-4' | 'col-sm-3' | string;
+export declare type BootstrapClass = 'col-12' | 'col-9' | 'col-6' | 'col-4' | 'col-3' | 'col-sm-12' | 'col-sm-9' | 'col-sm-6' | 'col-sm-4' | 'col-sm-3';
 
 declare type Color = 'primary' | 'accent' | 'warn';
 

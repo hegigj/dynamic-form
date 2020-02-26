@@ -3,7 +3,7 @@ import {TimePickerConfig} from 'amazing-time-picker-angular6/src/app/atp-library
 import {BootstrapClass, ChildFormOrder, FormArrayActions, Methods, ObjectType, Suffix} from '../../../common/models/extra.model';
 
 export class FormOrderConfig extends FormControlModel {
-  class?: BootstrapClass | BootstrapClass[];
+  class?: BootstrapClass;
   onTextInputTextarea?: boolean;
 
   childField?: ChildFormOrder;

@@ -12,6 +12,6 @@
 <div class="row" *ngIf="!form && !hideSkeleton">
   <div *ngFor="let skeleton of setSkeleton" [class]="skeleton">
     <ngx-skeleton-loader [count]="1"
-                         [theme]="appearance ? {height: '60px'} : {height: '45px'}"></ngx-skeleton-loader>
+                         [theme]="appearance ? {height: '45px'} : {height: '40px'}"></ngx-skeleton-loader>
   </div>
 </div>

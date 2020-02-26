@@ -21,10 +21,8 @@ export class GetFormDirective {
   }
 
   private _cleanForm(form): ObjectType {
-    Object.keys(form).forEach(key => {
-      // noinspection TsLint
-      if (form[key] === undefined || form[key] === null || form[key] === '') delete form[key];
-    });
+    Object.keys(form)
+      .forEach(key => (form[key] === undefined || form[key] === null || form[key] === '') ? delete form[key] : NaN);
     return form;
   }
 

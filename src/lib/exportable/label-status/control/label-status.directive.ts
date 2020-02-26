@@ -1,13 +1,15 @@
 import {Directive, ElementRef, Input} from '@angular/core';
 
 interface ConfigLabelStatus {
-  borderRadius?: number;
-  color?: string;
-  isCircle?: boolean;
   fontFamily?: string;
   fontSize?: number;
+  color?: string;
   opacity?: number;
+
+  borderRadius?: number;
+  isCircle?: boolean;
   padding?: string;
+
   status?: string;
   statusArray: {id: string, someLabel: string, labelColor: string}[];
 }
@@ -21,22 +23,22 @@ export class LabelStatusDirective {
   constructor(private _el: ElementRef) {
     setTimeout(() => {
       this.config = {
-        borderRadius: this.config.borderRadius ? this.config.borderRadius : 4,
-        color: this.config.color ? this.config.color : '#FFA000',
-        isCircle: this.config.isCircle ? this.config.isCircle : false,
         fontFamily: this.config.fontFamily ? this.config.fontFamily : 'Roboto',
         fontSize: this.config.fontSize ? this.config.fontSize : 14,
+        color: this.config.color ? this.config.color : '#FFA000',
         opacity: this.config.opacity ? this.config.opacity : .2,
+        borderRadius: this.config.borderRadius ? this.config.borderRadius : 4,
+        isCircle: this.config.isCircle ? this.config.isCircle : false,
         padding: this.config.padding ? this.config.padding : '6px 9px',
         status: this.config.status,
         statusArray: this.config.statusArray
       };
 
-      this.labeling(this._el);
+      this._labeling(this._el);
     });
   }
 
-  cutHex(hex: string) {
+  private _cutHex(hex: string): string {
     if (this.config.statusArray) {
       if (this.config.status) {
         this.config.color = this.config.statusArray.find(color => color.id === this.config.status).labelColor;
@@ -53,8 +55,8 @@ export class LabelStatusDirective {
     } return hex.charAt(0) === '#' ? hex.substr(1, 6) : hex;
   }
 
-  rgb(hex: string) {
-    const filteredHex = this.cutHex(hex);
+  private _rgba(hex: string): string {
+    const filteredHex = this._cutHex(hex);
     const R = parseInt(filteredHex.substr(0, 2), 16);
     const G = parseInt(filteredHex.substr(2, 2), 16);
     const B = parseInt(filteredHex.substr(4, 2), 16);
@@ -62,12 +64,13 @@ export class LabelStatusDirective {
     return `rgba(${R}, ${G}, ${B}, ${A})`;
   }
 
-  labeling(el: ElementRef) {
-    el.nativeElement.style.backgroundColor = this.rgb(this.config.color);
-    el.nativeElement.style.borderRadius = this.config.isCircle ? '50%' : `${this.config.borderRadius}px`;
-    el.nativeElement.style.color = this.config.color;
+  private _labeling(el: ElementRef): void {
     el.nativeElement.style.fontFamily = this.config.fontFamily;
     el.nativeElement.style.fontSize = `${this.config.fontSize}px`;
+
+    el.nativeElement.style.backgroundColor = this._rgba(this.config.color);
+    el.nativeElement.style.color = this.config.color;
     el.nativeElement.style.padding = this.config.padding;
+    el.nativeElement.style.borderRadius = this.config.isCircle ? `50%` : `${this.config.borderRadius}px`;
   }
 }

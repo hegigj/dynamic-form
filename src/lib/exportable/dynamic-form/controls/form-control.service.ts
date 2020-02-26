@@ -61,10 +61,10 @@ export class FormControlService {
   resetForm$() {
     if (this._form) {
       this._order ?
-        Object.keys(this._order).forEach(key => {
-          // noinspection TsLint
-          if (this._order[key].canReset === undefined || this._order[key].canReset) this._form.controls[key].setValue('');
-        }) : this._form.reset();
+        Object.keys(this._order)
+          .forEach(key =>
+            (this._order[key].canReset === undefined || this._order[key].canReset) ? this._form.controls[key].setValue('') : NaN) :
+        this._form.reset();
     }
   }
 
@@ -76,11 +76,11 @@ export class FormControlService {
     return this._formValidity.asObservable();
   }
 
-  public deleteFormArray(index: number) {
+  deleteFormArray(index: number) {
     this._formArray.removeAt(index);
   }
 
-  public addFormArray(index?: number, field?: Field) {
+  addFormArray(index?: number, field?: Field) {
     if (index) {
       this._formArray.length > (index + 1) ?
         this._formArray.insert(index + 1, this._formArrayForm(field ? field : this._fieldArray)) :
@@ -90,9 +90,20 @@ export class FormControlService {
     }
   }
 
-  public create(fields: FormOrderConfig[], method?: string) {
-    const formGroup = this._fgCreator(fields, method);
+  create(fields: FormOrderConfig[] | FieldMapModel, method: string = null) {
+    const field = this._toArray(fields);
+    const formGroup = this._fgCreator(field, method);
     return new FormGroup(formGroup);
+  }
+
+  private _toArray(fields: FormOrderConfig[] | FieldMapModel): FormOrderConfig[] {
+    let fieldArray: FormOrderConfig[] = [];
+    if (!(fields instanceof Array)) {
+      Object.values(fields).forEach(field => fieldArray.push(field));
+    } else {
+      fieldArray = fields;
+    }
+    return fieldArray;
   }
 
   private _fgCreator(fields: FormOrderConfig[], method?: string) {
@@ -136,9 +147,8 @@ export class FormControlService {
     const _formArray: FormOrderConfig[] = [];
     Object.keys(field.order ? field.order : field.field).forEach(key => {
       if (field.order) {
-        // noinspection TsLint
-        if (field.order[key].value !== undefined) hasValue = true;
         Object.assign(field.field[key], field.order[key]);
+        (field.order[key].value !== '' || undefined || null) ? hasValue = true : NaN;
       }
       _formArray.push(field.field[key]);
     });
@@ -213,7 +223,7 @@ export class FormControlService {
         default:
           console.log(
             `${key.toUpperCase()} is not a constraint, that it's known in this form:
-             \\src\\lib\\exportable\\dynamic-form\\controls\\form-control.service.ts:167`
+             \\src\\lib\\exportable\\dynamic-form\\controls\\form-control.service.ts:171`
           );
       }
     });
