@@ -9,17 +9,22 @@
   <div class="active-badge-warning" *ngIf="data?.message">{{data?.message}}</div>
   <app-form [fields]="data?.labels"
             [values]="data?.badge"
+<<<<<<< HEAD
             appearance="outline"
             [order]="order"
             [method]="data?.method"
             (getValidity)="canPut = $event"></app-form>
+=======
+            [order]="order"
+            [method]="data?.method"></app-form>
+>>>>>>> 1a1f20184f374074b3734fce86c54c2df3fc6ab8
 </div>
 <div mat-dialog-actions *ngIf="data?.method === 'PUT'">
   <button mat-button
           color="primary"
           appGetForm
           (form)="editBadge($event)"
-          [disabled]="!canPut">Edit</button>
+          disabled>Edit</button>
   <button mat-button
           [mat-dialog-close]="false">Cancel</button>
 </div>

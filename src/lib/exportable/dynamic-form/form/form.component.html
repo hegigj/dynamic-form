@@ -1,16 +1,16 @@
 <!--Form Group-->
 <form class="row" [formGroup]="form" *ngIf="form">
-  <div *ngFor="let field of fieldArray" [class]="field?.class ? field?.class : 'col-12'">
+  <div *ngFor="let field_type of fieldArray" [class]="field_type?.class ? field_type?.class : 'col-12'">
     <app-field [appearance]="appearance"
                [fg]="form"
-               [field]="field"
+               [field]="field_type"
                [fieldDataPool]="fieldDataPool"></app-field>
   </div>
 </form>
 
 <!--Skeleton-->
 <div class="row" *ngIf="!form && !hideSkeleton">
-  <div *ngFor="let skeleton of setSkeleton" [class]="skeleton">
+  <div *ngFor="let skeleton_class of skeleton" [class]="skeleton_class">
     <ngx-skeleton-loader [count]="1"
                          [theme]="appearance ? {height: '45px'} : {height: '40px'}"></ngx-skeleton-loader>
   </div>

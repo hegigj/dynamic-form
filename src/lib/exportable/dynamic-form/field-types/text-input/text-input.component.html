@@ -1,5 +1,5 @@
 <div [formGroup]="fg" *ngIf="fg && field" class="dynamic-field-wrapper">
-  <mat-form-field [appearance]="appearance" *ngIf="display">
+  <mat-form-field [appearance]="appearance">
     <mat-label *ngIf="appearance">{{field?.fieldLabel}}</mat-label>
 
     <input matInput
